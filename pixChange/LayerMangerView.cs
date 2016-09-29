@@ -123,39 +123,44 @@ namespace pixChange
 
         private void ok_Click(object sender, EventArgs e)
         {
-            int count = MainFrom.m_mapControl.LayerCount;
-            if (count == 0)
+            ILayer Layers = MainFrom.groupLayer;
+            ICompositeLayer GroupLayers = Layers as ICompositeLayer;
+            if (GroupLayers.Count != 0)
             {
-                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-                MainFrom.m_pTocControl.Update();
-            }
-            else
-            {
-                Boolean IsEqual = false;
-                for (int i = count - 1; i >= 0; i--)
-                {
-                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
-                    ILayer pGL = MainFrom.m_mapControl.get_Layer(i);
-                    ILayer insertMap = MainFrom.groupLayer;
-                    ICompositeLayer pGroupLayer = insertMap as ICompositeLayer;
-                    if (pGL.Name == MainFrom.groupLayer.Name)
-                    {
-                        IsEqual = true;
-                        if (pGL is IGroupLayer)
-                        {
-                            for (int j = 0; j < pGroupLayer.Count; j++)
-                            {
-                                ILayer pCompositeLayer;
-                                pCompositeLayer = pGroupLayer.get_Layer(j);
-                                pLayers.InsertLayerInGroup((IGroupLayer)pGL, pCompositeLayer, false, 0);
-                            }
-                        }
-                    }
-                }
-                if (!IsEqual)
+                int count = MainFrom.m_mapControl.LayerCount;
+                if (count == 0)
                 {
                     MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
                     MainFrom.m_pTocControl.Update();
+                }
+                else
+                {
+                    Boolean IsEqual = false;
+                    for (int i = count - 1; i >= 0; i--)
+                    {
+                        IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                        ILayer pGL = MainFrom.m_mapControl.get_Layer(i);
+                        ILayer insertMap = MainFrom.groupLayer;
+                        ICompositeLayer pGroupLayer = insertMap as ICompositeLayer;
+                        if (pGL.Name == MainFrom.groupLayer.Name)
+                        {
+                            IsEqual = true;
+                            if (pGL is IGroupLayer)
+                            {
+                                for (int j = 0; j < pGroupLayer.Count; j++)
+                                {
+                                    ILayer pCompositeLayer;
+                                    pCompositeLayer = pGroupLayer.get_Layer(j);
+                                    pLayers.InsertLayerInGroup((IGroupLayer)pGL, pCompositeLayer, false, 0);
+                                }
+                            }
+                        }
+                    }
+                    if (!IsEqual)
+                    {
+                        MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+                        MainFrom.m_pTocControl.Update();
+                    }
                 }
             }
             this.Close();

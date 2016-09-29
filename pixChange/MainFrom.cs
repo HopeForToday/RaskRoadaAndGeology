@@ -645,8 +645,7 @@ namespace pixChange
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
         }
-
-        private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
+        private void axTOCControl1_OnMouseDown_1(object sender, ITOCControlEvents_OnMouseDownEvent e)
         {
             ILayer layer = null;
             IBasicMap map = null;
@@ -705,7 +704,6 @@ namespace pixChange
             MainFrom.m_mapControl.Refresh();
             MainFrom.m_pTocControl.Update();
         }
-
         private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
         {
             for (int count = 0; count < MainFrom.m_mapControl.LayerCount; count++)
