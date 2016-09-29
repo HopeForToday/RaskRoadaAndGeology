@@ -24,10 +24,12 @@ namespace pixChange
     {
 
         //公共变量用于表示整个系统都能访问的图层控件和环境变量
-      //  public static SpatialAnalysisOption SAoption;
+        //  public static SpatialAnalysisOption SAoption;
         public static IMapControl3 m_mapControl = null;
         public static ITOCControl2 m_pTocControl = null;
         public static ToolStripComboBox toolComboBox = null;
+        public static IGroupLayer groupLayer = null;//数据分组
+        public static string groupLayerName = null;
         String m_mapDocumentName = "";
 
         IToolbarMenu m_pMenuLayer;
@@ -43,7 +45,7 @@ namespace pixChange
         bool m_isMouseDown;
         public bool frmAttriQueryisOpen = false;
 
-    
+
         //当前窗体实例
         public MainFrom pCurrentWin = null;
         //当前主地图控件实例
@@ -79,14 +81,14 @@ namespace pixChange
             InitializeComponent();
         }
 
-       
+
 
         private void 图层管理_Click(object sender, EventArgs e)
         {
-           //List<string>LayerPathList=new List<string>();
+            //List<string>LayerPathList=new List<string>();
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
-        
+
         }
 
         private void MainFrom_Load(object sender, EventArgs e)
@@ -145,22 +147,22 @@ namespace pixChange
                 case CustomTool.ZoomIn:
                 case CustomTool.ZoomOut:
                     //'Get 
-                  
+
 
                     break;
                 case CustomTool.Pan:
                     m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
                     m_focusScreenDisplay.PanMoveTo(pt);
                     break;
-              
-               
+
+
 
             }
         }
 
         private void axTOCControl1_OnKeyDown(object sender, ITOCControlEvents_OnKeyDownEvent e)
         {
-           
+
         }
 
         private void axMapControl1_OnKeyUp(object sender, IMapControlEvents2_OnKeyUpEvent e)
@@ -228,24 +230,24 @@ namespace pixChange
 
                         }
 
-                        NewWidth = pActiveView.Extent.Width*(pActiveView.Extent.Width/pFeedEnvelope.Width);
-                        NewHeight = pActiveView.Extent.Height*(pActiveView.Extent.Height/pFeedEnvelope.Height);
+                        NewWidth = pActiveView.Extent.Width * (pActiveView.Extent.Width / pFeedEnvelope.Width);
+                        NewHeight = pActiveView.Extent.Height * (pActiveView.Extent.Height / pFeedEnvelope.Height);
 
                         //Set the new extent coordinates
                         pEnvelope = new Envelope() as IEnvelope;
                         pEnvelope.PutCoords(
                             pActiveView.Extent.XMin -
-                            ((pFeedEnvelope.XMin - pActiveView.Extent.XMin)*
-                             (pActiveView.Extent.Width/pFeedEnvelope.Width)),
+                            ((pFeedEnvelope.XMin - pActiveView.Extent.XMin) *
+                             (pActiveView.Extent.Width / pFeedEnvelope.Width)),
                             pActiveView.Extent.YMin -
-                            ((pFeedEnvelope.YMin - pActiveView.Extent.YMin)*
-                             (pActiveView.Extent.Height/pFeedEnvelope.Height)),
+                            ((pFeedEnvelope.YMin - pActiveView.Extent.YMin) *
+                             (pActiveView.Extent.Height / pFeedEnvelope.Height)),
                             (pActiveView.Extent.XMin -
-                             ((pFeedEnvelope.XMin - pActiveView.Extent.XMin)*
-                              (pActiveView.Extent.Width/pFeedEnvelope.Width))) + NewWidth,
+                             ((pFeedEnvelope.XMin - pActiveView.Extent.XMin) *
+                              (pActiveView.Extent.Width / pFeedEnvelope.Width))) + NewWidth,
                             (pActiveView.Extent.YMin -
-                             ((pFeedEnvelope.YMin - pActiveView.Extent.YMin)*
-                              (pActiveView.Extent.Height/pFeedEnvelope.Height))) + NewHeight);
+                             ((pFeedEnvelope.YMin - pActiveView.Extent.YMin) *
+                              (pActiveView.Extent.Height / pFeedEnvelope.Height))) + NewHeight);
 
                     }
 
@@ -262,7 +264,7 @@ namespace pixChange
                     if (pEnvelope != null)
                     {
                         m_focusScreenDisplay.DisplayTransformation.VisibleBounds = pEnvelope;
-                        m_focusScreenDisplay.Invalidate(null, true, (short) esriScreenCache.esriAllScreenCaches);
+                        m_focusScreenDisplay.Invalidate(null, true, (short)esriScreenCache.esriAllScreenCaches);
 
                     }
                     m_cTool = CustomTool.None;
@@ -276,7 +278,7 @@ namespace pixChange
         private void axMapControl1_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
             IFeatureLayer pFeatureLayer;
-            IFeatureClass pFeatureClass ;
+            IFeatureClass pFeatureClass;
             //新建一个空间过滤器
             ISpatialFilter pSpatialFilter;
             IQueryFilter pFilter;
@@ -324,11 +326,11 @@ namespace pixChange
 
                     MessageBox.Show("所测距离为：" + check.ToString("#######.##") + "米");
                     m_cTool = CustomTool.None;
-                    break;             
+                    break;
 
-            
+
                 case CustomTool.RectSelect:
-                //    pFeatureLayer = (IFeatureLayer)m_mapControl.get_Layer(toolComboBox.SelectedIndex);
+                    //    pFeatureLayer = (IFeatureLayer)m_mapControl.get_Layer(toolComboBox.SelectedIndex);
                     pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
                     pFeatureClass = pFeatureLayer.FeatureClass;
                     IEnvelope pRect = new Envelope() as IEnvelope;
@@ -366,7 +368,7 @@ namespace pixChange
                     simpleLineSymbol = new SimpleLineSymbol();
                     simplePointSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
                     simplePointSymbol.Size = 5;
-                    simplePointSymbol.Color =ColorHelper.GetRGBColor(255, 0, 0);
+                    simplePointSymbol.Color = ColorHelper.GetRGBColor(255, 0, 0);
 
                     simpleLineSymbol.Width = 2;
                     simpleLineSymbol.Color = ColorHelper.GetRGBColor(255, 0, 99);
@@ -377,7 +379,7 @@ namespace pixChange
                     DataTable pDataTable = createDataTableByLayer(pFeatureLayer as ILayer);
                     while (pFeature != null)
                     {
-                         axMapControl1.Map.SelectFeature(pFeatureLayer,pFeature);  //高亮显示
+                        axMapControl1.Map.SelectFeature(pFeatureLayer, pFeature);  //高亮显示
                         IGeometry pShape;
                         pShape = pFeature.Shape;
                         ITable pTable = pFeature as ITable;
@@ -422,8 +424,8 @@ namespace pixChange
                         pFeature = pCursor.NextFeature();
                     }
                     m_cTool = CustomTool.None;
-               
-                    ProListView result=new ProListView();
+
+                    ProListView result = new ProListView();
                     result.showTable(pDataTable);
 
                     result.getLayerName(pFeatureLayer.Name);
@@ -431,7 +433,7 @@ namespace pixChange
                     //可以让选中的区域立即显示出来
                     MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     break;
-              
+
                 case CustomTool.Pan:
                     pPoint = new ESRI.ArcGIS.Geometry.Point();
                     pPoint.X = e.mapX;
@@ -441,7 +443,7 @@ namespace pixChange
                     m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
-          
+
 
             }
 
@@ -512,9 +514,9 @@ namespace pixChange
             // //将mapcontrol的tool设为nothing，不然会影响效果
             m_mapControl.CurrentTool = null;
             m_cTool = CustomTool.RectSelect;
-           
+
         }
-      
+
         //测距
         private void MearsureDistance(object sender, EventArgs e)
         {
@@ -532,19 +534,21 @@ namespace pixChange
             IFeatureLayer pFeatureLayer;
             pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
             IFeatureClass fa = pFeatureLayer.FeatureClass;
-            if(ToRasterControl.Rasterize(fa,@"..\..\Rources\xmlData\RainsCrate.tif","Rains",200))
+            if (ToRasterControl.Rasterize(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
             {
                 Console.WriteLine("转化成功！");
             }
             else
             {
-                  Console.WriteLine("转化失败！！");
+                Console.WriteLine("转化失败！！");
             }
         }
 
-     
+
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "基础数据";
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
         }
@@ -558,13 +562,16 @@ namespace pixChange
         {
             //添加雨量字段并赋值 测试
             //       addRains();  
-            ToRasterControl.RoadRaskCaulte(@"rastercalc", @"network_Buffer2.shp", @"..\..\Rources\RoadData");
-        
+            //ToRasterControl.RoadRaskCaulte(@"rastercalc", @"network_Buffer2.shp", @"..\..\Rources\RoadData");
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "公路风险评估数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
         }
-  
+
         public bool addRains()
         {
-            var  pFeatureLayer= ToRasterControl.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
+            var pFeatureLayer = ToRasterControl.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
             //添加雨量字段
             // 获取ITable对象
             //ITable pTable = pFeatureLayer as ITable;
@@ -588,7 +595,7 @@ namespace pixChange
             IDataset dataset = pFeatureLayer as IDataset;
             IWorkspace workspace = dataset.Workspace;
             IWorkspaceEdit wse = workspace as IWorkspaceEdit;
-        
+
             wse.StartEditing(false);
             wse.StartEditOperation();
             int proField = pFeatureLayer.FindField("RAINS");
@@ -598,17 +605,18 @@ namespace pixChange
             int i = 0;
             //录入雨量到矢量数据  这里是编码测试
             while (pFeature != null)
-            {                             
+            {
                 if (i < 10)//这里是测试，实际上是根据矢量文件里的字段这段公路是属于一个县
                 {
-                              pFeatureLayer.GetFeature(i).set_Value(proField, 25.3);
-                               pFeatureLayer.GetFeature(i).Store();
-                }else if (i>=10&&i<20)
+                    pFeatureLayer.GetFeature(i).set_Value(proField, 25.3);
+                    pFeatureLayer.GetFeature(i).Store();
+                }
+                else if (i >= 10 && i < 20)
                 {
                     pFeatureLayer.GetFeature(i).set_Value(proField, 10.2);
                     pFeatureLayer.GetFeature(i).Store();
                 }
-                else if (i>=20)
+                else if (i >= 20)
                 {
                     pFeatureLayer.GetFeature(i).set_Value(proField, 5);
                     pFeatureLayer.GetFeature(i).Store();
@@ -616,11 +624,125 @@ namespace pixChange
                 i++;
                 pFeature = pFeatureCursor.NextFeature();
             }
-           
+
             wse.StopEditOperation();
             wse.StopEditing(true);
             return true;
         }
-       
+
+        private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "地质灾害评估数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
+
+        private void barButtonItem7_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "地质灾害评估数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
+
+        private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
+        {
+            ILayer layer = null;
+            IBasicMap map = null;
+            object other = null;
+            object index = null;
+            bool IsUse = false;
+            esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
+            MainFrom.m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);//获取被点击的图层
+            if (layer != null)
+            {
+                IsUse = layer.Visible;
+            }
+            if (IsUse)
+            {
+                if (layer != null)
+                {
+                    layer.Visible = false;
+                }
+                if (layer is IGroupLayer)
+                {
+                    ICompositeLayer pGroupLayer = layer as ICompositeLayer;
+                    for (int i = 0; i < pGroupLayer.Count; i++)
+                    {
+                        ILayer pCompositeLayer;
+                        pCompositeLayer = pGroupLayer.get_Layer(i);
+                        pCompositeLayer.Visible = false;
+                    }
+                }
+                else
+                {
+                    IsCheck(layer);
+                }
+            }
+            else
+            {
+                if (layer != null)
+                {
+                    layer.Visible = true;
+                }
+                if (layer is IGroupLayer)
+                {
+                    ICompositeLayer pGroupLayer = layer as ICompositeLayer;
+                    for (int i = 0; i < pGroupLayer.Count; i++)
+                    {
+                        ILayer pCompositeLayer;
+                        pCompositeLayer = pGroupLayer.get_Layer(i);
+                        pCompositeLayer.Visible = true;
+                    }
+
+                }
+                else
+                {
+                    IsCheck(layer);
+                }
+            }
+            MainFrom.m_mapControl.Refresh();
+            MainFrom.m_pTocControl.Update();
+        }
+
+        private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
+        {
+            for (int count = 0; count < MainFrom.m_mapControl.LayerCount; count++)
+            {
+                bool IsEqual = false;
+                bool IsEmpty = false;
+                ILayer pGL = MainFrom.m_mapControl.get_Layer(count);
+                if (pGL is IGroupLayer)
+                {
+                    ICompositeLayer pGroupLayer = pGL as ICompositeLayer;
+                    for (int j = 0; j < pGroupLayer.Count; j++)
+                    {
+                        ILayer pCompositeLayer;
+                        pCompositeLayer = pGroupLayer.get_Layer(j);
+                        if (layer == pCompositeLayer)
+                        {
+                            IsEqual = true;
+                        }
+                        if (pCompositeLayer.Visible == true)
+                        {
+                            IsEmpty = true;
+                        }
+                    }
+                }
+                if (IsEqual)
+                {
+                    if (IsEmpty)
+                    {
+                        pGL.Visible = true;
+                    }
+                    else
+                    {
+                        pGL.Visible = false;
+                    }
+                }
+            }
+        }
+
     }
 }

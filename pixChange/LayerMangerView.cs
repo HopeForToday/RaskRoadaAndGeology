@@ -19,7 +19,8 @@ namespace pixChange
     {
         private List<string> LayerNameList;
         private List<string> LayerPathList;
-        private bool isLoad=true;//为了初始加载时不把底图清空
+        IFeatureLayer pFLayer;
+        private bool isLoad = true;//为了初始加载时不把底图清空
         public LayerMangerView()
         {
             InitializeComponent();
@@ -58,45 +59,106 @@ namespace pixChange
                 string ardess = file.Name.Substring(file.Name.LastIndexOf("."));
                 if (RasfileType.Contains(ardess))
                 { LayerNameList.Add(file.Name); }
-            } 
+            }
             //加载矢量底图
             DirectoryInfo Shasfolder = new DirectoryInfo(Common.shapPath);
             FileInfo[] fileInfo2 = Shasfolder.GetFiles();
             foreach (FileInfo file in fileInfo2)
-           {
-                if(file.Name.Substring(file.Name.LastIndexOf("."))==".shp")
+            {
+                if (file.Name.Substring(file.Name.LastIndexOf(".")) == ".shp")
                 {
                     LayerNameList.Add(file.Name);
                 }
-           }
+            }
         }
         //若果已经有图层,则相应的chexbox项应该被选中
         private void judeLayer()
         {
-            int count=MainFrom.m_mapControl.LayerCount;
+            int count = MainFrom.m_mapControl.LayerCount;
             if (count == 0) return;
-            for (int i = 0; i < count;i++ )
+            for (int i = 0; i < count; i++)
             {
-                //exCheckedListBox1.CheckedItems.Add(MainFrom.m_mapControl.get_Layer(i).Name);
-                for (int y = 0; y < exCheckedListBox1.Items.Count;y++ )
+                ILayer pGL = MainFrom.m_mapControl.get_Layer(i);
+                if (pGL is IGroupLayer)
                 {
-                    string layerName=exCheckedListBox1.Items[y].ToString();
-                    int index = layerName.LastIndexOf(".");
-                    if (layerName.Substring(index) == ".shp") layerName = layerName.Substring(0, index);
-                    if (layerName == MainFrom.m_mapControl.get_Layer(i).Name)
+                    ICompositeLayer pGroupLayer = pGL as ICompositeLayer;
+                    for (int j = 0; j < pGroupLayer.Count; j++)
                     {
-                        //后台选中 改变checkState
-                        exCheckedListBox1.SetItemChecked(y,true);
+                        ILayer pCompositeLayer;
+                        pCompositeLayer = pGroupLayer.get_Layer(j);
+                        for (int y = 0; y < exCheckedListBox1.Items.Count; y++)
+                        {
+                            string layerName = exCheckedListBox1.Items[y].ToString();
+                            int index = layerName.LastIndexOf(".");
+                            if (layerName.Substring(index) == ".shp")
+                                layerName = layerName.Substring(0, index);
+                            if (layerName == pCompositeLayer.Name)
+                            {
+                                //后台选中 改变checkState
+                                exCheckedListBox1.SetItemChecked(y, true);
+                            }
+                        }
                     }
                 }
+                else
+                {
+                    //exCheckedListBox1.CheckedItems.Add(MainFrom.m_mapControl.get_Layer(i).Name);
+                    for (int y = 0; y < exCheckedListBox1.Items.Count; y++)
+                    {
+                        string layerName = exCheckedListBox1.Items[y].ToString();
+                        int index = layerName.LastIndexOf(".");
+                        if (layerName.Substring(index) == ".shp") layerName = layerName.Substring(0, index);
+                        if (layerName == pGL.Name)
+                        {
+                            //后台选中 改变checkState
+                            exCheckedListBox1.SetItemChecked(y, true);
+                        }
+                    }
                     //exCheckedListBox1.SetItemChecked();
+                }
+
             }
-          
+
         }
 
         private void ok_Click(object sender, EventArgs e)
-        {      
-            this.Close();                            
+        {
+            int count = MainFrom.m_mapControl.LayerCount;
+            if (count == 0)
+            {
+                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+                MainFrom.m_pTocControl.Update();
+            }
+            else
+            {
+                Boolean IsEqual = false;
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                    ILayer pGL = MainFrom.m_mapControl.get_Layer(i);
+                    ILayer insertMap = MainFrom.groupLayer;
+                    ICompositeLayer pGroupLayer = insertMap as ICompositeLayer;
+                    if (pGL.Name == MainFrom.groupLayer.Name)
+                    {
+                        IsEqual = true;
+                        if (pGL is IGroupLayer)
+                        {
+                            for (int j = 0; j < pGroupLayer.Count; j++)
+                            {
+                                ILayer pCompositeLayer;
+                                pCompositeLayer = pGroupLayer.get_Layer(j);
+                                pLayers.InsertLayerInGroup((IGroupLayer)pGL, pCompositeLayer, false, 0);
+                            }
+                        }
+                    }
+                }
+                if (!IsEqual)
+                {
+                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+                    MainFrom.m_pTocControl.Update();
+                }
+            }
+            this.Close();
         }
 
         private void exCheckedListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -122,17 +184,13 @@ namespace pixChange
                     pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
                     IFeatureClass pFClass;
                     pFClass = pFWS.OpenFeatureClass(ShpName);
-
-                    IFeatureLayer pFLayer;
                     pFLayer = new FeatureLayer();
                     pFLayer.FeatureClass = pFClass;
                     pFLayer.Name = pFClass.AliasName;
-
-                    MainFrom.m_mapControl.AddLayer(pFLayer, 0);
-                 //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     //选择数据源
+                    MainFrom.groupLayer.Add((ILayer)pFLayer);
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
-                    MainFrom.m_pTocControl.Update();
                 }
                 else
                 {
@@ -141,17 +199,18 @@ namespace pixChange
                     IRasterLayer rasterLayer = new RasterLayer();
 
                     rasterLayer.CreateFromFilePath(fullPath);
-                  // IRaster ir = (IRaster) rasterLayer;
-                    MainFrom.m_mapControl.AddLayer(rasterLayer, 0);
-              //      MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
-                    MainFrom.m_pTocControl.Update();
+                    // IRaster ir = (IRaster) rasterLayer;
+                    MainFrom.groupLayer.Add(rasterLayer);
+                    //MainFrom.m_mapControl.AddLayer(rasterLayer, 0);
+                    //      MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    //MainFrom.m_pTocControl.Update();
                 }
             }
             else
             {
                 string layerName = selectLayer.ToString();
                 //若果已经没有选中的直接将图层清零
-                if (exCheckedListBox1.CheckedItems.Count == 0 )
+                if (exCheckedListBox1.CheckedItems.Count == 0)
                 {
                     if (layerName.Substring(layerName.LastIndexOf(".")) == ".shp")
                     {
@@ -175,7 +234,7 @@ namespace pixChange
                 try
                 {
                     //这里需要注意的是矢量文件在图层中没有后缀名 而栅格文件在图层中有后缀名 如.tif
-                    MainFrom.m_mapControl.DeleteLayer(LayerMange.returnIndexByLayerName(MainFrom.m_mapControl, layerName));
+                    MainFrom.m_mapControl.Map.DeleteLayer(LayerMange.returnIndexByLayerName(MainFrom.m_mapControl, layerName));
                     //  MainFrom.m_mapControl.de
                     MainFrom.m_pTocControl.Update();
                 }
@@ -184,12 +243,12 @@ namespace pixChange
 
                 }
 
-            }         
+            }
         }
 
         private void LayerMangerView_Load(object sender, EventArgs e)
         {
-         //   isLoad = false;
+            //   isLoad = false;
             exCheckedListBox1.Items.Clear();
             LayerNameList = new List<string>();
             getallLayers();
@@ -203,12 +262,5 @@ namespace pixChange
             judeLayer();
             exCheckedListBox1.SelectedIndexChanged += exCheckedListBox1_SelectedIndexChanged_1;
         }
-
-        private void exCheckedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-       
     }
 }

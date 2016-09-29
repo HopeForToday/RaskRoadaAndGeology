@@ -56,20 +56,20 @@
     <Reference Include="CustomControls">
       <HintPath>..\CustomControls\bin\Debug\CustomControls.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.BonusSkins.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Data.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Utils.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraBars.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraEditors.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraGrid.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraLayout.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraNavBar.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraPrinting.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraScheduler.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraScheduler.v15.2.Core, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraTreeList.v15.2, Version=15.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.BonusSkins.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraBars.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraNavBar.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="ESRI.ArcGIS.AnalysisTools, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
     <Reference Include="ESRI.ArcGIS.AxControls, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
     <Reference Include="ESRI.ArcGIS.Carto, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
@@ -246,18 +246,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Rources\RoadData\network_Buffer2.cpg" />
-    <None Include="Rources\RoadData\network_Buffer2.dbf" />
-    <None Include="Rources\RoadData\network_Buffer2.sbn" />
-    <None Include="Rources\RoadData\network_Buffer2.sbx" />
-    <None Include="Rources\RoadData\network_Buffer2.shp" />
-    <None Include="Rources\RoadData\network_Buffer2.shx" />
-    <None Include="Rources\ShapeData\Export_Output.dbf" />
-    <None Include="Rources\ShapeData\Export_Output.prj" />
-    <None Include="Rources\ShapeData\Export_Output.sbn" />
-    <None Include="Rources\ShapeData\Export_Output.sbx" />
-    <None Include="Rources\ShapeData\Export_Output.shp" />
-    <None Include="Rources\ShapeData\Export_Output.shx" />
     <None Include="Rources\LayersData\中国县界.dbf" />
     <None Include="Rources\LayersData\中国县界.prj" />
     <None Include="Rources\LayersData\中国县界.sbn" />
@@ -290,6 +278,35 @@
     <None Include="Rources\LayersData\省级行政区.sbx" />
     <None Include="Rources\LayersData\省级行政区.shp" />
     <None Include="Rources\LayersData\省级行政区.shx" />
+    <None Include="Rources\RoadData\info\arc.dir" />
+    <None Include="Rources\RoadData\info\arc0000.dat" />
+    <None Include="Rources\RoadData\info\arc0000.nit" />
+    <None Include="Rources\RoadData\info\arc0001.dat" />
+    <None Include="Rources\RoadData\info\arc0001.nit" />
+    <None Include="Rources\RoadData\network_Buffer2.cpg" />
+    <None Include="Rources\RoadData\network_Buffer2.dbf" />
+    <None Include="Rources\RoadData\network_Buffer2.sbn" />
+    <None Include="Rources\RoadData\network_Buffer2.sbx" />
+    <None Include="Rources\RoadData\network_Buffer2.shp" />
+    <None Include="Rources\RoadData\network_Buffer2.shx" />
+    <None Include="Rources\RoadData\rastercalc\dblbnd.adf" />
+    <None Include="Rources\RoadData\rastercalc\hdr.adf" />
+    <None Include="Rources\RoadData\rastercalc\sta.adf" />
+    <None Include="Rources\RoadData\rastercalc\w001001.adf" />
+    <None Include="Rources\RoadData\rastercalc\w001001x.adf" />
+    <None Include="Rources\RoadData\roadGrid.ovr" />
+    <None Include="Rources\RoadData\roadgrid\dblbnd.adf" />
+    <None Include="Rources\RoadData\roadgrid\hdr.adf" />
+    <None Include="Rources\RoadData\roadgrid\sta.adf" />
+    <None Include="Rources\RoadData\roadgrid\w001001.adf" />
+    <None Include="Rources\RoadData\roadgrid\w001001x.adf" />
+    <None Include="Rources\RoadData\roadPre.img" />
+    <None Include="Rources\ShapeData\Export_Output.dbf" />
+    <None Include="Rources\ShapeData\Export_Output.prj" />
+    <None Include="Rources\ShapeData\Export_Output.sbn" />
+    <None Include="Rources\ShapeData\Export_Output.sbx" />
+    <None Include="Rources\ShapeData\Export_Output.shp" />
+    <None Include="Rources\ShapeData\Export_Output.shx" />
     <None Include="Rources\ShapeData\中国县界.dbf" />
     <None Include="Rources\ShapeData\中国县界.prj" />
     <None Include="Rources\ShapeData\中国县界.sbn" />
@@ -320,6 +337,18 @@
     <None Include="Rources\ShapeData\省级行政区.sbx" />
     <None Include="Rources\ShapeData\省级行政区.shp" />
     <None Include="Rources\ShapeData\省级行政区.shx" />
+    <None Include="Rources\xmlData\RainsCrate.tfw" />
+    <None Include="Rources\xmlData\RainsCrate.tif.ovr" />
+    <None Include="Rources\xmlData\RainsCrate.tif.vat.cpg" />
+    <None Include="Rources\xmlData\RainsCrate.tif.vat.dbf" />
+    <None Include="Rources\xmlData\ttt.tfw" />
+    <None Include="Rources\xmlData\ttt2.tfw" />
+    <None Include="Rources\xmlData\ttt3.tfw" />
+    <None Include="Rources\xmlData\ttt3.tif.ovr" />
+    <None Include="Rources\xmlData\ttt4.tfw" />
+    <None Include="Rources\xmlData\ttt4.tif.ovr" />
+    <None Include="Rources\xmlData\ttt4.tif.vat.cpg" />
+    <None Include="Rources\xmlData\ttt4.tif.vat.dbf" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -339,15 +368,31 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Rources\Images\图层.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\NQ8]GNP3Q%29_R3I_[0}4C53V.png" />
+    <Content Include="Resources\NQ8]GNP3Q%29_R3I_[0}4C53V1.png" />
+    <Content Include="Resources\NQ8]GNP3Q%29_R3I_[0}4C53V2.png" />
+    <Content Include="Rources\Images\图层.png" />
     <Content Include="Rources\LayersData\大理市.tif" />
     <Content Include="Rources\LayersData\大理市.tif.aux.xml" />
     <Content Include="Rources\LayersData\大理市.txt" />
     <Content Include="Rources\RasterData\大理市.tif" />
     <Content Include="Rources\RoadData\network_Buffer2.shp.xml" />
+    <Content Include="Rources\RoadData\rastercalc.aux.xml" />
+    <Content Include="Rources\RoadData\rastercalc\metadata.xml" />
+    <Content Include="Rources\RoadData\roadGrid.aux.xml" />
+    <Content Include="Rources\RoadData\roadgrid\metadata.xml" />
     <Content Include="Rources\xmlData\AreaXML.xml" />
+    <Content Include="Rources\xmlData\RainsCrate.tif" />
+    <Content Include="Rources\xmlData\RainsCrate.tif.aux.xml" />
+    <Content Include="Rources\xmlData\RainsCrate.tif.xml" />
+    <Content Include="Rources\xmlData\ttt.tif" />
+    <Content Include="Rources\xmlData\ttt2.tif" />
+    <Content Include="Rources\xmlData\ttt3.tif" />
+    <Content Include="Rources\xmlData\ttt3.tif.aux.xml" />
+    <Content Include="Rources\xmlData\ttt3.tif.xml" />
+    <Content Include="Rources\xmlData\ttt4.tif" />
+    <Content Include="Rources\xmlData\ttt4.tif.aux.xml" />
+    <Content Include="Rources\xmlData\ttt4.tif.xml" />
     <Content Include="Rources\雨量信息.mdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
