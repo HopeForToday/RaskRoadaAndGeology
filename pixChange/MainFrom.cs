@@ -22,7 +22,7 @@ namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-
+        //提交测试
         //公共变量用于表示整个系统都能访问的图层控件和环境变量
         //  public static SpatialAnalysisOption SAoption;
         public static IMapControl3 m_mapControl = null;
