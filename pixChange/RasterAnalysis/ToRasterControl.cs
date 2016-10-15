@@ -128,7 +128,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            rasterLayer2.CreateFromFilePath(saveWorkspace + "\\" + "roadPre");
           
            MainFrom.m_mapControl.AddLayer(rasterLayer2, 0);
-           //      MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+           //MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
            MainFrom.m_pTocControl.Update();
            //将生成的风险栅格重分类
            //<0.2	一级：可能性小
@@ -149,7 +149,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            pNumRemap.MapRange(0.8,1000,5);
            //pNumRemap.MapRangeToNoData(-1000,0);
            //pNumRemap.MapRangeToNoData(1000, 20000);
-         IRemap pRemap = pNumRemap as IRemap; 
+           IRemap pRemap = pNumRemap as IRemap; 
         // 重分类
         // geoDataset为上一步得到的栅格
         //     IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);//还没有测试成功 
@@ -172,7 +172,69 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            }                        
            return true;
        }
+       /// <summary>
+       /// 生成风险等级栅格
+       /// </summary>
+       /// <param name="roadEvalName"></param>
+       /// <param name="rains"></param>
+       /// <param name="saveWorkspace"></param>
+       /// <returns></returns>
+       public static bool RoadRaskCaulte(string roadEvalName,int rains,string saveWorkspace)
+       {
+           IWorkspaceFactory rWorkspaceFactory = new RasterWorkspaceFactory();
+           IWorkspace SWorkspace = rWorkspaceFactory.OpenFromFile(saveWorkspace, 0);
+           IRasterWorkspace rasterWorkspace = SWorkspace as IRasterWorkspace;
+           //栅格计算器 计算风险级数  先不要签你的三方协议 然后存储  表达式必须隔开
+           IMapAlgebraOp mapAlgebra = new RasterMapAlgebraOpClass();
+           IRasterDataset roadEvalRaster = OpenRasterDataSet(rasterWorkspace, roadEvalName);
+     
+           IGeoDataset geo1 = roadEvalRaster as IGeoDataset;
+        
+           mapAlgebra.BindRaster(geo1, "EvalRaster");    
+           IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * 10 / 25");//然后存储  表达式必须间隔开
        
+          //   ISaveAs saveAs = raskDataset as ISaveAs;
+          //   saveAs.SaveAs("roadPre", SWorkspace, "");//
+          
+          //   IRasterLayer rasterLayer2 = new RasterLayer();
+          //    rasterLayer2.CreateFromFilePath(saveWorkspace + "\\" + "roadPre");
+          //  MainFrom.m_mapControl.AddLayer(rasterLayer2, 0);
+          // MainFrom.groupLayer.Add(rasterLayer2);
+          //MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+          //    MainFrom.m_pTocControl.Update();
+           //将生成的风险栅格重分类
+           //<0.2	一级：可能性小
+           //0.2-0.4	二级：可
+           //能性较小
+           //0.4-0.6	三级：可能性较大
+           //0.6-0.8	四级：可能性大
+           //>0.8	五级：可能性很大
+           // 输入：raskDataset
+
+         //   输出：geoDataset_result
+           IRasterBandCollection pRsBandCol = raskDataset as IRasterBandCollection;
+           IRasterBand pRasterBand = pRsBandCol.Item(0);
+           pRasterBand.ComputeStatsAndHist();
+           IRasterStatistics pRasterStatistic = pRasterBand.Statistics;
+           double dMaxValue = pRasterStatistic.Maximum;
+           double dMinValue = pRasterStatistic.Minimum;
+           IReclassOp pReclassOp = new RasterReclassOpClass();
+           INumberRemap pNumRemap = new NumberRemapClass();
+           //pNumRemap.MapRange(dMinValue, 0.2, 1);
+           //pNumRemap.MapRange(0.2, 0.4, 2);
+           //pNumRemap.MapRange(0.4, 0.6, 3);
+           //pNumRemap.MapRange(0.6, dMaxValue, 4);
+           //pNumRemap.MapRangeToNoData(-1000, 0);
+           //pNumRemap.MapRange(0.8, 1000, 5);
+           pNumRemap.MapRange(dMinValue,2, 0);
+           pNumRemap.MapRange(2, dMaxValue, 1);
+           IRemap pRemap = pNumRemap as IRemap; 
+           IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
+        //   IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
+           return true;
+       }
+     
+
        //打开栅格数据集
        public static IRasterDataset OpenRasterDataSet(IRasterWorkspace rasterWorkspace, string name)
        {
@@ -183,8 +245,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        }
        //打开要素文件
        public static IFeatureClass OpenFeatureClass(string name)
-       {     
-         
+       {            
            //利用"\\"将文件路径分成两部分 
            int Position = name.LastIndexOf("\\");
            //文件目录

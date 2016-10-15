@@ -59,35 +59,5 @@ namespace RoadRaskEvaltionSystem.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap NQ8_GNP3Q__R3I__0_4C53V {
-            get {
-                object obj = ResourceManager.GetObject("NQ8]GNP3Q)_R3I_[0}4C53V", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap NQ8_GNP3Q__R3I__0_4C53V1 {
-            get {
-                object obj = ResourceManager.GetObject("NQ8]GNP3Q)_R3I_[0}4C53V1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap NQ8_GNP3Q__R3I__0_4C53V2 {
-            get {
-                object obj = ResourceManager.GetObject("NQ8]GNP3Q)_R3I_[0}4C53V2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

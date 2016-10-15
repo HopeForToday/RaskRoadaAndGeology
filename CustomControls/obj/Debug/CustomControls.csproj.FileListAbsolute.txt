@@ -27,3 +27,8 @@ D:\project\CustomControls\bin\Debug\CustomControls.pdb
 D:\project\CustomControls\obj\Debug\CustomControls.csprojResolveAssemblyReference.cache
 D:\project\CustomControls\obj\Debug\CustomControls.dll
 D:\project\CustomControls\obj\Debug\CustomControls.pdb
+D:\project\RaskRoadaAndGeology\CustomControls\bin\Debug\CustomControls.dll
+D:\project\RaskRoadaAndGeology\CustomControls\bin\Debug\CustomControls.pdb
+D:\project\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.csprojResolveAssemblyReference.cache
+D:\project\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.dll
+D:\project\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.pdb

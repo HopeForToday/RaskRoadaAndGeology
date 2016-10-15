@@ -106,7 +106,7 @@
             this.splitContainer1.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
             this.splitContainer1.Panel2.Controls.Add(this.axMapControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1354, 560);
+            this.splitContainer1.Size = new System.Drawing.Size(920, 560);
             this.splitContainer1.SplitterDistance = 247;
             this.splitContainer1.SplitterWidth = 9;
             this.splitContainer1.TabIndex = 1;
@@ -138,7 +138,7 @@
             this.toolStripSeparator6});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1094, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(660, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -235,7 +235,7 @@
             this.axMapControl1.Location = new System.Drawing.Point(8, 28);
             this.axMapControl1.Name = "axMapControl1";
             this.axMapControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl1.OcxState")));
-            this.axMapControl1.Size = new System.Drawing.Size(1076, 524);
+            this.axMapControl1.Size = new System.Drawing.Size(642, 524);
             this.axMapControl1.TabIndex = 0;
             this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
             this.axMapControl1.OnKeyUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnKeyUpEventHandler(this.axMapControl1_OnKeyUp);
@@ -273,7 +273,7 @@
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(1354, 148);
+            this.ribbonControl1.Size = new System.Drawing.Size(920, 148);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // barWorkspaceMenuItem1
@@ -462,13 +462,13 @@
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 708);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1354, 25);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(920, 25);
             // 
             // MainFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1354, 733);
+            this.ClientSize = new System.Drawing.Size(920, 733);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
