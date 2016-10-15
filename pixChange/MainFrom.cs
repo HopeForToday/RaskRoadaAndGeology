@@ -639,72 +639,7 @@ namespace pixChange
             lm.Show();
         }
 
-        private void barButtonItem7_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            MainFrom.groupLayer = new GroupLayerClass();
-            MainFrom.groupLayer.Name = "地质灾害评估数据";
-            LayerMangerView lm = new LayerMangerView();
-            lm.Show();
-        }
-        private void axTOCControl1_OnMouseDown_1(object sender, ITOCControlEvents_OnMouseDownEvent e)
-        {
-            ILayer layer = null;
-            IBasicMap map = null;
-            object other = null;
-            object index = null;
-            bool IsUse = false;
-            esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
-            MainFrom.m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);//获取被点击的图层
-            if (layer != null)
-            {
-                IsUse = layer.Visible;
-            }
-            if (IsUse)
-            {
-                if (layer != null)
-                {
-                    layer.Visible = false;
-                }
-                if (layer is IGroupLayer)
-                {
-                    ICompositeLayer pGroupLayer = layer as ICompositeLayer;
-                    for (int i = 0; i < pGroupLayer.Count; i++)
-                    {
-                        ILayer pCompositeLayer;
-                        pCompositeLayer = pGroupLayer.get_Layer(i);
-                        pCompositeLayer.Visible = false;
-                    }
-                }
-                else
-                {
-                    IsCheck(layer);
-                }
-            }
-            else
-            {
-                if (layer != null)
-                {
-                    layer.Visible = true;
-                }
-                if (layer is IGroupLayer)
-                {
-                    ICompositeLayer pGroupLayer = layer as ICompositeLayer;
-                    for (int i = 0; i < pGroupLayer.Count; i++)
-                    {
-                        ILayer pCompositeLayer;
-                        pCompositeLayer = pGroupLayer.get_Layer(i);
-                        pCompositeLayer.Visible = true;
-                    }
 
-                }
-                else
-                {
-                    IsCheck(layer);
-                }
-            }
-            MainFrom.m_mapControl.Refresh();
-            MainFrom.m_pTocControl.Update();
-        }
         private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
         {
             for (int count = 0; count < MainFrom.m_mapControl.LayerCount; count++)
@@ -743,5 +678,73 @@ namespace pixChange
             }
         }
 
+        private void barButtonItem6_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "地质灾害评估数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
+
+    //    private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
+    //    {
+    //        ILayer layer = null;
+    //        IBasicMap map = null;
+    //        object other = null;
+    //        object index = null;
+    //        bool IsUse = false;
+    //        esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
+    //        m_pTocControl.Update();
+    //        MainFrom.m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);//获取被点击的图层
+    //        //if (layer != null)
+    //        //{
+    //        //    IsUse = layer.Visible;
+    //        //} b
+    //        //if (IsUse)
+    //        //{
+    //        //    if (layer != null)
+    //        //    {
+    //        //        layer.Visible = false;
+    //        //    }
+    //        //    if (layer is IGroupLayer)
+    //        //    {
+    //        //        ICompositeLayer pGroupLayer = layer as ICompositeLayer;
+    //        //        for (int i = 0; i < pGroupLayer.Count; i++)
+    //        //        {
+    //        //            ILayer pCompositeLayer;
+    //        //            pCompositeLayer = pGroupLayer.get_Layer(i);
+    //        //            pCompositeLayer.Visible = false;
+    //        //        }
+    //        //    }
+    //        //    else
+    //        //    {
+    //        //        IsCheck(layer);
+    //        //    }
+    //        //}
+    //        //else
+    //        //{
+    //        //    if (layer != null)
+    //        //    {
+    //        //        layer.Visible = true;
+    //        //    }
+    //        //    if (layer is IGroupLayer)
+    //        //    {
+    //        //        ICompositeLayer pGroupLayer = layer as ICompositeLayer;
+    //        //        for (int i = 0; i < pGroupLayer.Count; i++)
+    //        //        {
+    //        //            ILayer pCompositeLayer;
+    //        //            pCompositeLayer = pGroupLayer.get_Layer(i);
+    //        //            pCompositeLayer.Visible = true;
+    //        //        }
+
+    //        //    }
+    //        //    else
+    //        //    {
+    //        //        IsCheck(layer);
+    //        //    }
+    //        //}
+    //        MainFrom.m_mapControl.Refresh();
+    //        MainFrom.m_pTocControl.Update();
+    //    }
     }
 }
