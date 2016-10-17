@@ -17,6 +17,9 @@ namespace pixChange
 {
     public partial class LayerMangerView : Form
     {
+        //定义栅格、矢量路径
+        string rasterPath = null;
+        string shapePath = null;
         private List<string> LayerNameList;
         private List<string> LayerPathList;
         IFeatureLayer pFLayer;
@@ -44,8 +47,29 @@ namespace pixChange
         //将图层名加载到exCheckedListBox1中
         private void getallLayers()
         {
+            switch (MainFrom.WhichChecked)
+            {
+                case 1:
+                    rasterPath = Common.BaserasterPath;
+                    shapePath = Common.BaseshapePath;
+                    break;
+                case 2:
+                    rasterPath = Common.GeoDisasterrasterPath;
+                    shapePath = Common.GeoDisastershapePath;
+                    break;
+                case 3:
+                    rasterPath = Common.RoadrasterPath;
+                    shapePath = Common.RoadshapePath;
+                    break;
+                case 4:
+                    rasterPath = Common.EcologyrasterPath;
+                    shapePath = Common.EcologyshapePath;
+                    break;
+                default:
+                    break;
+            }
             //加载栅格底图
-            DirectoryInfo Rasfolder = new DirectoryInfo(Common.rasterPath);
+            DirectoryInfo Rasfolder = new DirectoryInfo(rasterPath);
             FileInfo[] fileInfos = Rasfolder.GetFiles();
             List<string> RasfileType = new List<string>();
             RasfileType.Add(".jpg");
@@ -61,7 +85,7 @@ namespace pixChange
                 { LayerNameList.Add(file.Name); }
             }
             //加载矢量底图
-            DirectoryInfo Shasfolder = new DirectoryInfo(Common.shapPath);
+            DirectoryInfo Shasfolder = new DirectoryInfo(shapePath);
             FileInfo[] fileInfo2 = Shasfolder.GetFiles();
             foreach (FileInfo file in fileInfo2)
             {
@@ -123,51 +147,12 @@ namespace pixChange
 
         private void ok_Click(object sender, EventArgs e)
         {
-            ILayer Layers = MainFrom.groupLayer;
-            ICompositeLayer GroupLayers = Layers as ICompositeLayer;
-            if (GroupLayers.Count != 0)
-            {
-                int count = MainFrom.m_mapControl.LayerCount;
-                if (count == 0)
-                {
-                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-                    MainFrom.m_pTocControl.Update();
-                }
-                else
-                {
-                    Boolean IsEqual = false;
-                    for (int i = count - 1; i >= 0; i--)
-                    {
-                        IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
-                        ILayer pGL = MainFrom.m_mapControl.get_Layer(i);
-                        ILayer insertMap = MainFrom.groupLayer;
-                        ICompositeLayer pGroupLayer = insertMap as ICompositeLayer;
-                        if (pGL.Name == MainFrom.groupLayer.Name)
-                        {
-                            IsEqual = true;
-                            if (pGL is IGroupLayer)
-                            {
-                                for (int j = 0; j < pGroupLayer.Count; j++)
-                                {
-                                    ILayer pCompositeLayer;
-                                    pCompositeLayer = pGroupLayer.get_Layer(j);
-                                    pLayers.InsertLayerInGroup((IGroupLayer)pGL, pCompositeLayer, false, 0);
-                                }
-                            }
-                        }
-                    }
-                    if (!IsEqual)
-                    {
-                        MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-                        MainFrom.m_pTocControl.Update();
-                    }
-                }
-            }
             this.Close();
         }
 
         private void exCheckedListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            Boolean IsEqual = false;//判断是否已经存在此图层
             int i = exCheckedListBox1.SelectedIndex;
             var selectLayer = exCheckedListBox1.SelectedItem;
             //这里还可以用循环的方法 this.myCheckedlistBox.GetItemChecked(i)
@@ -176,7 +161,7 @@ namespace pixChange
                 string fullPath = selectLayer.ToString();
                 if (fullPath.Substring(fullPath.LastIndexOf(".")) == ".shp")
                 {
-                    fullPath = Common.shapPath + fullPath;//这里发现+=和普通写法还是有区别的
+                    fullPath = shapePath + fullPath;//这里发现+=和普通写法还是有区别的
                     //利用"\\"将文件路径分成两部分 
                     int Position = fullPath.LastIndexOf("\\");
                     //文件目录
@@ -193,54 +178,37 @@ namespace pixChange
                     pFLayer.FeatureClass = pFClass;
                     pFLayer.Name = pFClass.AliasName;
                     //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    IsEqual = InsertShapeLayer(IsEqual);
                     //选择数据源
-                    MainFrom.groupLayer.Add((ILayer)pFLayer);
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
+                    MainFrom.m_pTocControl.Update();
                 }
                 else
                 {
-                    fullPath = Common.rasterPath + fullPath;
+                    fullPath = rasterPath + fullPath;
                     //这里将RasterLayerClass改为RasterLayer  即可以嵌入互操作类型  下同
                     IRasterLayer rasterLayer = new RasterLayer();
-
                     rasterLayer.CreateFromFilePath(fullPath);
                     // IRaster ir = (IRaster) rasterLayer;
-                    MainFrom.groupLayer.Add(rasterLayer);
-                    //MainFrom.m_mapControl.AddLayer(rasterLayer, 0);
-                    //      MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
-                    //MainFrom.m_pTocControl.Update();
+                    IsEqual = InsertLayer(IsEqual, rasterLayer);
+                    MainFrom.m_pTocControl.Update();
                 }
             }
             else
             {
                 string layerName = selectLayer.ToString();
-                //若果已经没有选中的直接将图层清零
-                if (exCheckedListBox1.CheckedItems.Count == 0)
-                {
-                    if (layerName.Substring(layerName.LastIndexOf(".")) == ".shp")
-                    {
-                        layerName = layerName.Substring(0, layerName.LastIndexOf("."));
-                        //选择数据源
-                        MainFrom.toolComboBox.Items.Remove(layerName);
-
-                    }
-                    MainFrom.m_mapControl.ClearLayers();
-                    MainFrom.m_pTocControl.Update();
-                    return;
-                }
                 isLoad = true;
                 if (layerName.Substring(layerName.LastIndexOf(".")) == ".shp")
                 {
                     //选择数据源
                     layerName = layerName.Substring(0, layerName.LastIndexOf("."));
                     MainFrom.toolComboBox.Items.Remove(layerName);
-
                 }
                 try
                 {
                     //这里需要注意的是矢量文件在图层中没有后缀名 而栅格文件在图层中有后缀名 如.tif
                     MainFrom.m_mapControl.Map.DeleteLayer(LayerMange.returnIndexByLayerName(MainFrom.m_mapControl, layerName));
-                    //  MainFrom.m_mapControl.de
+                    MainFrom.m_mapControl.Refresh();
                     MainFrom.m_pTocControl.Update();
                 }
                 catch (Exception ex)
@@ -250,7 +218,70 @@ namespace pixChange
 
             }
         }
+        private bool InsertShapeLayer(Boolean IsEqual)//插入矢量图
+        {
+            int count = MainFrom.m_mapControl.LayerCount;
+            if (count == 0)
+            {
+                MainFrom.groupLayer.Add((ILayer)pFLayer);
+                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+            }
+            else
+            {
+                for (int m = count - 1; m >= 0; m--)
+                {
+                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                    ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
+                    if (pGL.Name == MainFrom.groupLayer.Name)
+                    {
+                        IsEqual = true;
+                        if (pGL is IGroupLayer)
+                        {
+                            pLayers.InsertLayerInGroup((IGroupLayer)pGL, (ILayer)pFLayer, false, 0);
+                        }
+                    }
+                }
+                if (!IsEqual)
+                {
+                    MainFrom.groupLayer.Add((ILayer)pFLayer);
+                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
 
+                }
+            }
+            return IsEqual;
+        }
+        private static bool InsertLayer(Boolean IsEqual, IRasterLayer rasterLayer)//插入栅格图
+        {
+            int count = MainFrom.m_mapControl.LayerCount;
+            if (count == 0)
+            {
+                MainFrom.groupLayer.Add(rasterLayer);
+                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+            }
+            else
+            {
+                for (int m = count - 1; m >= 0; m--)
+                {
+                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                    ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
+                    if (pGL.Name == MainFrom.groupLayer.Name)
+                    {
+                        IsEqual = true;
+                        if (pGL is IGroupLayer)
+                        {
+                            pLayers.InsertLayerInGroup((IGroupLayer)pGL, rasterLayer, false, 0);
+                        }
+                    }
+                }
+                if (!IsEqual)
+                {
+                    MainFrom.groupLayer.Add(rasterLayer);
+                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+
+                }
+            }
+            return IsEqual;
+        }
         private void LayerMangerView_Load(object sender, EventArgs e)
         {
             //   isLoad = false;

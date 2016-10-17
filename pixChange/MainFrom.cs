@@ -31,7 +31,7 @@ namespace pixChange
         public static IGroupLayer groupLayer = null;//数据分组
         public static string groupLayerName = null;
         String m_mapDocumentName = "";
-
+        public static int WhichChecked = 0;//记录哪一个模块被点击 1:基础数据 2:地质数据 3:公路数据 4:生态数据
         IToolbarMenu m_pMenuLayer;
         //用于判断当前鼠标点击的菜单命令,以备在地图控件中判断操作
         static public CustomTool m_cTool;
@@ -547,6 +547,7 @@ namespace pixChange
 
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            MainFrom.WhichChecked = 1;
             MainFrom.groupLayer = new GroupLayerClass();
             MainFrom.groupLayer.Name = "基础数据";
             LayerMangerView lm = new LayerMangerView();

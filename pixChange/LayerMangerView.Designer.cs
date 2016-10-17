@@ -81,7 +81,6 @@
             this.exCheckedListBox1.Size = new System.Drawing.Size(322, 212);
             this.exCheckedListBox1.TabIndex = 6;
             this.exCheckedListBox1.Value = 0;
-            this.exCheckedListBox1.SelectedIndexChanged += new System.EventHandler(this.exCheckedListBox1_SelectedIndexChanged_1);
             // 
             // LayerMangerView
             // 
