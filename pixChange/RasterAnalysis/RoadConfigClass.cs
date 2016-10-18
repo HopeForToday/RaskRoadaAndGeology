@@ -40,6 +40,10 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
             {
                 RoadRange range = roadRanges[keys[i]];
                 builder.Append(range.MinValue.ToString()+','+range.MaxValue);
+                if(i!=(keys.Length-1))
+                {
+                    builder.Append(',');
+                }
             }
             ConfigHelper.UpdateAppConfig("RoadRiskLevel", builder.ToString());
         }
