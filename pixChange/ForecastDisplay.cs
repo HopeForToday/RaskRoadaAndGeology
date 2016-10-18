@@ -17,7 +17,8 @@ namespace RoadRaskEvaltionSystem
 {
     public partial class ForecastDisplay : Form
     {
-        string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=C:\\Users\\chen g l\\Desktop\\GitProject\\RaskRoadaAndGeology3\\pixChange\\Rources\\雨量信息.mdb";
+        //string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=C:\\Users\\chen g l\\Desktop\\GitProject\\RaskRoadaAndGeology3\\pixChange\\Rources\\雨量信息.mdb";
+        string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=" + Application.StartupPath + "\\Rources\\雨量信息.mdb";
         string ChartSqlStr, GridSqlStr, WeekSqlStr;
         Series newRains, newTemperature, newWindspeed;
         Series oldRain1h, oldTemperature, oldHumidity, oldWindspeed;
