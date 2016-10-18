@@ -14,6 +14,7 @@ using ESRI.ArcGIS.SpatialAnalyst;
 using ESRI.ArcGIS.SpatialAnalystTools;
 using pixChange;
 using pixChange.HelperClass;
+using ESRI.ArcGIS.Geometry;
 
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
@@ -228,9 +229,17 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            //pNumRemap.MapRange(0.8, 1000, 5);
            pNumRemap.MapRange(dMinValue,2, 0);
            pNumRemap.MapRange(2, dMaxValue, 1);
-           IRemap pRemap = pNumRemap as IRemap; 
-           IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
-        //   IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
+           IRemap pRemap = pNumRemap as IRemap;
+           //IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
+           IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
+           IRasterLayer rasterLayer = new RasterLayerClass();
+           rasterLayer.CreateFromRaster(pOutRaster);
+           if (rasterLayer != null)
+           {
+               MainFrom.m_mapControl.AddLayer(rasterLayer);
+               IEnvelope envelope = rasterLayer.AreaOfInterest; 
+               MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层
+           }
            return true;
        }
      
