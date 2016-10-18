@@ -7,12 +7,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using RoadRaskEvaltionSystem.ServiceLocator;
 namespace RoadRaskEvaltionSystem
 {
     public partial class ConfigForm : Form
     {
-        private IRoadRisk roadRisk = new RoadConfigClass();
+        private IRoadRiskConfig roadRisk = ServerLocator.GetRoadRiskConfig();
         public ConfigForm()
         {
             InitializeComponent();

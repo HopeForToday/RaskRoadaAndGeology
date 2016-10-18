@@ -9,6 +9,7 @@ using System.Text;
 
 namespace RoadRaskEvaltionSystem
 {
+
     public sealed class LayerVisibility :BaseCommand, ICommandSubType
     {
         private IHookHelper hookHelper;

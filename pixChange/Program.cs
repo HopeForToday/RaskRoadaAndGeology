@@ -8,14 +8,18 @@ using ESRI.ArcGIS.esriSystem;
 using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.WeatherHander;
+using RoadRaskEvaltionSystem.ServiceLocator;
 
 namespace pixChange
 {
-    static class Program
+    delegate bool GetWeatherHandler(); //申明一个委托，表明需要在子线程上执行的方法的函数签名
+     class Program
     {
         private static LicenseInitializer m_AOLicenseInitializer = new pixChange.LicenseInitializer();
-        delegate bool GetWeather(); //申明一个委托，表明需要在子线程上执行的方法的函数签名
-        static GetWeather calcMethod = new GetWeather(getWeatherData);//把委托和具体的方法关联起来
+        //把委托和具体的方法关联起来
+        private  static GetWeatherHandler calcMethod = new GetWeatherHandler(getWeatherData);
+         //获取保存天气的依赖字段
+        private static  ISaveWeather saveWeather = ServerLocator.GetSaveWeather();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -42,13 +46,13 @@ namespace pixChange
         {
             try
             {
-                SaveWeatherMsg.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/lushan.html", 1);
+                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/lushan.html", 1);
                 Common.DBHander.coloseCon(); //来不及数据库连接
-                SaveWeatherMsg.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/baoxing.html", 2);
+                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/baoxing.html", 2);
                 Common.DBHander.coloseCon();
-                SaveWeatherMsg.savelast24hMsg("http://www.nmc.cn/f/rest/passed/56279", 1);
+                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56279", 1);
                 Common.DBHander.coloseCon();
-                SaveWeatherMsg.savelast24hMsg("http://www.nmc.cn/f/rest/passed/56273", 2);
+                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56273", 2);
                 Common.DBHander.coloseCon();
             }
             catch (Exception ex)

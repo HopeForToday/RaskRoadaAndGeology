@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RoadRaskEvaltionSystem
 {
     /// <summary>
-    /// 放大至整个图层
+    /// 缩放至整个图层
     /// </summary>
     public sealed class ZoomToLayer : BaseCommand
     {

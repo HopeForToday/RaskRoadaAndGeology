@@ -18,11 +18,14 @@ using ESRI.ArcGIS.SystemUI;
 using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem;
+using RoadRaskEvaltionSystem.ServiceLocator;
 
 namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        //栅格接口类
+        IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
         //公共变量用于表示整个系统都能访问的图层控件和环境变量
         //  public static SpatialAnalysisOption SAoption;
@@ -577,7 +580,7 @@ namespace pixChange
             IFeatureLayer pFeatureLayer;
             pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
             IFeatureClass fa = pFeatureLayer.FeatureClass;
-            if (ToRasterControl.Rasterize(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
+            if (roadRaskCaculate.FeatureToRaster(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
             {
                 Console.WriteLine("转化成功！");
             }
@@ -607,7 +610,7 @@ namespace pixChange
             //添加雨量字段并赋值 测试
             //       addRains();  
            // ToRasterControl.RoadRaskCaulte(@"rastercalc", @"network_Buffer2.shp", @"..\..\Rources\RoadData");
-            ToRasterControl.RoadRaskCaulte(@"rastercalc1.tif", 20, @"..\..\Rources\RoadData\RoadRasterData");
+            roadRaskCaculate.RoadRaskCaulte(@"rastercalc1.tif", 20, @"..\..\Rources\RoadData\RoadRasterData");
             //MainFrom.groupLayer = new GroupLayerClass();
             //MainFrom.groupLayer.Name = "公路风险评估数据";
             //LayerMangerView lm = new LayerMangerView();
@@ -616,7 +619,7 @@ namespace pixChange
 
         public bool addRains()
         {
-            var pFeatureLayer = ToRasterControl.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
+            var pFeatureLayer = roadRaskCaculate.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
             //添加雨量字段
             // 获取ITable对象
             //ITable pTable = pFeatureLayer as ITable;

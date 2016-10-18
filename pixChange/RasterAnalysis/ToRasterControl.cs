@@ -16,11 +16,16 @@ using pixChange;
 using pixChange.HelperClass;
 using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
-
+using RoadRaskEvaltionSystem.ServiceLocator;
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
-   public class ToRasterControl
+   public class ToRasterControl :IRoadRaskCaculate
     {
+       private IRoadRiskConfig roadRiskConfig = null;
+       public ToRasterControl(IRoadRiskConfig roadRiskConfig)
+       {
+           this.roadRiskConfig = roadRiskConfig;
+       }
        /// <summary>
        /// 使用GP工具和转化工具进行要素转栅格
        /// </summary>
@@ -28,7 +33,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// <param name="outRaster"></param>
        /// <param name="fieldName"></param>
        /// <param name="cellSize"></param>
-       public static bool Rasterize(object inputFeature, object outRaster, object fieldName, object cellSize)
+       public  bool FeatureToRaster(object inputFeature, object outRaster, object fieldName, object cellSize)
        {
            //Runtime manager to find the ESRI product installed in the system  
            //ESRI.ArcGIS.RuntimeManager.Bind(ESRI.ArcGIS.ProductCode.Desktop);  
@@ -57,7 +62,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// 计算雨量系数
        /// </summary>
        /// <returns></returns>
-       public static float RainsCoffcient()
+       private  float RainsCoffcient()
        {
            float coffcient=0;
 
@@ -72,7 +77,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// <param name="roadEvalPath">道路评价结果 </param>
        /// <param name="roadRainsShpPath">加了雨量字段的道路缓冲区</param>
        /// <returns></returns>
-       public static bool RoadRaskCaulte(string roadEvalName, string roadRainsName, string saveWorkspace)
+       public  bool RoadRaskCaulte(string roadEvalName, string roadRainsName, string saveWorkspace)
        {
            //读取 道路评价结果栅格数据的信息 
            RasterHelper rh=new RasterHelper();
@@ -143,12 +148,19 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
 
            // 输出：geoDataset_result
            IReclassOp pReclassOp = new RasterReclassOpClass();
-           INumberRemap pNumRemap = new NumberRemapClass();              
-           pNumRemap.MapRange(0,0.2,1);
+           INumberRemap pNumRemap = new NumberRemapClass();
+           IDictionary<int, RoadRange> roadRanges = this.roadRiskConfig.GetRoadRiskLevelFromConfig();
+           foreach(var v in roadRanges)
+           {
+               pNumRemap.MapRange(v.Value.MinValue, v.Value.MaxValue, v.Key);
+           }
+           /*
+           pNumRemap.MapRange(0, 0.2, 1);
            pNumRemap.MapRange(0.2, 0.4, 2);
            pNumRemap.MapRange(0.4, 0.6, 3);
            pNumRemap.MapRange(0.6, 0.8, 4);
            pNumRemap.MapRange(0.8,1000,5);
+            */
            //pNumRemap.MapRangeToNoData(-1000,0);
            //pNumRemap.MapRangeToNoData(1000, 20000);
            IRemap pRemap = pNumRemap as IRemap; 
@@ -181,18 +193,100 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// <param name="rains"></param>
        /// <param name="saveWorkspace"></param>
        /// <returns></returns>
-       public static bool RoadRaskCaulte(string roadEvalName,int rains,string saveWorkspace)
+       public  bool RoadRaskCaulte(string roadEvalName,int rains,string saveWorkspace)
        {
+           #region 备份
+         //  IWorkspaceFactory rWorkspaceFactory = new RasterWorkspaceFactory();
+         //  IWorkspace SWorkspace = rWorkspaceFactory.OpenFromFile(saveWorkspace, 0);
+         //  IRasterWorkspace rasterWorkspace = SWorkspace as IRasterWorkspace;
+         //  //栅格计算器 计算风险级数  先不要签你的三方协议 然后存储  表达式必须隔开
+         //  IMapAlgebraOp mapAlgebra = new RasterMapAlgebraOpClass();
+         //  IRasterDataset roadEvalRaster = OpenRasterDataSet(rasterWorkspace, roadEvalName);
+     
+         //  IGeoDataset geo1 = roadEvalRaster as IGeoDataset;
+        
+         //  mapAlgebra.BindRaster(geo1, "EvalRaster");    
+         //  IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * 10 / 25");//然后存储  表达式必须间隔开
+         //  //将生成的风险栅格重分类
+         //  //<0.2	一级：可能性小
+         //  //0.2-0.4	二级：可
+         //  //能性较小
+         //  //0.4-0.6	三级：可能性较大
+         //  //0.6-0.8	四级：可能性大
+         //  //>0.8	五级：可能性很大
+         //  // 输入：raskDataset
+         ////   输出：geoDataset_result
+         //  IRasterBandCollection pRsBandCol = raskDataset as IRasterBandCollection;
+         //  IRasterBand pRasterBand = pRsBandCol.Item(0);
+         //  pRasterBand.ComputeStatsAndHist();
+         //  IRasterStatistics pRasterStatistic = pRasterBand.Statistics;
+         //  double dMaxValue = pRasterStatistic.Maximum;
+         //  double dMinValue = pRasterStatistic.Minimum;
+         //  IReclassOp pReclassOp = new RasterReclassOpClass();
+         //  INumberRemap pNumRemap = new NumberRemapClass();
+         //  //pNumRemap.MapRange(dMinValue, 0.2, 1);
+         //  //pNumRemap.MapRange(0.2, 0.4, 2);
+         //  //pNumRemap.MapRange(0.4, 0.6, 3);
+         //  //pNumRemap.MapRange(0.6, dMaxValue, 4);
+         //  //pNumRemap.MapRangeToNoData(-1000, 0);
+         //  //pNumRemap.MapRange(0.8, 1000, 5);
+
+         //  pNumRemap.MapRange(dMinValue,0.2, 0);
+         //  pNumRemap.MapRange(0.2, 0.4, 1);
+         //  pNumRemap.MapRange(0.4, 0.6, 2);
+         //  pNumRemap.MapRange(0.6, 0.8, 3);
+         //  pNumRemap.MapRange(0.8, dMaxValue, 4);
+         //  IRemap pRemap = pNumRemap as IRemap;
+         //  //IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
+         //  IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
+         //  IRasterLayer rasterLayer = new RasterLayerClass();
+         //  rasterLayer.CreateFromRaster(pOutRaster);
+         //  if (rasterLayer != null)
+         //  {
+         //      //string fullPath = Common.RoadshapePath+"道路.shp";
+         //      rasterLayer.Name = "公路风险";
+         //      Boolean IsEqual = false;
+         //      //int Position = fullPath.LastIndexOf("\\");
+         //      ////文件目录
+         //      //string FilePath = fullPath.Substring(0, Position);
+         //      //string ShpName = fullPath.Substring(Position + 1);
+         //      //IWorkspaceFactory pWF;
+         //      //pWF = new ShapefileWorkspaceFactory();
+         //      //IFeatureWorkspace pFWS;
+         //      //pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
+         //      //IFeatureClass pFClass;
+         //      //pFClass = pFWS.OpenFeatureClass(ShpName);
+         //      //IFeatureLayer pFLayer = new FeatureLayer();
+         //      //pFLayer.FeatureClass = pFClass;
+
+         //      for (int i = 0; i < MainFrom.m_mapControl.LayerCount;i++ )
+         //      {
+         //          ILayer ComLayer=MainFrom.m_mapControl.get_Layer(i);
+         //          if (rasterLayer.Name == ComLayer.Name)
+         //          {
+         //              IsEqual = true;
+         //          }
+         //      }
+         //      if (!IsEqual)
+         //      {
+         //          //MainFrom.m_mapControl.AddLayer((ILayer)pFLayer);
+         //          MainFrom.m_mapControl.AddLayer(rasterLayer);
+         //          IEnvelope envelope = rasterLayer.AreaOfInterest;
+         //          MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
+         //      }
+         //  }
+           //  return true;
+           #endregion
            IWorkspaceFactory rWorkspaceFactory = new RasterWorkspaceFactory();
            IWorkspace SWorkspace = rWorkspaceFactory.OpenFromFile(saveWorkspace, 0);
            IRasterWorkspace rasterWorkspace = SWorkspace as IRasterWorkspace;
            //栅格计算器 计算风险级数  先不要签你的三方协议 然后存储  表达式必须隔开
            IMapAlgebraOp mapAlgebra = new RasterMapAlgebraOpClass();
            IRasterDataset roadEvalRaster = OpenRasterDataSet(rasterWorkspace, roadEvalName);
-     
+
            IGeoDataset geo1 = roadEvalRaster as IGeoDataset;
-        
-           mapAlgebra.BindRaster(geo1, "EvalRaster");    
+
+           mapAlgebra.BindRaster(geo1, "EvalRaster");
            IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * 10 / 25");//然后存储  表达式必须间隔开
            //将生成的风险栅格重分类
            //<0.2	一级：可能性小
@@ -202,7 +296,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            //0.6-0.8	四级：可能性大
            //>0.8	五级：可能性很大
            // 输入：raskDataset
-         //   输出：geoDataset_result
+           //   输出：geoDataset_result
            IRasterBandCollection pRsBandCol = raskDataset as IRasterBandCollection;
            IRasterBand pRasterBand = pRsBandCol.Item(0);
            pRasterBand.ComputeStatsAndHist();
@@ -211,17 +305,24 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            double dMinValue = pRasterStatistic.Minimum;
            IReclassOp pReclassOp = new RasterReclassOpClass();
            INumberRemap pNumRemap = new NumberRemapClass();
+           IDictionary<int, RoadRange> roadRanges = this.roadRiskConfig.GetRoadRiskLevelFromConfig();
+           foreach (var v in roadRanges)
+           {
+               pNumRemap.MapRange(v.Value.MinValue, v.Value.MaxValue, v.Key);
+           }
            //pNumRemap.MapRange(dMinValue, 0.2, 1);
            //pNumRemap.MapRange(0.2, 0.4, 2);
            //pNumRemap.MapRange(0.4, 0.6, 3);
            //pNumRemap.MapRange(0.6, dMaxValue, 4);
            //pNumRemap.MapRangeToNoData(-1000, 0);
            //pNumRemap.MapRange(0.8, 1000, 5);
-           pNumRemap.MapRange(dMinValue,0.2, 0);
+           /*
+           pNumRemap.MapRange(dMinValue, 0.2, 0);
            pNumRemap.MapRange(0.2, 0.4, 1);
            pNumRemap.MapRange(0.4, 0.6, 2);
            pNumRemap.MapRange(0.6, 0.8, 3);
            pNumRemap.MapRange(0.8, dMaxValue, 4);
+            */
            IRemap pRemap = pNumRemap as IRemap;
            //IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
            IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
@@ -245,9 +346,9 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
                //IFeatureLayer pFLayer = new FeatureLayer();
                //pFLayer.FeatureClass = pFClass;
 
-               for (int i = 0; i < MainFrom.m_mapControl.LayerCount;i++ )
+               for (int i = 0; i < MainFrom.m_mapControl.LayerCount; i++)
                {
-                   ILayer ComLayer=MainFrom.m_mapControl.get_Layer(i);
+                   ILayer ComLayer = MainFrom.m_mapControl.get_Layer(i);
                    if (rasterLayer.Name == ComLayer.Name)
                    {
                        IsEqual = true;
@@ -266,7 +367,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
      
 
        //打开栅格数据集
-       public static IRasterDataset OpenRasterDataSet(IRasterWorkspace rasterWorkspace, string name)
+       public  IRasterDataset OpenRasterDataSet(IRasterWorkspace rasterWorkspace, string name)
        {
         
         //   name = name.Substring(0, name.LastIndexOf("."));
@@ -274,7 +375,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            return dataSet;
        }
        //打开要素文件
-       public static IFeatureClass OpenFeatureClass(string name)
+       public  IFeatureClass OpenFeatureClass(string name)
        {            
            //利用"\\"将文件路径分成两部分 
            int Position = name.LastIndexOf("\\");
@@ -291,6 +392,17 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            return pFClass;
        }
 
+
+
+       public IRasterDataset OpenRasterDataSet(string name)
+       {
+           throw new NotImplementedException();
+       }
+
+       public IFeatureClass OpenFeatureClass(IFeatureWorkspace featureWorkspace, string name)
+       {
+           throw new NotImplementedException();
+       }
     }
 
 

@@ -10,11 +10,16 @@ using RoadRaskEvaltionSystem.HelperClass;
 
 namespace RoadRaskEvaltionSystem.WeatherHander
 {
-    public class SaveWeatherMsg
+    public class SaveWeatherMsg:ISaveWeather
     {
-        public static void SaveForeacastWerherMsg(string url,int AreaID)
+        private IGetWeather getWeatherObj = null;
+        public SaveWeatherMsg(IGetWeather getWeatherObj)
         {
-            List<forecastWeatherMesg> WeatherList = GetWeatherMessage.getforcastMessage(url);
+            this.getWeatherObj = getWeatherObj;
+        }
+        public  void SaveForeacastWerherMsg(string url,int AreaID)
+        {
+            List<forecastWeatherMesg> WeatherList = getWeatherObj.getforcastMessage(url);
             if (WeatherList.Count == 0)
             {
                 Console.WriteLine("天气预报提取失败!");
@@ -54,9 +59,9 @@ namespace RoadRaskEvaltionSystem.WeatherHander
           
         }
         //实际上只有最近23个小时的数据
-        public static void savelast24hMsg(string url, int AreaID)
+        public  void Savelast24hMsg(string url, int AreaID)
         {
-            List<OneHourWeather> Last23h = (List<OneHourWeather>)GetWeatherMessage.Get24HourWeather(url);
+            List<OneHourWeather> Last23h = (List<OneHourWeather>)getWeatherObj.Get24HourWeather(url);
             foreach (var r in Last23h)
             {
                 DataTable dt = Common.DBHander.ReturnDataSet("select ID from OneHourWeather where Hourtime=#" + r.time + "# and AreaID=" + AreaID).Tables[0];

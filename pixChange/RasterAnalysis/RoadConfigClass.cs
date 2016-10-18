@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
-    class RoadConfigClass:IRoadRisk
+    class RoadConfigClass:IRoadRiskConfig
     {
         public IDictionary<int, RoadRange> GetRoadRiskLevelFromConfig()
         {
@@ -24,7 +24,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
                 for (int i = 0; i < numbers.Count - 1; i+=2)
                 {
                     RoadRange roadRange = new RoadRange(numbers[i], numbers[i + 1]);
-                    roadRanges.Add(i + 1, roadRange);
+                    roadRanges.Add(roadRanges.Count+1,roadRange);
                 }
             }
             return roadRanges;

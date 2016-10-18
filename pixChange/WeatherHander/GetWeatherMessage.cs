@@ -11,10 +11,10 @@ using RoadRaskEvaltionSystem.WeatherHander;
 
 namespace HtmlAgilityPackDemo1
 {
-    public class GetWeatherMessage
+    public class GetWeatherMessage:IGetWeather
     {
         //获取预报信息
-        public static List<forecastWeatherMesg> getforcastMessage(string url)
+        public  List<forecastWeatherMesg> getforcastMessage(string url)
         {
             HtmlWeb web = new HtmlWeb();
             HtmlAgilityPack.HtmlDocument doc = web.Load(url);
@@ -92,7 +92,7 @@ namespace HtmlAgilityPackDemo1
             return forWeMsgList;
         }
         //获取过去24小时的天气详细信息
-        public static object Get24HourWeather(string url)
+        public  object Get24HourWeather(string url)
         {
             Uri uil = new Uri(url);
             System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(uil);
