@@ -45,9 +45,9 @@
             this.chartControl2 = new DevExpress.XtraCharts.ChartControl();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
-            this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.timegroupControl = new DevExpress.XtraEditors.GroupControl();
             this.comboBoxEdit_Date = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.areagroupControl = new DevExpress.XtraEditors.GroupControl();
             this.comboBoxEdit_Area = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
@@ -62,11 +62,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.chartControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
             this.splitContainerControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
-            this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timegroupControl)).BeginInit();
+            this.timegroupControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit_Date.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
-            this.groupControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.areagroupControl)).BeginInit();
+            this.areagroupControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit_Area.Properties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,7 +84,7 @@
             this.chartControl1.Padding.Right = 10;
             this.chartControl1.Padding.Top = 10;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl1.Size = new System.Drawing.Size(713, 379);
+            this.chartControl1.Size = new System.Drawing.Size(713, 383);
             this.chartControl1.TabIndex = 0;
             // 
             // xtraTabControl1
@@ -105,12 +105,13 @@
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(719, 411);
+            this.xtraTabControl1.Size = new System.Drawing.Size(717, 411);
             this.xtraTabControl1.TabIndex = 1;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
             this.xtraTabPage2,
             this.xtraTabPage3});
+            this.xtraTabControl1.SelectedPageChanged += new DevExpress.XtraTab.TabPageChangedEventHandler(this.xtraTabControl1_SelectedPageChanged);
             // 
             // xtraTabPage1
             // 
@@ -119,7 +120,7 @@
             this.xtraTabPage1.Appearance.Header.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.xtraTabPage1.Controls.Add(this.chartControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(713, 379);
+            this.xtraTabPage1.Size = new System.Drawing.Size(713, 383);
             this.xtraTabPage1.Text = "预测天气";
             // 
             // xtraTabPage2
@@ -128,7 +129,7 @@
             this.xtraTabPage2.Appearance.Header.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.xtraTabPage2.Controls.Add(this.panelControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(713, 379);
+            this.xtraTabPage2.Size = new System.Drawing.Size(713, 383);
             this.xtraTabPage2.Text = "未来7天天气";
             // 
             // panelControl1
@@ -137,7 +138,7 @@
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(713, 379);
+            this.panelControl1.Size = new System.Drawing.Size(713, 383);
             this.panelControl1.TabIndex = 0;
             // 
             // gridControl1
@@ -146,7 +147,7 @@
             this.gridControl1.Location = new System.Drawing.Point(2, 2);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(709, 375);
+            this.gridControl1.Size = new System.Drawing.Size(709, 379);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -257,7 +258,7 @@
             this.xtraTabPage3.Appearance.Header.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.xtraTabPage3.Controls.Add(this.chartControl2);
             this.xtraTabPage3.Name = "xtraTabPage3";
-            this.xtraTabPage3.Size = new System.Drawing.Size(713, 379);
+            this.xtraTabPage3.Size = new System.Drawing.Size(713, 383);
             this.xtraTabPage3.Text = "过去24时天气";
             // 
             // chartControl2
@@ -270,7 +271,7 @@
             this.chartControl2.Location = new System.Drawing.Point(0, 0);
             this.chartControl2.Name = "chartControl2";
             this.chartControl2.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl2.Size = new System.Drawing.Size(713, 379);
+            this.chartControl2.Size = new System.Drawing.Size(713, 383);
             this.chartControl2.TabIndex = 0;
             // 
             // splitContainerControl1
@@ -279,8 +280,8 @@
             this.splitContainerControl1.Location = new System.Drawing.Point(0, 0);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.simpleButton1);
-            this.splitContainerControl1.Panel1.Controls.Add(this.groupControl2);
-            this.splitContainerControl1.Panel1.Controls.Add(this.groupControl1);
+            this.splitContainerControl1.Panel1.Controls.Add(this.timegroupControl);
+            this.splitContainerControl1.Panel1.Controls.Add(this.areagroupControl);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.xtraTabControl1);
             this.splitContainerControl1.Panel2.Text = "Panel2";
@@ -300,16 +301,16 @@
             this.simpleButton1.Text = "确定";
             this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
             // 
-            // groupControl2
+            // timegroupControl
             // 
-            this.groupControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupControl2.Controls.Add(this.comboBoxEdit_Date);
-            this.groupControl2.Location = new System.Drawing.Point(10, 109);
-            this.groupControl2.Name = "groupControl2";
-            this.groupControl2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupControl2.Size = new System.Drawing.Size(140, 80);
-            this.groupControl2.TabIndex = 1;
-            this.groupControl2.Text = "时间选择";
+            this.timegroupControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.timegroupControl.Controls.Add(this.comboBoxEdit_Date);
+            this.timegroupControl.Location = new System.Drawing.Point(10, 109);
+            this.timegroupControl.Name = "timegroupControl";
+            this.timegroupControl.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.timegroupControl.Size = new System.Drawing.Size(140, 80);
+            this.timegroupControl.TabIndex = 1;
+            this.timegroupControl.Text = "时间选择";
             // 
             // comboBoxEdit_Date
             // 
@@ -322,16 +323,16 @@
             this.comboBoxEdit_Date.Size = new System.Drawing.Size(120, 20);
             this.comboBoxEdit_Date.TabIndex = 0;
             // 
-            // groupControl1
+            // areagroupControl
             // 
-            this.groupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupControl1.Controls.Add(this.comboBoxEdit_Area);
-            this.groupControl1.Location = new System.Drawing.Point(10, 14);
-            this.groupControl1.Name = "groupControl1";
-            this.groupControl1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupControl1.Size = new System.Drawing.Size(140, 80);
-            this.groupControl1.TabIndex = 0;
-            this.groupControl1.Text = "区域选择";
+            this.areagroupControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.areagroupControl.Controls.Add(this.comboBoxEdit_Area);
+            this.areagroupControl.Location = new System.Drawing.Point(10, 14);
+            this.areagroupControl.Name = "areagroupControl";
+            this.areagroupControl.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.areagroupControl.Size = new System.Drawing.Size(140, 80);
+            this.areagroupControl.TabIndex = 0;
+            this.areagroupControl.Text = "区域选择";
             // 
             // comboBoxEdit_Area
             // 
@@ -368,11 +369,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.chartControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
             this.splitContainerControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
-            this.groupControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.timegroupControl)).EndInit();
+            this.timegroupControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit_Date.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
-            this.groupControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.areagroupControl)).EndInit();
+            this.areagroupControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit_Area.Properties)).EndInit();
             this.ResumeLayout(false);
 
@@ -389,8 +390,8 @@
         private DevExpress.XtraCharts.ChartControl chartControl2;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
-        private DevExpress.XtraEditors.GroupControl groupControl2;
-        private DevExpress.XtraEditors.GroupControl groupControl1;
+        private DevExpress.XtraEditors.GroupControl timegroupControl;
+        private DevExpress.XtraEditors.GroupControl areagroupControl;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit_Date;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit_Area;
         private DevExpress.XtraGrid.GridControl gridControl1;

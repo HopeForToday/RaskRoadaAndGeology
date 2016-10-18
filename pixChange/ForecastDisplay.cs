@@ -451,5 +451,17 @@ namespace RoadRaskEvaltionSystem
             dt_Week = getDataTable(WeekSqlStr);
             CreateOldChart(dt_Week);
         }
+
+        private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
+        {
+            if (xtraTabControl1.SelectedTabPage == xtraTabPage1)
+            {
+                timegroupControl.Enabled = true;
+            }
+            else
+            {
+                timegroupControl.Enabled = false;
+            }
+        }
     }
 }
