@@ -227,8 +227,11 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            //pNumRemap.MapRange(0.6, dMaxValue, 4);
            //pNumRemap.MapRangeToNoData(-1000, 0);
            //pNumRemap.MapRange(0.8, 1000, 5);
-           pNumRemap.MapRange(dMinValue,2, 0);
-           pNumRemap.MapRange(2, dMaxValue, 1);
+           pNumRemap.MapRange(dMinValue,0.2, 0);
+           pNumRemap.MapRange(0.2, 0.4, 1);
+           pNumRemap.MapRange(0.4, 0.6, 2);
+           pNumRemap.MapRange(0.6, 0.8, 3);
+           pNumRemap.MapRange(0.8, dMaxValue, 4);
            IRemap pRemap = pNumRemap as IRemap;
            //IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
            IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
