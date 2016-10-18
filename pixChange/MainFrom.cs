@@ -55,6 +55,9 @@ namespace pixChange
         public AxMapControl pCurrentSmallMap = null;
         //当前TOC控件实例
         public AxTOCControl pCurrentTOC = null;
+
+        private IToolbarMenu mapMenu;//toc控件右键地图菜单
+        private IToolbarMenu layerMenu;//toc控件右键图层菜单
         public enum CustomTool
         {
             None = 0,
@@ -102,7 +105,50 @@ namespace pixChange
             toolComboBox = this.toolStripComboBox2;
             //TOC控件绑定地图控件
             m_pTocControl.SetBuddyControl(m_mapControl);
+            //pCurrentTOC = m_pTocControl;
+            //构造地图右键菜单
+            mapMenu = new ToolbarMenuClass();
+            mapMenu.AddItem(new LayerVisibility(), 1, 0, false, esriCommandStyles.esriCommandStyleIconAndText);
+            mapMenu.AddItem(new LayerVisibility(), 2, 1, false, esriCommandStyles.esriCommandStyleIconAndText);
+            //构造图层右键菜单
+            layerMenu = new ToolbarMenuClass();
+            //添加“移除图层”菜单项
+            layerMenu.AddItem(new RemoveLayer(), -1, 0, false, esriCommandStyles.esriCommandStyleTextOnly);
+            //添加“放大到整个图层”菜单项
+            layerMenu.AddItem(new ZoomToLayer(), -1, 1, true, esriCommandStyles.esriCommandStyleTextOnly);
+            //右键菜单绑定
+            mapMenu.SetHook(m_mapControl);
+            layerMenu.SetHook(m_mapControl);
+        }
+        /// <summary>
+        /// 在TocControl的鼠标事件中实现右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
+        {
+            esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
+            IBasicMap map = null;
+            ILayer layer = null;
+            object other = null;
+            object index = null;
+            m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);
+            if (e.button == 2)//右键
+            {
+                m_mapControl.CustomProperty = layer;
+                if (item == esriTOCControlItem.esriTOCControlItemMap)//点击的是地图
+                {
+                    m_pTocControl.SelectItem(map, null);
+                    mapMenu.PopupMenu(e.x, e.y, m_pTocControl.hWnd);
+                }
 
+                if (item == esriTOCControlItem.esriTOCControlItemLayer)//点击的是图层
+                {
+                    m_pTocControl.SelectItem(layer, null);
+                    //setSecAndEdit(layer.Name);
+                    layerMenu.PopupMenu(e.x, e.y, m_pTocControl.hWnd);
+                }
+            }
         }
         //放大
         private void ToolButtonZoomIn_Click(object sender, EventArgs e)
@@ -161,10 +207,6 @@ namespace pixChange
             }
         }
 
-        private void axTOCControl1_OnKeyDown(object sender, ITOCControlEvents_OnKeyDownEvent e)
-        {
-
-        }
 
         private void axMapControl1_OnKeyUp(object sender, IMapControlEvents2_OnKeyUpEvent e)
         {
@@ -687,6 +729,13 @@ namespace pixChange
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
         }
+
+        private void barButtonItem14_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new ConfigForm().ShowDialog();
+        }
+
+      
 
     //    private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
     //    {

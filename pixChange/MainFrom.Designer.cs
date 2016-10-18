@@ -70,6 +70,7 @@
             this.barButtonItem12 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem13 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem14 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -118,8 +119,8 @@
             this.axTOCControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axTOCControl1.OcxState")));
             this.axTOCControl1.Size = new System.Drawing.Size(239, 546);
             this.axTOCControl1.TabIndex = 0;
+            this.axTOCControl1.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl1_OnMouseDown);
             this.axTOCControl1.OnMouseMove += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseMoveEventHandler(this.axTOCControl1_OnMouseMove);
-            this.axTOCControl1.OnKeyDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnKeyDownEventHandler(this.axTOCControl1_OnKeyDown);
             // 
             // toolStrip2
             // 
@@ -267,9 +268,10 @@
             this.barButtonItem11,
             this.barButtonItem12,
             this.barButtonItem13,
-            this.barButtonItem5});
+            this.barButtonItem5,
+            this.barButtonItem14});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 20;
+            this.ribbonControl1.MaxItemId = 21;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -412,6 +414,14 @@
             this.barButtonItem5.Name = "barButtonItem5";
             this.barButtonItem5.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem5_ItemClick);
             // 
+            // barButtonItem14
+            // 
+            this.barButtonItem14.Caption = "公路重分类设置";
+            this.barButtonItem14.Id = 20;
+            this.barButtonItem14.ImageUri.Uri = "Customization";
+            this.barButtonItem14.Name = "barButtonItem14";
+            this.barButtonItem14.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem14_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -441,6 +451,7 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem9, true);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem10);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem11);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem14);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "公路风险评估与预警";
             // 
@@ -541,6 +552,7 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem13;
         private DevExpress.XtraBars.BarButtonItem barButtonItem5;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem14;
    
     }
 }
