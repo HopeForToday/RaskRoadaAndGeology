@@ -236,9 +236,22 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            rasterLayer.CreateFromRaster(pOutRaster);
            if (rasterLayer != null)
            {
-               MainFrom.m_mapControl.AddLayer(rasterLayer);
-               IEnvelope envelope = rasterLayer.AreaOfInterest; 
-               MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层
+               rasterLayer.Name = "公路风险";
+               Boolean IsEqual = false;
+               for (int i = 0; i < MainFrom.m_mapControl.LayerCount;i++ )
+               {
+                   ILayer ComLayer=MainFrom.m_mapControl.get_Layer(i);
+                   if (rasterLayer.Name == ComLayer.Name)
+                   {
+                       IsEqual = true;
+                   }
+               }
+               if (!IsEqual)
+               {
+                   MainFrom.m_mapControl.AddLayer(rasterLayer);
+                   IEnvelope envelope = rasterLayer.AreaOfInterest;
+                   MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
+               }
            }
            return true;
        }
