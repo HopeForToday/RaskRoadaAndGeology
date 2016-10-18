@@ -15,6 +15,7 @@ using ESRI.ArcGIS.SpatialAnalystTools;
 using pixChange;
 using pixChange.HelperClass;
 using ESRI.ArcGIS.Geometry;
+using RoadRaskEvaltionSystem.HelperClass;
 
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
@@ -228,8 +229,22 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            rasterLayer.CreateFromRaster(pOutRaster);
            if (rasterLayer != null)
            {
+               //string fullPath = Common.RoadshapePath+"道路.shp";
                rasterLayer.Name = "公路风险";
                Boolean IsEqual = false;
+               //int Position = fullPath.LastIndexOf("\\");
+               ////文件目录
+               //string FilePath = fullPath.Substring(0, Position);
+               //string ShpName = fullPath.Substring(Position + 1);
+               //IWorkspaceFactory pWF;
+               //pWF = new ShapefileWorkspaceFactory();
+               //IFeatureWorkspace pFWS;
+               //pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
+               //IFeatureClass pFClass;
+               //pFClass = pFWS.OpenFeatureClass(ShpName);
+               //IFeatureLayer pFLayer = new FeatureLayer();
+               //pFLayer.FeatureClass = pFClass;
+
                for (int i = 0; i < MainFrom.m_mapControl.LayerCount;i++ )
                {
                    ILayer ComLayer=MainFrom.m_mapControl.get_Layer(i);
@@ -240,6 +255,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
                }
                if (!IsEqual)
                {
+                   //MainFrom.m_mapControl.AddLayer((ILayer)pFLayer);
                    MainFrom.m_mapControl.AddLayer(rasterLayer);
                    IEnvelope envelope = rasterLayer.AreaOfInterest;
                    MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
