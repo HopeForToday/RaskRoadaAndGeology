@@ -193,16 +193,6 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
         
            mapAlgebra.BindRaster(geo1, "EvalRaster");    
            IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * 10 / 25");//然后存储  表达式必须间隔开
-       
-          //   ISaveAs saveAs = raskDataset as ISaveAs;
-          //   saveAs.SaveAs("roadPre", SWorkspace, "");//
-          
-          //   IRasterLayer rasterLayer2 = new RasterLayer();
-          //    rasterLayer2.CreateFromFilePath(saveWorkspace + "\\" + "roadPre");
-          //  MainFrom.m_mapControl.AddLayer(rasterLayer2, 0);
-          // MainFrom.groupLayer.Add(rasterLayer2);
-          //MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
-          //    MainFrom.m_pTocControl.Update();
            //将生成的风险栅格重分类
            //<0.2	一级：可能性小
            //0.2-0.4	二级：可
@@ -211,7 +201,6 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            //0.6-0.8	四级：可能性大
            //>0.8	五级：可能性很大
            // 输入：raskDataset
-
          //   输出：geoDataset_result
            IRasterBandCollection pRsBandCol = raskDataset as IRasterBandCollection;
            IRasterBand pRasterBand = pRsBandCol.Item(0);
