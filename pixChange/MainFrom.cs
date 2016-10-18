@@ -17,6 +17,7 @@ using ESRI.ArcGIS.SystemUI;
 
 using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.RasterAnalysis;
+using RoadRaskEvaltionSystem;
 
 namespace pixChange
 {
@@ -556,7 +557,7 @@ namespace pixChange
 
         private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            new ForecastDisplay().Show();
         }
 
         private void barButtonItem11_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
