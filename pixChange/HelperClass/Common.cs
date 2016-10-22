@@ -110,7 +110,70 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            m_mapControl.Extent = m_mapControl.FullExtent;
        }
+       public static bool InsertShapeLayer(Boolean IsEqual, ILayer pFlayer)//插入矢量图
+       {
+           int count = MainFrom.m_mapControl.LayerCount;
+           if (count == 0)
+           {
+               MainFrom.groupLayer.Add(pFlayer);
+               MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+           }
+           else
+           {
+               for (int m = count - 1; m >= 0; m--)
+               {
+                   IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                   ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
+                   if (pGL.Name == MainFrom.groupLayer.Name)
+                   {
+                       IsEqual = true;
+                       if (pGL is IGroupLayer)
+                       {
+                           pLayers.InsertLayerInGroup((IGroupLayer)pGL, pFlayer, false, 0);
+                       }
+                   }
+               }
+               if (!IsEqual)
+               {
+                   MainFrom.groupLayer.Add(pFlayer);
+                   MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
 
+               }
+           }
+           return IsEqual;
+       }
+       public static bool InsertLayer(Boolean IsEqual, IRasterLayer rasterLayer)//插入栅格图
+       {
+           int count = MainFrom.m_mapControl.LayerCount;
+           if (count == 0)
+           {
+               MainFrom.groupLayer.Add(rasterLayer);
+               MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+           }
+           else
+           {
+               for (int m = count - 1; m >= 0; m--)
+               {
+                   IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
+                   ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
+                   if (pGL.Name == MainFrom.groupLayer.Name)
+                   {
+                       IsEqual = true;
+                       if (pGL is IGroupLayer)
+                       {
+                           pLayers.InsertLayerInGroup((IGroupLayer)pGL, rasterLayer, false, 0);
+                       }
+                   }
+               }
+               if (!IsEqual)
+               {
+                   MainFrom.groupLayer.Add(rasterLayer);
+                   MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
+
+               }
+           }
+           return IsEqual;
+       }
        //public static void mapHandel()
        //{
        //    IFeatureLayer pFeatureLayer;
