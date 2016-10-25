@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem.WeatherHander;
 using HtmlAgilityPackDemo1;
+using RoadRaskEvaltionSystem.RouteAnalysis;
 namespace RoadRaskEvaltionSystem.ServiceLocator
 {
     /// <summary>
@@ -17,6 +18,8 @@ namespace RoadRaskEvaltionSystem.ServiceLocator
         private static IRoadRiskConfig m_RoadConfig = null;
         private static ISaveWeather m_SaverWeather = null;
         private static IGetWeather m_GetWeather = null;
+        private static IRouteConfig routeConfig = null;
+        private static IRouteDecide routeDecide = null;
         public static IRoadRaskCaculate GetIRoadRaskCaculate()
         {
             if(m_RoadRaskCacluate==null)
@@ -49,6 +52,22 @@ namespace RoadRaskEvaltionSystem.ServiceLocator
                 m_SaverWeather = new SaveWeatherMsg(GetWeather());
             }
             return m_SaverWeather;
+        }
+        public static IRouteConfig GetRoutConfig()
+        {
+            if (routeConfig == null)
+            {
+                routeConfig = new RouteConfigClass();
+            }
+            return routeConfig;
+        }
+        public static IRouteDecide GetRouteDecide()
+        {
+            if (routeDecide == null)
+            {
+                routeDecide = new RouteDecideClass(GetRoutConfig());
+            }
+            return routeDecide;
         }
     }
 }
