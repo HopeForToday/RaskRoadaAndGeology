@@ -22,17 +22,11 @@ namespace pixChange
         string shapePath = null;
         private List<string> LayerNameList;
         private List<string> LayerPathList;
-        IFeatureLayer pFLayer;
+        
         private bool isLoad = true;//为了初始加载时不把底图清空
         public LayerMangerView()
         {
             InitializeComponent();
-            //LayerNameList=new List<string>();
-            //getallLayers();
-            //int i = MainFrom.m_mapControl.LayerCount;
-            //exCheckedListBox1.DataSource = LayerNameList;//为什么这一句就把图层清空了呢
-            //int y = MainFrom.m_mapControl.LayerCount;
-            //judeLayer();
         }
 
         public LayerMangerView(ref List<string> LayerPathList)
@@ -47,7 +41,7 @@ namespace pixChange
         //将图层名加载到exCheckedListBox1中
         private void getallLayers()
         {
-            switch (MainFrom.WhichChecked)
+            switch (MainFrom.WhichChecked)//根据点击模块不同赋予不同的数据途径
             {
                 case 1:
                     rasterPath = Common.BaserasterPath;
@@ -126,7 +120,6 @@ namespace pixChange
                 }
                 else
                 {
-                    //exCheckedListBox1.CheckedItems.Add(MainFrom.m_mapControl.get_Layer(i).Name);
                     for (int y = 0; y < exCheckedListBox1.Items.Count; y++)
                     {
                         string layerName = exCheckedListBox1.Items[y].ToString();
@@ -138,7 +131,6 @@ namespace pixChange
                             exCheckedListBox1.SetItemChecked(y, true);
                         }
                     }
-                    //exCheckedListBox1.SetItemChecked();
                 }
 
             }
@@ -174,11 +166,12 @@ namespace pixChange
                     pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
                     IFeatureClass pFClass;
                     pFClass = pFWS.OpenFeatureClass(ShpName);
+                    IFeatureLayer pFLayer;
                     pFLayer = new FeatureLayer();
                     pFLayer.FeatureClass = pFClass;
                     pFLayer.Name = pFClass.AliasName;
                     //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
-                    IsEqual = InsertShapeLayer(IsEqual);
+                    IsEqual = Common.InsertShapeLayer(IsEqual,(ILayer)pFLayer);
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
                     MainFrom.m_pTocControl.Update();
@@ -190,7 +183,7 @@ namespace pixChange
                     IRasterLayer rasterLayer = new RasterLayer();
                     rasterLayer.CreateFromFilePath(fullPath);
                     // IRaster ir = (IRaster) rasterLayer;
-                    IsEqual = InsertLayer(IsEqual, rasterLayer);
+                    IsEqual = Common.InsertLayer(IsEqual, rasterLayer);
                     MainFrom.m_pTocControl.Update();
                 }
             }
@@ -218,73 +211,9 @@ namespace pixChange
 
             }
         }
-        private bool InsertShapeLayer(Boolean IsEqual)//插入矢量图
-        {
-            int count = MainFrom.m_mapControl.LayerCount;
-            if (count == 0)
-            {
-                MainFrom.groupLayer.Add((ILayer)pFLayer);
-                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-            }
-            else
-            {
-                for (int m = count - 1; m >= 0; m--)
-                {
-                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
-                    ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
-                    if (pGL.Name == MainFrom.groupLayer.Name)
-                    {
-                        IsEqual = true;
-                        if (pGL is IGroupLayer)
-                        {
-                            pLayers.InsertLayerInGroup((IGroupLayer)pGL, (ILayer)pFLayer, false, 0);
-                        }
-                    }
-                }
-                if (!IsEqual)
-                {
-                    MainFrom.groupLayer.Add((ILayer)pFLayer);
-                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-
-                }
-            }
-            return IsEqual;
-        }
-        private static bool InsertLayer(Boolean IsEqual, IRasterLayer rasterLayer)//插入栅格图
-        {
-            int count = MainFrom.m_mapControl.LayerCount;
-            if (count == 0)
-            {
-                MainFrom.groupLayer.Add(rasterLayer);
-                MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-            }
-            else
-            {
-                for (int m = count - 1; m >= 0; m--)
-                {
-                    IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
-                    ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
-                    if (pGL.Name == MainFrom.groupLayer.Name)
-                    {
-                        IsEqual = true;
-                        if (pGL is IGroupLayer)
-                        {
-                            pLayers.InsertLayerInGroup((IGroupLayer)pGL, rasterLayer, false, 0);
-                        }
-                    }
-                }
-                if (!IsEqual)
-                {
-                    MainFrom.groupLayer.Add(rasterLayer);
-                    MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-
-                }
-            }
-            return IsEqual;
-        }
+    
         private void LayerMangerView_Load(object sender, EventArgs e)
         {
-            //   isLoad = false;
             exCheckedListBox1.Items.Clear();
             LayerNameList = new List<string>();
             getallLayers();

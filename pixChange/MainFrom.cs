@@ -609,12 +609,7 @@ namespace pixChange
         {
             //添加雨量字段并赋值 测试
             //       addRains();  
-           // ToRasterControl.RoadRaskCaulte(@"rastercalc", @"network_Buffer2.shp", @"..\..\Rources\RoadData");
             roadRaskCaculate.RoadRaskCaulte(@"rastercalc1.tif", 20, @"..\..\Rources\RoadData\RoadRasterData");
-            //MainFrom.groupLayer = new GroupLayerClass();
-            //MainFrom.groupLayer.Name = "公路风险评估数据";
-            //LayerMangerView lm = new LayerMangerView();
-            //lm.Show();
         }
 
         public bool addRains()
