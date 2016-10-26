@@ -19,11 +19,14 @@ using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.ServiceLocator;
+using RoadRaskEvaltionSystem.HelperClass;
 
 namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        //公路断点集合
+        private List<IPoint> breakPoints = new List<IPoint>();
         ////栅格接口类
         //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
@@ -82,6 +85,7 @@ namespace pixChange
             EditRedo = 16,
             EditDeleteFeature = 17,
             EditAttribute = 18,
+            DrawBreakPoint=19
         };
         public MainFrom()
         {
@@ -489,8 +493,9 @@ namespace pixChange
                     m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
-
-
+                case CustomTool.DrawBreakPoint:
+                    InsertBreakPoint(e);
+                    break;
             }
 
         }
@@ -731,6 +736,30 @@ namespace pixChange
         private void barButtonItem14_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new ConfigForm().ShowDialog();
+        }
+        //开启编辑公路断点模式
+        private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            m_cTool = CustomTool.DrawBreakPoint;
+        }
+        //插入公路断点
+        private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
+        {
+            IPoint point = new PointClass();
+            point.X = e.mapX;
+            point.Y = e.mapY;
+            SymbolUtil.DrawSymbolWithPicture(point,this.axMapControl1,@"Images\1.jpg");
+            this.breakPoints.Add(point);
+        }
+        //计算最优路线
+        private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if(breakPoints.Count==0)
+            {
+                MessageBox.Show("尚未设置任何公路断点");
+                return;
+            }
+            //进行路线查询
         }
 
       
