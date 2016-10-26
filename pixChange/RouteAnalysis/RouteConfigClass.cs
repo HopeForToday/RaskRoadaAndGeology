@@ -10,13 +10,12 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
     class RouteConfigClass : IRouteConfig
     {
         //返回空或者空串 代表没有查询到
-        public string QueryGoodRouteIndex(int objectID,bool isException)
+        public string QueryGoodRouteIndex(int objectID)
         {
             Dictionary<int, string> queryIndexs = queryAllIndex();
             if(queryIndexs==null)
             {
-                isException = true;
-                return "";
+                throw new Exception("配置文件出错");
             }
            return queryIndexs[objectID];
         }

@@ -193,7 +193,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// <param name="rains"></param>
        /// <param name="saveWorkspace"></param>
        /// <returns></returns>
-       public  bool RoadRaskCaulte(string roadEvalName,int rains,string saveWorkspace)
+       public  bool RoadRaskCaulte(string roadEvalName,double rains,string saveWorkspace)
        {
            #region 备份
          //  IWorkspaceFactory rWorkspaceFactory = new RasterWorkspaceFactory();
@@ -403,6 +403,8 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        {
            throw new NotImplementedException();
        }
+
+
     }
 
 

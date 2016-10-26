@@ -24,8 +24,8 @@ namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-        //栅格接口类
-        IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
+        ////栅格接口类
+        //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
         //公共变量用于表示整个系统都能访问的图层控件和环境变量
         //  public static SpatialAnalysisOption SAoption;
@@ -577,17 +577,17 @@ namespace pixChange
         //矢量转栅格测试
         private void button1_Click(object sender, EventArgs e)
         {
-            IFeatureLayer pFeatureLayer;
-            pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
-            IFeatureClass fa = pFeatureLayer.FeatureClass;
-            if (roadRaskCaculate.FeatureToRaster(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
-            {
-                Console.WriteLine("转化成功！");
-            }
-            else
-            {
-                Console.WriteLine("转化失败！！");
-            }
+            //IFeatureLayer pFeatureLayer;
+            //pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
+            //IFeatureClass fa = pFeatureLayer.FeatureClass;
+            //if (roadRaskCaculate.FeatureToRaster(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
+            //{
+            //    Console.WriteLine("转化成功！");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("转化失败！！");
+            //}
         }
 
 
@@ -608,13 +608,13 @@ namespace pixChange
         private void barButtonItem11_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //添加雨量字段并赋值 测试
-            //       addRains();  
-            roadRaskCaculate.RoadRaskCaulte(@"rastercalc1.tif", 20, @"..\..\Rources\RoadData\RoadRasterData");
+            //addRains();  
+            //roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", 20, @"..\..\Rources\RoadData\RoadRasterData");
         }
 
-        public bool addRains()
-        {
-            var pFeatureLayer = roadRaskCaculate.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
+        //public bool addRains()
+        //{
+            //var pFeatureLayer = roadRaskCaculate.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
             //添加雨量字段
             // 获取ITable对象
             //ITable pTable = pFeatureLayer as ITable;
@@ -635,43 +635,43 @@ namespace pixChange
             //wse.StartEditing(false);
             //wse.StartEditOperation();
 
-            IDataset dataset = pFeatureLayer as IDataset;
-            IWorkspace workspace = dataset.Workspace;
-            IWorkspaceEdit wse = workspace as IWorkspaceEdit;
+            //IDataset dataset = pFeatureLayer as IDataset;
+            //IWorkspace workspace = dataset.Workspace;
+            //IWorkspaceEdit wse = workspace as IWorkspaceEdit;
 
-            wse.StartEditing(false);
-            wse.StartEditOperation();
-            int proField = pFeatureLayer.FindField("RAINS");
+            //wse.StartEditing(false);
+            //wse.StartEditOperation();
+            //int proField = pFeatureLayer.FindField("RAINS");
 
-            IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-            IFeature pFeature = pFeatureCursor.NextFeature();
-            int i = 0;
-            //录入雨量到矢量数据  这里是编码测试
-            while (pFeature != null)
-            {
-                if (i < 10)//这里是测试，实际上是根据矢量文件里的字段这段公路是属于一个县
-                {
-                    pFeatureLayer.GetFeature(i).set_Value(proField, 25.3);
-                    pFeatureLayer.GetFeature(i).Store();
-                }
-                else if (i >= 10 && i < 20)
-                {
-                    pFeatureLayer.GetFeature(i).set_Value(proField, 10.2);
-                    pFeatureLayer.GetFeature(i).Store();
-                }
-                else if (i >= 20)
-                {
-                    pFeatureLayer.GetFeature(i).set_Value(proField, 5);
-                    pFeatureLayer.GetFeature(i).Store();
-                }
-                i++;
-                pFeature = pFeatureCursor.NextFeature();
-            }
+            //IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+            //IFeature pFeature = pFeatureCursor.NextFeature();
+            //int i = 0;
+            ////录入雨量到矢量数据  这里是编码测试
+            //while (pFeature != null)
+            //{
+            //    if (i < 10)//这里是测试，实际上是根据矢量文件里的字段这段公路是属于一个县
+            //    {
+            //        pFeatureLayer.GetFeature(i).set_Value(proField, 25.3);
+            //        pFeatureLayer.GetFeature(i).Store();
+            //    }
+            //    else if (i >= 10 && i < 20)
+            //    {
+            //        pFeatureLayer.GetFeature(i).set_Value(proField, 10.2);
+            //        pFeatureLayer.GetFeature(i).Store();
+            //    }
+            //    else if (i >= 20)
+            //    {
+            //        pFeatureLayer.GetFeature(i).set_Value(proField, 5);
+            //        pFeatureLayer.GetFeature(i).Store();
+            //    }
+            //    i++;
+            //    pFeature = pFeatureCursor.NextFeature();
+            //}
 
-            wse.StopEditOperation();
-            wse.StopEditing(true);
-            return true;
-        }
+            //wse.StopEditOperation();
+            //wse.StopEditing(true);
+            //return true;
+        //}
 
         private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

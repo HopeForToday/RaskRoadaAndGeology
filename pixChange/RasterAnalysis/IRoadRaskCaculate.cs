@@ -35,7 +35,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
        /// <param name="rains"></param>
        /// <param name="saveWorkspace"></param>
        /// <returns></returns>
-          bool RoadRaskCaulte(string roadEvalName, int rains, string saveWorkspace);
+          bool RoadRaskCaulte(string roadEvalName, double rains, string saveWorkspace);
         /// <summary>
         /// 打开栅格数据集
         /// </summary>

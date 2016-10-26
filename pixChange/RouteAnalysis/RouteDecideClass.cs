@@ -17,7 +17,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             this.routeConfig = config;
         }
         //根据点查询缓冲区以内的要素
-        private IFeature QuerySingleFeatureByPoint(IPoint  point,IMap map,IFeatureLayer layer,double buffer_distance)
+        public IFeature QuerySingleFeatureByPoint(IPoint  point,IMap map,IFeatureLayer layer,double buffer_distance)
         {
           //为了安全在此判断是否map中是否已经包括layer
             bool isContain=false;
@@ -63,14 +63,14 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             pFeatureCursor = pFeatureClass.Search(pSpatialFilter, false);
             return pFeatureCursor.NextFeature();
         }
-      //查询绕行路线 0代表没有查询到
-        public int QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer)
+       //查询绕行路线 0代表没有查询到
+        public string QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer)
         {
             //查询所点击的要素
             IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 2);
             if (feature == null)
             {
-                return 0;
+                return null;
             }
             int objectID = feature.Fields.FindField("ObjectID");
             return routeConfig.QueryGoodRouteIndex(objectID);

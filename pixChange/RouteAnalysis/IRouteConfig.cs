@@ -9,6 +9,6 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
     interface IRouteConfig
     {
         //根据objectID查询绕行路线的编号 
-        bool QueryGoodRouteIndex(int objectID);
+        string QueryGoodRouteIndex(int objectID);
     }
 }

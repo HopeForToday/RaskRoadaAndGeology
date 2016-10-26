@@ -10,6 +10,6 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
 {
     public interface IRouteDecide
     {
-        int QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer);
+        string QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer);
     }
 }
