@@ -25,38 +25,53 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                 Console.WriteLine("天气预报提取失败!");
                 return;
             }
-            DataTable idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID ).Tables[0];
+            DataTable idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID).Tables[0];
             List<string> sqllist = new List<string>();
+            // var dd=WeatherList.Find(t=>t.dateTime.Contains("日"));var index1=WeatherList.IndexOf(dd);  下面的方式效率会高一些
+            int index = 0, count = WeatherList.Count;
+            for (int k = 0; k < count; k++)
+            {
+                if (WeatherList[k].dateTime.Contains("日"))
+                {
+                    index = k;
+                    break;
+                }
+            }
+            WeatherList.RemoveRange(index + 2, 8 - (index + 2));
+            //第一次录入数据 
             if (idS.Rows.Count == 0 || idS == null)
             {
-               
-                foreach (var r in WeatherList)
+                for (int i = 0; i < 56; i++)
                 {
-
-                     string sql =
-                        string.Format(
-                            "INSERT INTO  ForecastWeather (AreaID,dtime3hour,temperature,rains,wind,windd,qy,yl,njd,xdsd) VALUES ({0},'{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}') ",
-                            AreaID, r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd);//datetime 不能用在sql语句中 是关键字
-                 // Common.DBHander.ExeSQL(sql);
+                    string sql = "INSERT INTO  ForecastWeather (AreaID) values (" + AreaID + ")";
                     sqllist.Add(sql);
-                }              
+                }
+                Common.DBHander.insertToAccessByBatch(sqllist);
+                idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID).Tables[0];
             }
-            else
+
+            List<int> IDs = new List<int>();
+            foreach (DataRow dr in idS.Rows)
             {
-                List<int> IDs=new List<int>();
-                foreach (DataRow dr in idS.Rows)
-                {
-                    IDs.Add(Convert.ToInt32(dr[0]));
-                }
-                for (int i = 0; i < IDs.Count; i++)
-                {
-                    var r = WeatherList[i];
-                    sqllist.Add(string.Format("update ForecastWeather set dtime3hour='{0}' , temperature='{1}',temperature='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}'  where ID='{9}' ", r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd, IDs[i]));
-                }
-               
+                IDs.Add(Convert.ToInt32(dr[0]));
             }
+            //var kk = WeatherList.Find(t=>t.dateTime.Contains("日"));
+            //var dd = WeatherList.IndexOf(kk);   下面的代码效率要高一些
+
+            int start = 8 - index - 1;//开始存数据的时间段
+            int timeD = IDs.Count - start;//需要录入数据的时间段数
+            //WeatherList.RemoveRange(index + 2, 8 - (index+2) );
+            sqllist.Clear();
+            for (int i = 0; i < WeatherList.Count; i++)
+            {
+                var r = WeatherList[i];
+                sqllist.Add(string.Format("update ForecastWeather set dtime3hour='{0}' , temperature='{1}',rains='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}'  where ID={9} ",
+                    r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd, IDs[8 - (index + 2) + i]));
+            }
+
+
             Common.DBHander.insertToAccessByBatch(sqllist);
-          
+
         }
         //实际上只有最近23个小时的数据
         public  void Savelast24hMsg(string url, int AreaID)
