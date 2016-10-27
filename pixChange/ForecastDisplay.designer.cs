@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ForecastDisplay));
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
@@ -129,7 +130,7 @@
             this.xtraTabPage2.Appearance.Header.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.xtraTabPage2.Controls.Add(this.panelControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(713, 383);
+            this.xtraTabPage2.Size = new System.Drawing.Size(713, 379);
             this.xtraTabPage2.Text = "未来7天天气";
             // 
             // panelControl1
@@ -138,7 +139,7 @@
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(713, 383);
+            this.panelControl1.Size = new System.Drawing.Size(713, 379);
             this.panelControl1.TabIndex = 0;
             // 
             // gridControl1
@@ -147,7 +148,7 @@
             this.gridControl1.Location = new System.Drawing.Point(2, 2);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(709, 379);
+            this.gridControl1.Size = new System.Drawing.Size(709, 375);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -258,7 +259,7 @@
             this.xtraTabPage3.Appearance.Header.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.xtraTabPage3.Controls.Add(this.chartControl2);
             this.xtraTabPage3.Name = "xtraTabPage3";
-            this.xtraTabPage3.Size = new System.Drawing.Size(713, 383);
+            this.xtraTabPage3.Size = new System.Drawing.Size(713, 379);
             this.xtraTabPage3.Text = "过去24时天气";
             // 
             // chartControl2
@@ -271,7 +272,7 @@
             this.chartControl2.Location = new System.Drawing.Point(0, 0);
             this.chartControl2.Name = "chartControl2";
             this.chartControl2.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl2.Size = new System.Drawing.Size(713, 383);
+            this.chartControl2.Size = new System.Drawing.Size(713, 379);
             this.chartControl2.TabIndex = 0;
             // 
             // splitContainerControl1
@@ -351,10 +352,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 411);
             this.Controls.Add(this.splitContainerControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "ForecastDisplay";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ForecastDisplay";
+            this.Text = "天气详情";
             this.Load += new System.EventHandler(this.ForecastDisplay_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).EndInit();
