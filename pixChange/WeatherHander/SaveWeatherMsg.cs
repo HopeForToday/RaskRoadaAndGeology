@@ -17,7 +17,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
         {
             this.getWeatherObj = getWeatherObj;
         }
-        public  void SaveForeacastWerherMsg(string url,int AreaID)
+        public    void SaveForeacastWerherMsg(string url,int AreaID)
         {
             List<forecastWeatherMesg> WeatherList = getWeatherObj.getforcastMessage(url);
             if (WeatherList.Count == 0)
