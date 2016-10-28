@@ -369,6 +369,7 @@
             this.barButtonItem6.Id = 11;
             this.barButtonItem6.ImageUri.Uri = "BringToFront";
             this.barButtonItem6.Name = "barButtonItem6";
+            this.barButtonItem6.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem6_ItemClick_2);
             // 
             // barButtonItem7
             // 
@@ -412,6 +413,7 @@
             this.barButtonItem12.Id = 17;
             this.barButtonItem12.ImageUri.Uri = "Through";
             this.barButtonItem12.Name = "barButtonItem12";
+            this.barButtonItem12.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem12_ItemClick);
             // 
             // barButtonItem13
             // 
