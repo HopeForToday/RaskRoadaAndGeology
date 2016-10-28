@@ -55,12 +55,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
             {
                 IDs.Add(Convert.ToInt32(dr[0]));
             }
-            //var kk = WeatherList.Find(t=>t.dateTime.Contains("日"));
-            //var dd = WeatherList.IndexOf(kk);   下面的代码效率要高一些
-
-            int start = 8 - index - 1;//开始存数据的时间段
-            int timeD = IDs.Count - start;//需要录入数据的时间段数
-            //WeatherList.RemoveRange(index + 2, 8 - (index+2) );
+        
             sqllist.Clear();
             for (int i = 0; i < WeatherList.Count; i++)
             {
