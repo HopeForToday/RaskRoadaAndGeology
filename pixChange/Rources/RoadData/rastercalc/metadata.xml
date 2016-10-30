@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="zh"><Esri><CreaDate>20160921</CreaDate><CreaTime>23495300</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.2\ArcToolbox\Toolboxes\Spatial Analyst Tools.tbx\RasterCalculator" Date="20160921" Time="234953">RasterCalculator ""Reclass_Feat1" * "Feature_netw1" / 25" D:\RoadTest\rastercalc</Process></lineage></DataProperties></Esri></metadata>

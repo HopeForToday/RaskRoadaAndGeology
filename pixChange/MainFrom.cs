@@ -627,6 +627,8 @@ namespace pixChange
         private void barButtonItem11_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //添加雨量字段并赋值 测试
+            ConditionForm condtion = new ConditionForm();
+            condtion.Show();
             //addRains();  
             //roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", 20, @"..\..\Rources\RoadData\RoadRasterData");
         }
