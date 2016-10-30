@@ -633,66 +633,6 @@ namespace pixChange
             //roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", 20, @"..\..\Rources\RoadData\RoadRasterData");
         }
 
-        //public bool addRains()
-        //{
-            //var pFeatureLayer = roadRaskCaculate.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
-            //添加雨量字段
-            // 获取ITable对象
-            //ITable pTable = pFeatureLayer as ITable;
-            //if (pTable == null)
-            //{
-            //    return false;
-            //}
-            //// 创建新字段                        
-            //IField nField = new FieldClass(); //new a field instance
-            //IFieldEdit nFieldEdit = (IFieldEdit)nField;
-            //nFieldEdit.Name_2 = "RAINS";
-            //nFieldEdit.Type_2 = esriFieldType.esriFieldTypeSingle;
-            //nFieldEdit.DefaultValue_2 = 0;
-            //pTable.AddField(nFieldEdit);
-            //IDataset dataset = fclass as IDataset;
-            //IWorkspace workspace = dataset.Workspace;
-            //IWorkspaceEdit wse = workspace as IWorkspaceEdit;
-            //wse.StartEditing(false);
-            //wse.StartEditOperation();
-
-            //IDataset dataset = pFeatureLayer as IDataset;
-            //IWorkspace workspace = dataset.Workspace;
-            //IWorkspaceEdit wse = workspace as IWorkspaceEdit;
-
-            //wse.StartEditing(false);
-            //wse.StartEditOperation();
-            //int proField = pFeatureLayer.FindField("RAINS");
-
-            //IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-            //IFeature pFeature = pFeatureCursor.NextFeature();
-            //int i = 0;
-            ////录入雨量到矢量数据  这里是编码测试
-            //while (pFeature != null)
-            //{
-            //    if (i < 10)//这里是测试，实际上是根据矢量文件里的字段这段公路是属于一个县
-            //    {
-            //        pFeatureLayer.GetFeature(i).set_Value(proField, 25.3);
-            //        pFeatureLayer.GetFeature(i).Store();
-            //    }
-            //    else if (i >= 10 && i < 20)
-            //    {
-            //        pFeatureLayer.GetFeature(i).set_Value(proField, 10.2);
-            //        pFeatureLayer.GetFeature(i).Store();
-            //    }
-            //    else if (i >= 20)
-            //    {
-            //        pFeatureLayer.GetFeature(i).set_Value(proField, 5);
-            //        pFeatureLayer.GetFeature(i).Store();
-            //    }
-            //    i++;
-            //    pFeature = pFeatureCursor.NextFeature();
-            //}
-
-            //wse.StopEditOperation();
-            //wse.StopEditing(true);
-            //return true;
-        //}
 
 
         private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
@@ -848,23 +788,7 @@ namespace pixChange
             }
             return queryLayer;
         }
-        private void barButtonItem6_ItemClick_2(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            MainFrom.WhichChecked = 2;
-            MainFrom.groupLayer = new GroupLayerClass();
-            MainFrom.groupLayer.Name = "地质灾害评估数据";
-            LayerMangerView lm = new LayerMangerView();
-            lm.Show();
-        }
 
-        private void barButtonItem12_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            MainFrom.WhichChecked = 4;
-            MainFrom.groupLayer = new GroupLayerClass();
-            MainFrom.groupLayer.Name = "生态数据";
-            LayerMangerView lm = new LayerMangerView();
-            lm.Show();
-        }
         //指针按钮事件  去除其它操作鼠标命令
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
@@ -875,67 +799,23 @@ namespace pixChange
         {
             MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
         }
-      
 
-    //    private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
-    //    {
-    //        ILayer layer = null;
-    //        IBasicMap map = null;
-    //        object other = null;
-    //        object index = null;
-    //        bool IsUse = false;
-    //        esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
-    //        m_pTocControl.Update();
-    //        MainFrom.m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);//获取被点击的图层
-    //        //if (layer != null)
-    //        //{
-    //        //    IsUse = layer.Visible;
-    //        //} b
-    //        //if (IsUse)
-    //        //{
-    //        //    if (layer != null)
-    //        //    {
-    //        //        layer.Visible = false;
-    //        //    }
-    //        //    if (layer is IGroupLayer)
-    //        //    {
-    //        //        ICompositeLayer pGroupLayer = layer as ICompositeLayer;
-    //        //        for (int i = 0; i < pGroupLayer.Count; i++)
-    //        //        {
-    //        //            ILayer pCompositeLayer;
-    //        //            pCompositeLayer = pGroupLayer.get_Layer(i);
-    //        //            pCompositeLayer.Visible = false;
-    //        //        }
-    //        //    }
-    //        //    else
-    //        //    {
-    //        //        IsCheck(layer);
-    //        //    }
-    //        //}
-    //        //else
-    //        //{
-    //        //    if (layer != null)
-    //        //    {
-    //        //        layer.Visible = true;
-    //        //    }
-    //        //    if (layer is IGroupLayer)
-    //        //    {
-    //        //        ICompositeLayer pGroupLayer = layer as ICompositeLayer;
-    //        //        for (int i = 0; i < pGroupLayer.Count; i++)
-    //        //        {
-    //        //            ILayer pCompositeLayer;
-    //        //            pCompositeLayer = pGroupLayer.get_Layer(i);
-    //        //            pCompositeLayer.Visible = true;
-    //        //        }
+        private void barButtonItem9_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.WhichChecked = 2;
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "风险因素数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
 
-    //        //    }
-    //        //    else
-    //        //    {
-    //        //        IsCheck(layer);
-    //        //    }
-    //        //}
-    //        MainFrom.m_mapControl.Refresh();
-    //        MainFrom.m_pTocControl.Update();
-    //    }
+        private void barButtonItem10_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.WhichChecked = 3;
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "风险综合数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
     }
 }

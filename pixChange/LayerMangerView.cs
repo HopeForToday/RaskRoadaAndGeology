@@ -48,17 +48,25 @@ namespace pixChange
                     shapePath = Common.BaseshapePath;
                     break;
                 case 2:
-                    rasterPath = Common.GeoDisasterrasterPath;
-                    shapePath = Common.GeoDisastershapePath;
+                    rasterPath = Common.conditionRaster;
+                    shapePath = Common.conditionShape;
                     break;
                 case 3:
-                    rasterPath = Common.RoadrasterPath;
-                    shapePath = Common.RoadshapePath;
+                    rasterPath = Common.conditionAllRaster;
+                    shapePath = Common.conditionAllShape;
                     break;
-                case 4:
-                    rasterPath = Common.EcologyrasterPath;
-                    shapePath = Common.EcologyshapePath;
-                    break;
+                //case 2:
+                //    rasterPath = Common.GeoDisasterrasterPath;
+                //    shapePath = Common.GeoDisastershapePath;
+                //    break;
+                //case 3:
+                //    rasterPath = Common.RoadrasterPath;
+                //    shapePath = Common.RoadshapePath;
+                //    break;
+                //case 4:
+                //    rasterPath = Common.EcologyrasterPath;
+                //    shapePath = Common.EcologyshapePath;
+                    //break;
                 default:
                     break;
             }

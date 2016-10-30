@@ -51,24 +51,32 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// </summary>
         //基础数据
         public static string BaserasterPath = @"..\..\Rources\BaseData\BaseRasterData\";
-        //生态数据
-        public static string EcologyrasterPath = @"..\..\Rources\EcologyData\EcologyRasterData\";
-        //地质灾害数据
-        public static string GeoDisasterrasterPath = @"..\..\Rources\GeoDisasterData\GeoDisasterRasterData\";
-        //公路数据
-        public static string RoadrasterPath = @"..\..\Rources\RoadData\RoadRasterData\";
+       //风险因素数据
+        public static string conditionRaster = @"..\..\Rources\ConditionData\ConditionRasterData\";
+       //风险综合数据
+        public static string conditionAllRaster = @"..\..\Rources\ConditionAllData\ConditionAllRasterData\";
+        ////生态数据
+        //public static string EcologyrasterPath = @"..\..\Rources\EcologyData\EcologyRasterData\";
+        ////地质灾害数据
+        //public static string GeoDisasterrasterPath = @"..\..\Rources\GeoDisasterData\GeoDisasterRasterData\";
+        ////公路数据
+        //public static string RoadrasterPath = @"..\..\Rources\RoadData\RoadRasterData\";
         //public static string rasterPath = @"..\..\Rources\RasterData\";
         /// <summary>
         /// 矢量底图的存储路径
         /// </summary>
         /// //基础数据
         public static string BaseshapePath = @"..\..\Rources\BaseData\BaseShapeData\";
+        //风险因素数据
+        public static string conditionShape = @"..\..\Rources\ConditionData\ConditionShapeData\";
+        //风险综合数据
+        public static string conditionAllShape = @"..\..\Rources\ConditionAllData\ConditionAllShapeData\";
         //生态数据
-        public static string EcologyshapePath = @"..\..\Rources\EcologyData\EcologyShapeData\";
-        //地质灾害数据
-        public static string GeoDisastershapePath = @"..\..\Rources\GeoDisasterData\GeoDisasterShapeData\";
-        //公路数据
-        public static string RoadshapePath = @"..\..\Rources\RoadData\RoadShapeData\";
+        //public static string EcologyshapePath = @"..\..\Rources\EcologyData\EcologyShapeData\";
+        ////地质灾害数据
+        //public static string GeoDisastershapePath = @"..\..\Rources\GeoDisasterData\GeoDisasterShapeData\";
+        ////公路数据
+        //public static string RoadshapePath = @"..\..\Rources\RoadData\RoadShapeData\";
         //public static string shapPath = @"..\..\Rources\ShapeData\";
        /// <summary>
        /// areaXML保存路径
