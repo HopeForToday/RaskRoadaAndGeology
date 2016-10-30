@@ -54,7 +54,7 @@ namespace RoadRaskEvaltionSystem
             day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
             //数据库连接字符串
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
-            GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
+            GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID ASC", AreaId);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE AreaID = {0} ORDER BY ID ASC", AreaId);
             //获取数据并创建图表
             dt_Chart = getDataTable(ChartSqlStr);
@@ -82,6 +82,15 @@ namespace RoadRaskEvaltionSystem
             this.gridView1.IndicatorWidth = 100;
             //不显示内置的导航条。
             gridControl1.UseEmbeddedNavigator = false;
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (String.IsNullOrEmpty(dt.Rows[i]["dtime3hour"].ToString()))
+                {
+                    dt.Rows.RemoveAt(i);
+                    i--;
+                }
+            }
 
             gridControl1.DataSource = dt;
         }
@@ -270,10 +279,24 @@ namespace RoadRaskEvaltionSystem
                             }
                             break;
                         case "humidity":
-                            value = Convert.ToDouble(dt.Rows[i][yBindName].ToString());
+                            if (dt.Rows[i][yBindName].ToString().Equals("9999.0"))
+                            {
+                                value = Convert.ToDouble(dt.Rows[i - 1][yBindName].ToString());
+                            }
+                            else
+                            {
+                                value = Convert.ToDouble(dt.Rows[i][yBindName].ToString());
+                            }
                             break;
                         case "windSpeed":
-                            value = Convert.ToDouble(dt.Rows[i][yBindName].ToString());
+                            if (dt.Rows[i][yBindName].ToString().Equals("9999.0"))
+                            {
+                                value = Convert.ToDouble(dt.Rows[i - 1][yBindName].ToString());
+                            }
+                            else
+                            {
+                                value = Convert.ToDouble(dt.Rows[i][yBindName].ToString());
+                            }
                             break;
                         default:
                             break;
