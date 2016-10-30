@@ -58,7 +58,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
             //实例化图片注记
             IPictureMarkerSymbol pPicturemksb = new PictureMarkerSymbolClass();
             pPicturemksb.Size = 20;
-            pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureBitmap, pictureUri);
+           // pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureJPG, pictureUri);
+            Image image=Image.FromFile(pictureUri);
+            IPictureDisp pictureDisp= IPictureConverter.ImageToIPictureDisp(image);
+            pPicturemksb.Picture = pictureDisp;
             IMarkerElement pMarkerEle = new MarkerElement() as IMarkerElement;
             //将注记添加到元素中
             pMarkerEle.Symbol = pPicturemksb as IMarkerSymbol;

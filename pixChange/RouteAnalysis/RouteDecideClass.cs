@@ -81,7 +81,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         public string QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer)
         {
             //查询所点击的要素
-            IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 0.002);
+            IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 0.02);
             if (feature == null)
             {
                 return null;
