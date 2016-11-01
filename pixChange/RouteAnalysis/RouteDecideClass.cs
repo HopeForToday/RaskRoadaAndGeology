@@ -34,37 +34,6 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             {
                 throw new Exception("Map中不包括该图层");
             }
-            #region 注释
-            ////   map.SelectByShape()
-            //IFeatureClass pFeatureClass = layer.FeatureClass;
-            //ITopologicalOperator pTopOperator = point as ITopologicalOperator;
-            //IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
-            ////进行选取
-            //map.SelectByShape(pGeometry, null, true);
-            //map.ClearSelection();
-            ////空间过滤运算
-            //ISpatialFilter pSpatialFilter = new SpatialFilterClass();
-            //pSpatialFilter.Geometry = pGeometry;
-            ////设置选取点与待选取要素之间的空间关系
-            //switch (pFeatureClass.ShapeType)
-            //{
-            //    case esriGeometryType.esriGeometryPoint:
-            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelContains;
-            //        break;
-            //    case esriGeometryType.esriGeometryPolyline:
-            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;
-            //        break;
-            //    case esriGeometryType.esriGeometryPolygon:
-            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-            //        break;
-
-            //}
-            //pSpatialFilter.GeometryField = pFeatureClass.ShapeFieldName;
-            ////利用指针进行遍历 不过我们查询单个元素 只需要对第一个进行返回
-            //IFeatureCursor pFeatureCursor;
-            //pFeatureCursor = pFeatureClass.Search(pSpatialFilter, false);
-            //return pFeatureCursor.NextFeature();
-            #endregion
             ITopologicalOperator pTopOperator = point as ITopologicalOperator;
             IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
             IIdentify pIdentity = layer as IIdentify;
@@ -77,18 +46,75 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             }
             return pFeature;
         }
-       //查询绕行路线 0代表没有查询到
-        public string QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer)
+
+        //查询绕行路线 0代表没有查询到
+        public string QueryTheRoute(IPoint point,IFeatureLayer featureLayer,ref IPoint rightPoint)
         {
-            //查询所点击的要素
-            IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 0.02);
+            //查询离所点击的点最近的元素
+            IFeature feature = QueryTheRightFeatureByPoint(point, featureLayer, ref rightPoint);
             if (feature == null)
             {
                 return null;
             }
             int index = feature.Fields.FindField("OBJECTID");
-          int objectID=(int) feature.get_Value(index);
+           int objectID=(int) feature.get_Value(index);
             return routeConfig.QueryGoodRouteIndex(objectID);
+        }
+        /// <summary>
+        /// 查询配置文件中线要素集合中离点最近的元素
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="map"></param>
+        /// <param name="featureLayer"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private IFeature QueryTheRightFeatureByPoint(IPoint point, IFeatureLayer featureLayer, ref IPoint rightPoint)
+        {
+            List<IFeature> featuers = QueryAllFeatureInConfig(featureLayer);
+            IFeature feature = null;
+            double resultDistance = 9999999999;
+            ILine resultLine = null;
+            foreach (IFeature value in featuers)
+            {
+                double tempValue=0;
+                int disNum=0;
+                ILine line=DistanceUtil.GetNearestLine(value.Shape as  IPolyline, point, ref tempValue, ref disNum);
+                if(tempValue<resultDistance)
+                {
+                    resultDistance = tempValue;
+                    feature = value;
+                    resultLine = line;
+                }
+            }
+            rightPoint = new PointClass();
+            rightPoint.X = resultLine.FromPoint.X;
+            rightPoint.Y = resultLine.FromPoint.Y;
+            return feature;
+        }
+        //查询所有配置文件中的要素
+        public List<IFeature> QueryAllFeatureInConfig(IFeatureLayer layer)
+        {
+            List<IFeature> queryFeaturers = new List<IFeature>();
+            IFeatureClass featureClass=layer.FeatureClass;
+            Dictionary<int, string> queryObjectIDS=routeConfig.QueryIndexs;
+            foreach(var v in queryObjectIDS)
+            {
+                IFeature feature = QuerySingleFeature(featureClass, v.Key);
+                if(feature!=null)
+                {
+                    queryFeaturers.Add(feature);
+                }
+            }
+            return queryFeaturers;
+        }
+        //根据OBJECTID查询单个要素
+        public IFeature QuerySingleFeature(IFeatureClass featureClass, int objecID)
+        {
+            IQueryFilter2 queryFilter2 = new QueryFilterClass();
+            queryFilter2.WhereClause = "OBJECTID = " + objecID.ToString();
+            //Using a query filter to search a feature class:
+            IFeatureCursor featureCursor = featureClass.Search(queryFilter2, false);
+            return featureCursor.NextFeature();
         }
     }
 }

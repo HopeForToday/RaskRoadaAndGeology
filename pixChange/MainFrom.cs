@@ -27,11 +27,9 @@ namespace pixChange
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
         //公路断点集合
-        private List<IPoint> breakPoints = new List<IPoint>();
+        private IPoint breakPoint =null;
         //公路断点图片注记
-        private List<IElement> pixtureElements = new List<IElement>();
-        //公路断点文字注记
-        private List<IElement> textElements = new List<IElement>();
+        private IElement pixtureElement =null;
         //路线操作接口字段
         private IRouteDecide routeDecide = ServerLocator.GetRouteDecide();
         //公路网图层
@@ -659,35 +657,27 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            //如果处于正在编辑状态 则清除断路点和标识
             if (isInserting)
             {
-                if (DialogResult.OK == MessageBox.Show("是否取消当前公路编辑状态", "提示", MessageBoxButtons.OKCancel))
-               {
-                   //SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
-                   //SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
-                   SymbolUtil.ClearElement(this.axMapControl1);
-                   this.breakPoints.Clear();
-                   this.pixtureElements.Clear();
-                   this.textElements.Clear();
-               }
-            }
-            else
-            {
                 SymbolUtil.ClearElement(this.axMapControl1);
-                this.breakPoints.Clear();
-                this.pixtureElements.Clear();
-                this.textElements.Clear();
-                //根据绕行名称清除所有绕行路线图层
-                for (int i = 0; i < this.axMapControl1.LayerCount; i++)
+                this.breakPoint = null;
+                this.pixtureElement = null;
+                isInserting = false;
+            }
+            if(this.pixtureElement!=null)
+            {
+                SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
+            }
+            //根据绕行名称清除所有绕行路线图层
+            for (int i = 0; i < this.axMapControl1.LayerCount; i++)
+            {
+                ILayer layer = this.axMapControl1.get_Layer(i);
+                if (layer.Name.EndsWith("绕行"))
                 {
-                    ILayer layer = this.axMapControl1.get_Layer(i);
-                    if (layer.Name.EndsWith("绕行"))
-                    {
-                        this.axMapControl1.DeleteLayer(i);
-                    }
+                    this.axMapControl1.DeleteLayer(i);
                 }
             }
-            isInserting = true;
             /**优先查看是否有公路风险图层**/
             riskLayer = QueryLayerInMap("公路风险");
             if (riskLayer == null)
@@ -701,60 +691,60 @@ namespace pixChange
                 routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
                 this.axMapControl1.AddLayer(routeNetLayer);
             }
-            if(riskLayer==null)
+            if (riskLayer == null)
             {
                 riskLayer = RasterSimpleHelper.OpenRasterFile(Common.RiskDataPath);
                 this.axMapControl1.AddLayer(riskLayer);
             }
+            isInserting = true;
         }
         //插入公路断点
         private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
         {
+            if(this.pixtureElement!=null)
+            {
+                SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
+            }
             IPoint point = new PointClass();
             point.X = e.mapX;
             point.Y = e.mapY;
-            IPoint textPoint=new PointClass();
-            textPoint.X=e.mapX+5;
-            textPoint.Y=e.mapY+5;
-            string text=string.Format("{0}号断路点",this.breakPoints.Count+1);
-            this.pixtureElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath));
-            this.textElements.Add(SymbolUtil.DrawSymbolWithText(textPoint, this.axMapControl1, text));
-            this.breakPoints.Add(point);
+            this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
+            this.breakPoint = point;
         }
+ 
         //计算最优路线
         //最后可以考虑使用async进行异步查询
         private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             this.isInserting = false;
-            if(breakPoints.Count==0)
+            if (breakPoint == null)
             {
-                MessageBox.Show("尚未设置任何公路断点");
+                MessageBox.Show("尚未设置公路断点");
                 return;
             }
+            //图标修正点
+            IPoint rightPoint = null;
             //公路网要素图层
-            List<string> queryResults = new List<string>();
+            string queryResults = string.Empty;
             //进行路线查询
-            foreach(var point in this.breakPoints)
-            {
-                queryResults.Add(routeDecide.QueryTheRoute(point, this.axMapControl1.Map, routeNetLayer as IFeatureLayer));
-            }
+            queryResults = routeDecide.QueryTheRoute(breakPoint, routeNetLayer as IFeatureLayer, ref rightPoint);
             //进行路线展示
-            for(int i=0;i<queryResults.Count;i++)
+            if (string.IsNullOrEmpty(queryResults))
             {
-                string value=queryResults[i];
-                if(string.IsNullOrEmpty(value))
-                {
-                    MessageBox.Show(String.Format("{0}号点未能查询到最佳绕行方案，请检查公路断点位置",i+1));
-                    continue;
-                }
-                value=value+"绕行";
-                ShowRoute(value);
+                MessageBox.Show("未能查询到最佳绕行方案，请检查公路断点位置是否太过远离研究路线");
+                return;
             }
+            queryResults += "绕行";
+            ShowRoute(queryResults);
             if (this.routeNetLayer != null)
             {
                 m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
-            //    this.routeNetLayer.Visible = false;
+                // this.routeNetLayer.Visible = false;
             }
+            //修正短路点的坐标
+            SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
+            this.breakPoint = rightPoint;
+            this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(breakPoint, this.axMapControl1, Common.RouteBeakImggePath);
         }
         //显示绕行路线
         private void ShowRoute(string routeName)
@@ -788,7 +778,19 @@ namespace pixChange
 
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SymbolUtil.ClearElement(this.axMapControl1);
+            if (this.pixtureElement != null)
+            {
+                SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
+            }
+            //根据绕行名称清除所有绕行路线图层
+            for (int i = 0; i < this.axMapControl1.LayerCount; i++)
+            {
+                ILayer layer = this.axMapControl1.get_Layer(i);
+                if (layer.Name.EndsWith("绕行"))
+                {
+                    this.axMapControl1.DeleteLayer(i);
+                }
+            }
             MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
         }
 
@@ -809,6 +811,5 @@ namespace pixChange
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
         }
-      
     }
 }

@@ -482,7 +482,6 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem9, true);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem10);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem11);
-            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem14);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem15);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem16);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";

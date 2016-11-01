@@ -10,5 +10,9 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
     {
         //根据objectID查询绕行路线的编号 
         string QueryGoodRouteIndex(int objectID);
+        Dictionary<int, string> QueryIndexs
+        {
+            get;
+        }
     }
 }

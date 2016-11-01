@@ -11,6 +11,17 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
     {
         //返回空或者空串 代表没有查询到
         private Dictionary<int, string> queryIndexs;
+        public Dictionary<int, string> QueryIndexs
+        {
+            get
+            {
+                if (queryIndexs == null)
+                {
+                    queryIndexs = queryAllIndex();
+                }
+                return queryIndexs;
+            }
+        }
         public string QueryGoodRouteIndex(int objectID)
         {
             if (queryIndexs == null)
