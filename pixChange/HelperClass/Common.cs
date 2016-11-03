@@ -14,6 +14,7 @@ using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.SystemUI;
 using pixChange;
 using pixChange.HelperClass;
+using ESRI.ArcGIS.DataSourcesRaster;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
@@ -217,7 +218,46 @@ namespace RoadRaskEvaltionSystem.HelperClass
            }
            return IsEqual;
        }
-       //public static void mapHandel()
+
+       public static void funColorForRaster_Classify(IRasterLayer pRasterLayer,int ClassNum)
+       {
+           IRasterClassifyColorRampRenderer pRClassRend = new RasterClassifyColorRampRendererClass();
+           IRasterRenderer pRRend = pRClassRend as IRasterRenderer;
+           IRaster pRaster = pRasterLayer.Raster;
+           IRasterBandCollection pRBandCol = pRaster as IRasterBandCollection;
+           IRasterBand pRBand = pRBandCol.Item(0);
+           if (pRBand.Histogram == null)
+           {
+               pRBand.ComputeStatsAndHist();
+           }
+           pRRend.Raster = pRaster;
+           pRClassRend.ClassCount = ClassNum;
+           pRRend.Update();
+           IRgbColor pFromColor = new RgbColorClass();
+           pFromColor.Red = 0;//绿  
+           pFromColor.Green = 255;
+           pFromColor.Blue = 0;
+           IRgbColor pToColor = new RgbColorClass();
+           pToColor.Red = 255;//红
+           pToColor.Green = 0;
+           pToColor.Blue = 0;
+           IAlgorithmicColorRamp colorRamp = new AlgorithmicColorRampClass();
+           colorRamp.Size = ClassNum;
+           colorRamp.FromColor = pFromColor;
+           colorRamp.ToColor = pToColor;
+           bool createColorRamp;
+           colorRamp.CreateRamp(out createColorRamp);
+           IFillSymbol fillSymbol = new SimpleFillSymbolClass();
+           for (int i = 0; i < pRClassRend.ClassCount; i++)
+           {
+               fillSymbol.Color = colorRamp.get_Color(i);
+               pRClassRend.set_Symbol(i, fillSymbol as ISymbol);
+               pRClassRend.set_Label(i,(i+1).ToString());
+           }
+           pRasterLayer.Renderer = pRRend;
+           MainFrom.m_mapControl.AddLayer(pRasterLayer);
+       }
+        //public static void mapHandel()pRClassRend.get_Break(i).ToString()
        //{
        //    IFeatureLayer pFeatureLayer;
        //    IFeatureClass pFeatureClass;

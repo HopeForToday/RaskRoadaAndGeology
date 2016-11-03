@@ -368,29 +368,6 @@ namespace pixChange
                     m_mouseDownPoint = pPoint;
                     m_isMouseDown = true;
                     break;
-                case CustomTool.RuleMeasure://测距离
-                    IPolyline plinemeasure;
-                    plinemeasure = (IPolyline)m_mapControl.TrackLine();
-                    ISpatialReferenceFactory spatialReferenceFactory;
-                    spatialReferenceFactory = new SpatialReferenceEnvironment();
-
-                    IProjectedCoordinateSystem pPCS;
-                    pPCS = spatialReferenceFactory.CreateProjectedCoordinateSystem((int)esriSRProjCSType.esriSRProjCS_WGS1984N_AsiaAlbers);
-                    plinemeasure.Project(pPCS);
-
-                    m_mapControl.MapUnits = esriUnits.esriKilometers;
-
-                    IGeometry input_geometry;
-                    input_geometry = plinemeasure.FromPoint;
-                    IProximityOperator proOperator = (IProximityOperator)input_geometry;
-                    double check;
-                    check = proOperator.ReturnDistance(plinemeasure.ToPoint);
-
-                    MessageBox.Show("所测距离为：" + check.ToString("#######.##") + "米");
-                    m_cTool = CustomTool.None;
-                    break;
-
-
                 case CustomTool.RectSelect:
                     //    pFeatureLayer = (IFeatureLayer)m_mapControl.get_Layer(toolComboBox.SelectedIndex);
                     pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
@@ -579,15 +556,6 @@ namespace pixChange
             m_cTool = CustomTool.RectSelect;
 
         }
-
-        //测距
-        private void MearsureDistance(object sender, EventArgs e)
-        {
-            m_mapControl.CurrentTool = null;//避免之前的工具命令造成影响
-            m_cTool = CustomTool.RuleMeasure;
-        }
-
-
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             MainFrom.WhichChecked = 1;
@@ -664,11 +632,18 @@ namespace pixChange
                 this.breakPoint = null;
                 this.pixtureElement = null;
                 isInserting = false;
+                this.barButtonItem15.Caption = "设置断点";
+            }
+            else
+            {
+                isInserting = true;
+                this.barButtonItem15.Caption = "取消断点";
             }
             if(this.pixtureElement!=null)
             {
                 SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
             }
+            MainFrom.m_mapControl.Refresh();
             //根据绕行名称清除所有绕行路线图层
             for (int i = 0; i < this.axMapControl1.LayerCount; i++)
             {
@@ -696,7 +671,8 @@ namespace pixChange
                 riskLayer = RasterSimpleHelper.OpenRasterFile(Common.RiskDataPath);
                 this.axMapControl1.AddLayer(riskLayer);
             }
-            isInserting = true;
+            //isInserting = !isInserting;
+            //isInserting = true;
         }
         //插入公路断点
         private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -705,11 +681,13 @@ namespace pixChange
             {
                 SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
             }
+            
             IPoint point = new PointClass();
             point.X = e.mapX;
             point.Y = e.mapY;
             this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
             this.breakPoint = point;
+            this.barButtonItem15.Caption = "取消断点";
         }
  
         //计算最优路线
@@ -810,6 +788,11 @@ namespace pixChange
             MainFrom.groupLayer.Name = "风险综合数据";
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
+        }
+
+        private void barButtonItem17_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            new ConfigForm().ShowDialog();
         }
     }
 }

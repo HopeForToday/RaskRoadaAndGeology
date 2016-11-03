@@ -40,7 +40,6 @@
             this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
@@ -75,11 +74,16 @@
             this.barButtonItem14 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem15 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem16 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem17 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
+            this.barButtonItem18 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem19 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem20 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem21 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -133,7 +137,6 @@
             this.toolStripButton6,
             this.toolStripButton2,
             this.toolStripButton7,
-            this.toolStripButton8,
             this.toolStripSeparator5,
             this.toolStripButton9,
             this.toolStripLabel3,
@@ -197,15 +200,6 @@
             this.toolStripButton7.Text = "全景显示";
             this.toolStripButton7.Click += new System.EventHandler(this.ToolButtonFull_Click);
             // 
-            // toolStripButton8
-            // 
-            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
-            this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton8.Name = "toolStripButton8";
-            this.toolStripButton8.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButton8.Text = "测距";
-            this.toolStripButton8.Click += new System.EventHandler(this.MearsureDistance);
-            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
@@ -218,6 +212,7 @@
             this.toolStripButton9.Name = "toolStripButton9";
             this.toolStripButton9.Size = new System.Drawing.Size(76, 22);
             this.toolStripButton9.Text = "拉框查询";
+            this.toolStripButton9.Visible = false;
             this.toolStripButton9.Click += new System.EventHandler(this.LayerSelect_Click);
             // 
             // toolStripLabel3
@@ -229,17 +224,20 @@
             // 
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(140, 25);
+            this.toolStripComboBox2.Visible = false;
             // 
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
             this.toolStripLabel4.Size = new System.Drawing.Size(56, 22);
             this.toolStripLabel4.Text = "图层选择";
+            this.toolStripLabel4.Visible = false;
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator6.Visible = false;
             // 
             // toolStripButton1
             // 
@@ -292,9 +290,10 @@
             this.barButtonItem5,
             this.barButtonItem14,
             this.barButtonItem15,
-            this.barButtonItem16});
+            this.barButtonItem16,
+            this.barButtonItem17});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 23;
+            this.ribbonControl1.MaxItemId = 24;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -449,7 +448,7 @@
             // 
             // barButtonItem15
             // 
-            this.barButtonItem15.Caption = "公路断点";
+            this.barButtonItem15.Caption = "设置断点";
             this.barButtonItem15.Id = 21;
             this.barButtonItem15.ImageUri.Uri = "Delete";
             this.barButtonItem15.Name = "barButtonItem15";
@@ -462,6 +461,14 @@
             this.barButtonItem16.ImageUri.Uri = "Apply";
             this.barButtonItem16.Name = "barButtonItem16";
             this.barButtonItem16.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem16_ItemClick);
+            // 
+            // barButtonItem17
+            // 
+            this.barButtonItem17.Caption = "预警参数设置";
+            this.barButtonItem17.Id = 23;
+            this.barButtonItem17.ImageUri.Uri = "Customization";
+            this.barButtonItem17.Name = "barButtonItem17";
+            this.barButtonItem17.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem17_ItemClick);
             // 
             // ribbonPage1
             // 
@@ -484,6 +491,7 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem11);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem15);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem16);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem17);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "公路风险评估与预警";
             // 
@@ -499,6 +507,34 @@
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
             this.ribbonStatusBar1.Size = new System.Drawing.Size(920, 25);
+            // 
+            // barButtonItem18
+            // 
+            this.barButtonItem18.Caption = "预警参数设置";
+            this.barButtonItem18.Id = 20;
+            this.barButtonItem18.ImageUri.Uri = "Customization";
+            this.barButtonItem18.Name = "barButtonItem18";
+            // 
+            // barButtonItem19
+            // 
+            this.barButtonItem19.Caption = "预警参数设置";
+            this.barButtonItem19.Id = 20;
+            this.barButtonItem19.ImageUri.Uri = "Customization";
+            this.barButtonItem19.Name = "barButtonItem19";
+            // 
+            // barButtonItem20
+            // 
+            this.barButtonItem20.Caption = "预警参数设置";
+            this.barButtonItem20.Id = 20;
+            this.barButtonItem20.ImageUri.Uri = "Customization";
+            this.barButtonItem20.Name = "barButtonItem20";
+            // 
+            // barButtonItem21
+            // 
+            this.barButtonItem21.Caption = "预警参数设置";
+            this.barButtonItem21.Id = 20;
+            this.barButtonItem21.ImageUri.Uri = "Customization";
+            this.barButtonItem21.Name = "barButtonItem21";
             // 
             // MainFrom
             // 
@@ -541,7 +577,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton5;
         private System.Windows.Forms.ToolStripButton toolStripButton6;
         private System.Windows.Forms.ToolStripButton toolStripButton7;
-        private System.Windows.Forms.ToolStripButton toolStripButton8;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton toolStripButton9;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
@@ -581,6 +616,11 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem15;
         private DevExpress.XtraBars.BarButtonItem barButtonItem16;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem17;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem18;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem19;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem20;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem21;
    
     }
 }

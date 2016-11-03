@@ -283,11 +283,9 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            //栅格计算器 计算风险级数  先不要签你的三方协议 然后存储  表达式必须隔开
            IMapAlgebraOp mapAlgebra = new RasterMapAlgebraOpClass();
            IRasterDataset roadEvalRaster = OpenRasterDataSet(rasterWorkspace, roadEvalName);
-
            IGeoDataset geo1 = roadEvalRaster as IGeoDataset;
-
            mapAlgebra.BindRaster(geo1, "EvalRaster");
-           IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * 10 / 25");//然后存储  表达式必须间隔开
+           IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster] * " + rains + " / 25");//然后存储  表达式必须间隔开
            //将生成的风险栅格重分类
            //<0.2	一级：可能性小
            //0.2-0.4	二级：可
@@ -310,19 +308,6 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            {
                pNumRemap.MapRange(v.Value.MinValue, v.Value.MaxValue, v.Key);
            }
-           //pNumRemap.MapRange(dMinValue, 0.2, 1);
-           //pNumRemap.MapRange(0.2, 0.4, 2);
-           //pNumRemap.MapRange(0.4, 0.6, 3);
-           //pNumRemap.MapRange(0.6, dMaxValue, 4);
-           //pNumRemap.MapRangeToNoData(-1000, 0);
-           //pNumRemap.MapRange(0.8, 1000, 5);
-           /*
-           pNumRemap.MapRange(dMinValue, 0.2, 0);
-           pNumRemap.MapRange(0.2, 0.4, 1);
-           pNumRemap.MapRange(0.4, 0.6, 2);
-           pNumRemap.MapRange(0.6, 0.8, 3);
-           pNumRemap.MapRange(0.8, dMaxValue, 4);
-            */
            IRemap pRemap = pNumRemap as IRemap;
            //IGeoDataset geoDataset_result = pReclassOp.ReclassByRemap(raskDataset, pRemap, true);
            IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
@@ -330,22 +315,8 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            rasterLayer.CreateFromRaster(pOutRaster);
            if (rasterLayer != null)
            {
-               //string fullPath = Common.RoadshapePath+"道路.shp";
                rasterLayer.Name = "公路风险";
                Boolean IsEqual = false;
-               //int Position = fullPath.LastIndexOf("\\");
-               ////文件目录
-               //string FilePath = fullPath.Substring(0, Position);
-               //string ShpName = fullPath.Substring(Position + 1);
-               //IWorkspaceFactory pWF;
-               //pWF = new ShapefileWorkspaceFactory();
-               //IFeatureWorkspace pFWS;
-               //pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
-               //IFeatureClass pFClass;
-               //pFClass = pFWS.OpenFeatureClass(ShpName);
-               //IFeatureLayer pFLayer = new FeatureLayer();
-               //pFLayer.FeatureClass = pFClass;
-
                for (int i = 0; i < MainFrom.m_mapControl.LayerCount; i++)
                {
                    ILayer ComLayer = MainFrom.m_mapControl.get_Layer(i);
@@ -356,8 +327,7 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
                }
                if (!IsEqual)
                {
-                   //MainFrom.m_mapControl.AddLayer((ILayer)pFLayer);
-                   MainFrom.m_mapControl.AddLayer(rasterLayer);
+                   Common.funColorForRaster_Classify(rasterLayer, roadRanges.Count);
                    IEnvelope envelope = rasterLayer.AreaOfInterest;
                    MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
                }

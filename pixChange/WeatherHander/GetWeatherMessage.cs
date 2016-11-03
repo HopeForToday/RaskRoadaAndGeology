@@ -8,24 +8,34 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using RoadRaskEvaltionSystem.WeatherHander;
+using System.Threading;
 
 namespace HtmlAgilityPackDemo1
 {
-    public class GetWeatherMessage:IGetWeather
+    public class GetWeatherMessage : IGetWeather
     {
         //获取预报信息
-        public  List<forecastWeatherMesg> getforcastMessage(string url)
+        public List<forecastWeatherMesg> getforcastMessage(string url)
         {
             HtmlWeb web = new HtmlWeb();
             HtmlAgilityPack.HtmlDocument doc = web.Load(url);
             HtmlNode rootnode = doc.DocumentNode;
             var htmls = doc.DocumentNode.SelectNodes("//*[@id='hour3']/div[@class='hour3']");
-            List<forecastWeatherMesg>forWeMsgList=new List<forecastWeatherMesg>();
+            if (htmls == null)
+            {
+                for (int i = 0; i < 10000; i++)
+                {
+                    doc = web.Load(url);
+                    htmls = doc.DocumentNode.SelectNodes("//*[@id='hour3']/div[@class='hour3']");
+                    if (htmls != null) break;
+                }
+            }
+            List<forecastWeatherMesg> forWeMsgList = new List<forecastWeatherMesg>();
             for (int k = 1; k <= htmls.Count; k++)
             {
                 var item = htmls[k - 1];
                 var xpath = item.XPath;
-                 //时间段
+                //时间段
                 var datetimes = item.SelectNodes(item.XPath + "/div[@class='row first']/div");
                 //降水信息
                 var rains = item.SelectNodes(item.XPath + "/div[@class='row js']/div");
@@ -43,14 +53,14 @@ namespace HtmlAgilityPackDemo1
                 var yl = item.SelectNodes(item.XPath + "/div[@class='row yl']/div");
                 //能见度
                 var njd = item.SelectNodes(item.XPath + "/div[@class='row njd']/div");
-              
+
                 for (int i = 1; i < datetimes.Count; i++)
                 {
                     forecastWeatherMesg fm = new forecastWeatherMesg();
-                    fm.dateTime = datetimes[i].InnerText.Replace("\n","").Trim();
+                    fm.dateTime = datetimes[i].InnerText.Replace("\n", "").Trim();
                     forWeMsgList.Add(fm);
                 }
-               
+
                 for (int j = 1; j < rains.Count; j++)
                 {
                     //8*(k-1)+j-1==>8*k+j-9
@@ -68,10 +78,10 @@ namespace HtmlAgilityPackDemo1
                 {
                     forWeMsgList[8 * k + j - 9].windd = windd[j].InnerText.Replace("\n", "").Trim();
                 }
-              
+
                 for (int j = 1; j < qy.Count; j++)
                 {
-                    forWeMsgList[8*k+j-9].qy = qy[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].qy = qy[j].InnerText.Replace("\n", "").Trim();
                 }
                 for (int j = 1; j < xdsd.Count; j++)
                 {
@@ -79,20 +89,21 @@ namespace HtmlAgilityPackDemo1
                 }
                 for (int j = 1; j < yl.Count; j++)
                 {
-                    forWeMsgList[8*k+j-9].yl = yl[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].yl = yl[j].InnerText.Replace("\n", "").Trim();
                 }
                 for (int j = 1; j < njd.Count; j++)
                 {
-                    forWeMsgList[8*k+j-9].njd = njd[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].njd = njd[j].InnerText.Replace("\n", "").Trim();
                 }
 
             }
-         
-  
+
+
             return forWeMsgList;
         }
+
         //获取过去24小时的天气详细信息
-        public  object Get24HourWeather(string url)
+        public object Get24HourWeather(string url)
         {
             Uri uil = new Uri(url);
             System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(uil);
@@ -107,21 +118,21 @@ namespace HtmlAgilityPackDemo1
             var list = JsonUtility.Instance.JsonToObjectList<OneHourWeather>(jsonData);
             return list;
         }
-      
-            public static void test()
-     {
-         //Uri url =new Uri("http://www.nmc.cn/f/rest/passed/56079");  http://www.nmc.cn/publish/forecast/ASC/ruoergai.html
-          Uri url = new Uri("http://www.nmc.cn/publish/forecast/ASC/ruoergai.html");
-          System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(url);
-          System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
-          System.IO.Stream responseStream  = response.GetResponseStream();
-          System.IO.StreamReader sr = new System.IO.StreamReader(responseStream, System.Text.Encoding.GetEncoding("utf-8"));
-          string responseText = sr.ReadToEnd();
-         sr.Close();
-         sr.Dispose();
-         responseStream.Close();
-         string jsonData = responseText;
-     }
+
+        public static void test()
+        {
+            //Uri url =new Uri("http://www.nmc.cn/f/rest/passed/56079");  http://www.nmc.cn/publish/forecast/ASC/ruoergai.html
+            Uri url = new Uri("http://www.nmc.cn/publish/forecast/ASC/ruoergai.html");
+            System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(url);
+            System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+            System.IO.Stream responseStream = response.GetResponseStream();
+            System.IO.StreamReader sr = new System.IO.StreamReader(responseStream, System.Text.Encoding.GetEncoding("utf-8"));
+            string responseText = sr.ReadToEnd();
+            sr.Close();
+            sr.Dispose();
+            responseStream.Close();
+            string jsonData = responseText;
+        }
         static CookieContainer GetCookie(string postString, string postUrl)
         {
 

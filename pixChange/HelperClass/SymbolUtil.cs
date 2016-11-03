@@ -38,11 +38,18 @@ namespace RoadRaskEvaltionSystem.HelperClass
         //清除元素
         public static void ClearElement(AxMapControl mapControl, IElement element)
         {
-            IMap map = mapControl.Map;
-            IActiveView pActiveView = map as IActiveView;
-            IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
-            pGraphicsContainer.DeleteElement(element);
-            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            try
+            {
+                IMap map = mapControl.Map;
+                IActiveView pActiveView = map as IActiveView;
+                IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
+                pGraphicsContainer.DeleteElement(element);
+                pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            }
+            catch (Exception)
+            {
+                
+            }
         }
         //画带图片的地图注记
         public static IElement DrawSymbolWithPicture(IPoint point, AxMapControl mapControl, string pictureUri)

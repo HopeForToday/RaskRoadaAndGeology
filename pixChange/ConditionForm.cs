@@ -241,7 +241,6 @@ namespace RoadRaskEvaltionSystem
             }
             catch (Exception)
             {
-
                 throw;
             }
             this.Close();
