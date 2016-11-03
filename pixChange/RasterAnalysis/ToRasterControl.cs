@@ -316,21 +316,17 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            if (rasterLayer != null)
            {
                rasterLayer.Name = "公路风险";
-               Boolean IsEqual = false;
                for (int i = 0; i < MainFrom.m_mapControl.LayerCount; i++)
                {
                    ILayer ComLayer = MainFrom.m_mapControl.get_Layer(i);
                    if (rasterLayer.Name == ComLayer.Name)
                    {
-                       IsEqual = true;
+                       MainFrom.m_mapControl.Map.DeleteLayer(ComLayer);
                    }
                }
-               if (!IsEqual)
-               {
-                   Common.funColorForRaster_Classify(rasterLayer, roadRanges.Count);
-                   IEnvelope envelope = rasterLayer.AreaOfInterest;
-                   MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
-               }
+                Common.funColorForRaster_Classify(rasterLayer, roadRanges.Count);
+                IEnvelope envelope = rasterLayer.AreaOfInterest;
+                MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
            }
            return true;
        }
