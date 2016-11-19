@@ -51,10 +51,18 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            get { return routeNetFeaturePath; }
        }
-       public static string riskDataPath = Application.StartupPath + "\\" + @"Resource\风险评价";
+       private static string riskDataPath = Application.StartupPath + "\\" + @"Resource\风险评价";
        public static string RiskDataPath
        {
            get { return riskDataPath; }
+       }
+       private static string netWorkPath = Application.StartupPath + @"\Resource\网络数据集\roadnetworks.mdb";
+       /// <summary>
+       /// 网络数据集
+       /// </summary>
+       public static string NetWorkPath
+       {
+           get { return netWorkPath; }
        }
        /// <summary>
        /// 栅格底图的存储路径

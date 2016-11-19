@@ -93,7 +93,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.DataSourcesRaster, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -124,6 +124,12 @@
     </Reference>
     <Reference Include="ESRI.ArcGIS.Location, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.NetworkAnalysis, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.NetworkAnalyst, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Output, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -196,6 +202,7 @@
     <Compile Include="HelperClass\CumRaster.cs" />
     <Compile Include="HelperClass\Database.cs" />
     <Compile Include="HelperClass\DistanceUtil.cs" />
+    <Compile Include="HelperClass\FeatureClassUtil.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
     <Compile Include="HelperClass\IPictureConverter.cs">
       <SubType>Component</SubType>
@@ -203,6 +210,8 @@
     <Compile Include="HelperClass\LayerMange.cs" />
     <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
+    <Compile Include="HelperClass\UtilityNetWorkUtil.cs" />
+    <Compile Include="HelperClass\NormalNetworkUtil.cs" />
     <Compile Include="HelperClass\RainMessage.cs" />
     <Compile Include="HelperClass\RasterSimpleHelper.cs" />
     <Compile Include="HelperClass\ShapeSimpleHelper.cs" />
@@ -256,6 +265,7 @@
     <Compile Include="RouteAnalysis\IRouteDecide.cs" />
     <Compile Include="RouteAnalysis\RouteConfigClass.cs" />
     <Compile Include="RouteAnalysis\RouteDecideClass.cs" />
+    <Compile Include="RouteAnalysis\RouteDecideNew.cs" />
     <Compile Include="ServiceLocator\ServerLocator.cs" />
     <Compile Include="TreeEnter\RainsEnterTree.cs" />
     <Compile Include="TreeEnter\RanisEnViewModel.cs" />
@@ -600,9 +610,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\bin\Debug\Rources\雨量信息.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="bin\Debug\bin\Debug\Rources\雨量信息.mdb" />
     <Content Include="bin\Debug\CustomControls.dll" />
     <Content Include="bin\Debug\CustomControls.pdb" />
     <Content Include="bin\Debug\HtmlAgilityPack.dll" />
@@ -647,9 +655,6 @@
     <Content Include="bin\Debug\Rources\Images\图层.png" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif.aux.xml" />
-    <Content Include="bin\Debug\Rources\雨量信息.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="HtmlAgilityPack.dll" />
     <Content Include="Rources\BaseData\BaseShapeData\乡村点.jpg" />
     <Content Include="Rources\BaseData\BaseShapeData\乡村点.shp.xml" />
@@ -695,9 +700,6 @@
     <Content Include="Rources\xmlData\ttt4.tif" />
     <Content Include="Rources\xmlData\ttt4.tif.aux.xml" />
     <Content Include="Rources\xmlData\ttt4.tif.xml" />
-    <Content Include="Rources\雨量信息.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Rources\BaseData\BaseRasterData\" />

@@ -26,6 +26,10 @@ namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        //障碍点图层
+        private IFeatureClass barriesFeatureClass;
+        //经过节点图层
+        private IFeatureClass stopsFeatureClass;
         //公路断点集合
         private IPoint breakPoint =null;
         //公路断点图片注记
@@ -54,9 +58,6 @@ namespace pixChange
         //用于判断当前鼠标点击的菜单命令,以备在地图控件中判断操作
         static public CustomTool m_cTool;
         IScreenDisplay m_focusScreenDisplay;// For 平移
-
-        //NA分析变量
-
         //For 放大,缩小，平移
         INewEnvelopeFeedback m_feedBack;//  '拉框
         IPoint m_mouseDownPoint;
@@ -97,13 +98,15 @@ namespace pixChange
             EditDeleteFeature = 17,
             EditAttribute = 18
         };
+        //初始化障碍点图层和经过点图层
+        private void InitialAboutNetLayer()
+        {
+
+        }
         public MainFrom()
         {
             InitializeComponent();
         }
-
-
-
         private void 图层管理_Click(object sender, EventArgs e)
         {
             //List<string>LayerPathList=new List<string>();
@@ -625,6 +628,9 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            //实例化站点图层和障碍点图层
+            this.stopsFeatureClass = FeatureClassUtil.CreateMemorySimpleFeatureClass(esriGeometryType.esriGeometryPoint,this.axMapControl1.SpatialReference,"stops");
+            this.barriesFeatureClass = FeatureClassUtil.CreateMemorySimpleFeatureClass(esriGeometryType.esriGeometryPoint, this.axMapControl1.SpatialReference, "barries");
             //如果处于正在编辑状态 则清除断路点和标识
             if (isInserting)
             {
@@ -671,8 +677,6 @@ namespace pixChange
                 riskLayer = RasterSimpleHelper.OpenRasterFile(Common.RiskDataPath);
                 this.axMapControl1.AddLayer(riskLayer);
             }
-            //isInserting = !isInserting;
-            //isInserting = true;
         }
         //插入公路断点
         private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -702,23 +706,24 @@ namespace pixChange
             }
             //图标修正点
             IPoint rightPoint = null;
-            //公路网要素图层
-            string queryResults = string.Empty;
-            //进行路线查询
-            queryResults = routeDecide.QueryTheRoute(breakPoint, routeNetLayer as IFeatureLayer, ref rightPoint);
-            //进行路线展示
-            if (string.IsNullOrEmpty(queryResults))
-            {
-                MessageBox.Show("未能查询到最佳绕行方案，请检查公路断点位置是否太过远离研究路线");
-                return;
-            }
-            queryResults += "绕行";
+            /*  
+          //公路网要素图层
+          string queryResults = string.Empty;
+          //进行路线查询
+          queryResults = routeDecide.QueryTheRoute(breakPoint, routeNetLayer as IFeatureLayer, ref rightPoint);
+          //进行路线展示
+      if (string.IsNullOrEmpty(queryResults))
+          {
+              MessageBox.Show("未能查询到最佳绕行方案，请检查公路断点位置是否太过远离研究路线");
+              return;
+          }
+             queryResults += "绕行";
             ShowRoute(queryResults);
-            if (this.routeNetLayer != null)
-            {
-                m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
-                // this.routeNetLayer.Visible = false;
-            }
+     * */
+
+           // IPolyline polyline = routeDecide.QueryTheRoue(breakPoint, this.axMapControl1.Map, routeNetLayer as IFeatureLayer, Common.NetWorkPath, ref rightPoint);
+            routeDecide.QueryTheRoue(breakPoint, this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", ref rightPoint);
+            return;
             //修正短路点的坐标
             SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
             this.breakPoint = rightPoint;

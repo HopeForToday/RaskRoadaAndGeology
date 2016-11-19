@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace RoadRaskEvaltionSystem.RouteAnalysis
 {
-    class RouteDecideClass:IRouteDecide
+ //   class RouteDecideClass:IRouteDecide
+     class RouteDecideClass
     {
         IRouteConfig routeConfig = null;
         public RouteDecideClass(IRouteConfig config)
@@ -115,6 +116,12 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             //Using a query filter to search a feature class:
             IFeatureCursor featureCursor = featureClass.Search(queryFilter2, false);
             return featureCursor.NextFeature();
+        }
+
+
+        public IPolyline QueryTheRoue(IPoint breakPoint, IMap pMap, IFeatureLayer featureLayer, string dbPath, ref IPoint rightPoint)
+        {
+            throw new NotImplementedException();
         }
     }
 }

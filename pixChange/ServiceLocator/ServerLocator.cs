@@ -65,7 +65,7 @@ namespace RoadRaskEvaltionSystem.ServiceLocator
         {
             if (routeDecide == null)
             {
-                routeDecide = new RouteDecideClass(GetRoutConfig());
+                routeDecide = new RouteDecideNew();
             }
             return routeDecide;
         }
