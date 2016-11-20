@@ -10,8 +10,19 @@ using System.Threading.Tasks;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
+    /// <summary>
+    /// 要素类简单帮助类
+    /// 2016//11/20 FHR
+    /// </summary>
     class FeatureClassUtil
     {
+        /// <summary>
+        /// 根据字段集合创建一个内存要素类
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="shapeFiledName"></param>
+        /// <param name="className"></param>
+        /// <returns></returns>
         public static IFeatureClass CreateMemoryFeatureClass(IFields fields,string shapeFiledName,string className)
         {
             // 创建内存工作空间
@@ -25,6 +36,13 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 className, fields, null, null, esriFeatureType.esriFTSimple, shapeFiledName, "");
             return featureClass;
         }
+        /// <summary>
+        /// 创建一个只包含几何字段的简单内存要素类
+        /// </summary>
+        /// <param name="geometryType"></param>
+        /// <param name="spatialReference"></param>
+        /// <param name="className"></param>
+        /// <returns></returns>
         public static IFeatureClass CreateMemorySimpleFeatureClass(esriGeometryType geometryType,ISpatialReference spatialReference, string className)
         {
             // 创建内存工作空间
@@ -36,15 +54,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             IField field = new FieldClass();
             IFields fields = new FieldsClass();
             IFieldsEdit fieldsEdit = fields as IFieldsEdit;
-
             IFieldEdit fieldEdit = field as IFieldEdit;
-            /*
-         fieldEdit.Name_2 = "OBJECTID";
-         fieldEdit.Type_2 = esriFieldType.esriFieldTypeOID;
-         fieldEdit.IsNullable_2 = false;
-         fieldEdit.Required_2 = false;
-         fieldsEdit.AddField(field);
-          */
             //创建图形字段
             field = new FieldClass();
             fieldEdit = field as IFieldEdit;
@@ -90,7 +100,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
             return field;
         }
         /// <summary>
-        /// 简单的插入要素
+        /// 简单的插入只包含几何信息的要素
+        /// 注意在适当情况使用
         /// </summary>
         /// <param name="pFeature"></param>
         /// <param name="pFeatureClass"></param>
@@ -101,7 +112,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             newLineFeature.Store();
         }
         /// <summary>
-        /// 删除符合条件的元素
+        /// 删除要素类中符合条件的元素
         /// </summary>
         /// <param name="pFeatureClass"></param>
         /// <param name="whereClause"></param>

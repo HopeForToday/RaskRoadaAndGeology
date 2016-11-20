@@ -18,14 +18,14 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         {
             throw new NotImplementedException();
         }
-       public IPolyline QueryTheRoue(IPoint breakPoint, AxMapControl mapControl,  IFeatureLayer featureLayer,string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint)
+        public bool QueryTheRoue(IPoint breakPoint, AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint)
         {
             IFeature feature = null;
             int distNum = 0;
             ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature, ref distNum);
             if (breakLine == null)
             {
-                return null;
+                return false;
             }
             rightPoint = breakLine.FromPoint;
             //获取线要素的点集合
@@ -35,15 +35,18 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
                 FeatureClassUtil.CreateMemorySimpleFeatureClass(esriGeometryType.esriGeometryPoint, mapControl.SpatialReference, "stops");
             IFeatureClass barriesFeatureClass =
                 FeatureClassUtil.CreateMemorySimpleFeatureClass(esriGeometryType.esriGeometryPoint, mapControl.SpatialReference, "barries");
-           //添加站点
-            FeatureClassUtil.InsertSimpleFeature(lineCollection.get_Point(0),stopFeatureClass);
-            FeatureClassUtil.InsertSimpleFeature(lineCollection.get_Point(lineCollection.PointCount-1), stopFeatureClass);
-           //添加障碍
+            //添加站点
+            FeatureClassUtil.InsertSimpleFeature(lineCollection.get_Point(0), stopFeatureClass);
+            FeatureClassUtil.InsertSimpleFeature(lineCollection.get_Point(lineCollection.PointCount - 1), stopFeatureClass);
+            //添加障碍
             FeatureClassUtil.InsertSimpleFeature(rightPoint, barriesFeatureClass);
-           NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, stopFeatureClass, barriesFeatureClass, 0.2);
-            return null;
+            IDictionary<string, IFeatureClass> featureClasses = new Dictionary<string, IFeatureClass>();
+            featureClasses.Add("Stops", stopFeatureClass);
+            featureClasses.Add("Barriers", barriesFeatureClass);
+            //最短路径分析
+            return NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses, 0.2);
         }
-        public ESRI.ArcGIS.Geometry.IPolyline QueryTheRoue2(ESRI.ArcGIS.Geometry.IPoint breakPoint, IMap pMap, IFeatureLayer featureLayer, string dbPath, ref IPoint rightPoint)
+        public IPolyline QueryTheRoue2(IPoint breakPoint, IMap pMap, IFeatureLayer featureLayer, string dbPath, ref IPoint rightPoint)
         {
             
             IFeature feature = null;

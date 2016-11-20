@@ -10,15 +10,24 @@ using System.Threading.Tasks;
 
 namespace RoadRaskEvaltionSystem.RouteAnalysis
 {
- //   class RouteDecideClass:IRouteDecide
-     class RouteDecideClass
+    /// <summary>
+    /// 路线决策实现类1
+    /// </summary>
+     class RouteDecideClass:IRouteDecide
     {
         IRouteConfig routeConfig = null;
         public RouteDecideClass(IRouteConfig config)
         {
             this.routeConfig = config;
         }
-        //根据点查询缓冲区以内的要素
+        /// <summary>
+        /// 查询点缓冲区以内的要素
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="map"></param>
+        /// <param name="layer"></param>
+        /// <param name="buffer_distance"></param>
+        /// <returns></returns>
         public IFeature QuerySingleFeatureByPoint(IPoint  point,IMap map,IFeatureLayer layer,double buffer_distance)
         {
           //为了安全在此判断是否map中是否已经包括layer
@@ -48,7 +57,13 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             return pFeature;
         }
 
-        //查询绕行路线 0代表没有查询到
+        /// <summary>
+        /// 查询绕行路线 0代表没有查询到
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="featureLayer"></param>
+        /// <param name="rightPoint"></param>
+        /// <returns></returns>
         public string QueryTheRoute(IPoint point,IFeatureLayer featureLayer,ref IPoint rightPoint)
         {
             //查询离所点击的点最近的元素
@@ -92,7 +107,11 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             rightPoint.Y = resultLine.FromPoint.Y;
             return feature;
         }
-        //查询所有配置文件中的要素
+        /// <summary>
+        /// 查询所有配置文件中的要素
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <returns></returns>
         public List<IFeature> QueryAllFeatureInConfig(IFeatureLayer layer)
         {
             List<IFeature> queryFeaturers = new List<IFeature>();
@@ -108,7 +127,12 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             }
             return queryFeaturers;
         }
-        //根据OBJECTID查询单个要素
+        /// <summary>
+        /// 根据OBJECTID查询单个要素
+        /// </summary>
+        /// <param name="featureClass"></param>
+        /// <param name="objecID"></param>
+        /// <returns></returns>
         public IFeature QuerySingleFeature(IFeatureClass featureClass, int objecID)
         {
             IQueryFilter2 queryFilter2 = new QueryFilterClass();
@@ -119,7 +143,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         }
 
 
-        public IPolyline QueryTheRoue(IPoint breakPoint, IMap pMap, IFeatureLayer featureLayer, string dbPath, ref IPoint rightPoint)
+        public bool QueryTheRoue(IPoint breakPoint, ESRI.ArcGIS.Controls.AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint)
         {
             throw new NotImplementedException();
         }

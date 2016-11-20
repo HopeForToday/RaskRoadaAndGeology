@@ -12,6 +12,6 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
     public interface IRouteDecide
     {
         string QueryTheRoute(IPoint point,IFeatureLayer featureLayerref,ref IPoint rightPoint);
-        IPolyline QueryTheRoue(IPoint breakPoint, AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint);
+        bool QueryTheRoue(IPoint breakPoint, AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint);
     }
 }

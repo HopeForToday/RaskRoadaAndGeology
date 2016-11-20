@@ -6,6 +6,7 @@ using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.NetworkAnalyst;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,10 @@ using System.Windows.Forms;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
+    /// <summary>
+    /// 传输网络分析封装类 
+    /// 2016//11/20 FHR
+    /// </summary>
     public class NormalNetworkUtil
     {
         /// <summary>
@@ -25,8 +30,24 @@ namespace RoadRaskEvaltionSystem.HelperClass
         public static IWorkspace OpenWorkspace(string strMDBName)
         {
             IWorkspaceFactory pWorkspaceFactory = new AccessWorkspaceFactoryClass();
-            return pWorkspaceFactory.OpenFromFile(strMDBName, 0);
+            IWorkspace pWorkspace=null;
+            try
+            {
+                pWorkspace = pWorkspaceFactory.OpenFromFile(strMDBName, 0);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("打开工作空间出错:"+e.Message);
+            }
+            return pWorkspace;
         }
+        /// <summary>
+        /// 打开网络数据集
+        /// </summary>
+        /// <param name="pWorkspace"></param>
+        /// <param name="featureDatasetName"></param>
+        /// <param name="sNDSName"></param>
+        /// <returns></returns>
         public static INetworkDataset OpenNetworkDataset(IWorkspace pWorkspace, string featureDatasetName, string sNDSName)
         {
             try
@@ -71,59 +92,13 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 return null;
             }
         }
-        /// <summary>
-        /// 初始化地图和网络数据集
-        /// </summary>
-        /// <param name="mapControl"></param>
-        /// <param name="gdbfileName"></param>
-        /// <param name="featureDatasetName"></param>
-        /// <param name="ndsName"></param>
-        public static void Initial(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName)
-        {
-            mapControl.ActiveView.Clear();
-            mapControl.ActiveView.Refresh();
-            IWorkspace pWorkspace = OpenWorkspace(gdbfileName);
-            IFeatureWorkspace pFeatureWorkspace = pWorkspace as IFeatureWorkspace;
-            INetworkDataset pNetworkDataset = OpenNetworkDataset(gdbfileName, featureDatasetName, ndsName);
-
-            INAContext pNAContext = CreateNAContext(pNetworkDataset);
-
-            IFeatureClass pInputFC = pFeatureWorkspace.OpenFeatureClass("stop");
-
-            IFeatureClass pVertexFC = pFeatureWorkspace.OpenFeatureClass("TestNet_ND_Junctions");
-
-            IFeatureLayer pVertexFL = new FeatureLayerClass();
-            pVertexFL.FeatureClass = pVertexFC;
-            pVertexFL.Name = pVertexFL.FeatureClass.AliasName;
-            IFeatureLayer pRoadFL = new FeatureLayerClass();
-            pRoadFL.FeatureClass = pFeatureWorkspace.OpenFeatureClass("道路中心线");
-            pRoadFL.Name = pRoadFL.FeatureClass.AliasName;
-            mapControl.AddLayer(pRoadFL, 0);
-
-            ILayer pLayer;
-            INetworkLayer pNetworkLayer = new NetworkLayerClass();
-            pNetworkLayer.NetworkDataset = pNetworkDataset;
-            pLayer = pNetworkLayer as ILayer;
-            pLayer.Name = "Network Dataset";
-            mapControl.AddLayer(pLayer, 0);
-
-            //Create a Network Analysis Layer and add to ArcMap
-            INALayer naLayer = pNAContext.Solver.CreateLayer(pNAContext);
-            pLayer = naLayer as ILayer;
-            pLayer.Name = pNAContext.Solver.DisplayName;
-            mapControl.AddLayer(pLayer, 0);
-
-            IActiveView pActiveView = mapControl.ActiveView;
-            IMap pMap = pActiveView.FocusMap;
-            IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
-        }
 
         /// <summary>
         ///  根据网络数据集创建网络分析上下文
         /// </summary>
         /// <param name="networkDataset"></param>
         /// <returns></returns>
-        public static INAContext CreateNAContext(INetworkDataset networkDataset)
+        private static INAContext CreateNAContext(INetworkDataset networkDataset)
         {
             IDENetworkDataset pDENetworkDataset = GetDENetworkDataset(networkDataset);
             INASolver pNASolver = new NARouteSolverClass();
@@ -136,20 +111,20 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// </summary>
         /// <param name="networkDataset"></param>
         /// <returns></returns>
-        public static IDENetworkDataset GetDENetworkDataset(INetworkDataset networkDataset)
+        private static IDENetworkDataset GetDENetworkDataset(INetworkDataset networkDataset)
         {
             IDatasetComponent dsComponent = networkDataset as IDatasetComponent;
             return dsComponent.DataElement as IDENetworkDataset;
         }
 
        /// <summary>
-       /// 插入相关元素 如经过站点、障碍点等
+       /// 以图层的方法插入相关元素 如经过站点、障碍点、障碍线、障碍多边形等
        /// </summary>
-       /// <param name="pNAContext"></param>
-       /// <param name="strNAClassName"></param>
-       /// <param name="inputFC"></param>
+       /// <param name="pNAContext">网络分析上下文</param>
+        /// <param name="strNAClassName">Stops、Barriers、PolylineBarriers\PolygonBarriers</param>
+       /// <param name="inputFeatuerClass"></param>
        /// <param name="dSnapTolerance"></param>
-        public static void LoadNANetWorkLocations(INAContext pNAContext, string strNAClassName, IFeatureClass inputFC, double dSnapTolerance)
+        public static void LoadNANetWorkLocations(INAContext pNAContext, string strNAClassName, IFeatureClass inputFeatuerClass, double dSnapTolerance)
         {
             INAClass pNAClass;
             INamedSet pNamedSet;
@@ -162,7 +137,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             }
             ISpatialFilter filer = new SpatialFilterClass();
             filer.WhereClause = "";
-            int count = inputFC.FeatureCount(filer as IQueryFilter);
+            int count = inputFeatuerClass.FeatureCount(filer as IQueryFilter);
              //删除已存在的元素
             pNAClass.DeleteAllRows();
             //创建NAClassLoader，设置捕捉容限值
@@ -175,27 +150,45 @@ namespace RoadRaskEvaltionSystem.HelperClass
             pNAClassLoader.NAClass = pNAClass;
             //字段匹配
             INAClassFieldMap pNAClassFieldMap = new NAClassFieldMapClass();
-            pNAClassFieldMap.CreateMapping(pNAClass.ClassDefinition, inputFC.Fields);
+            pNAClassFieldMap.CreateMapping(pNAClass.ClassDefinition, inputFeatuerClass.Fields);
             pNAClassLoader.FieldMap = pNAClassFieldMap;
             //加载要素类数据
             int iRows = 0;
             int iRowsLocated = 0;
-            IFeatureCursor pFeatureCursor = inputFC.Search(null, true);
+            IFeatureCursor pFeatureCursor = inputFeatuerClass.Search(null, true);
             pNAClassLoader.Load((ICursor)pFeatureCursor, null, ref iRows, ref iRowsLocated);
             ((INAContextEdit)pNAContext).ContextChanged();
+            
         }
-        //路径分析
-        public static void Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IFeatureClass stopFeatureClass, IFeatureClass barriesFeatureClass, double dSnapTolerance)
+        /// <summary>
+        /// 最短路径分析
+        /// </summary>
+        /// <param name="mapControl">地图控件</param>
+        /// <param name="gdbfileName">数据库文件</param>
+        /// <param name="featureDatasetName">要素集名字</param>
+        /// <param name="ndsName">网络数据集名字</param>
+        /// <param name="featureClasses">参数要素类字段,键值包括:Stops(路线经过结点),Barriers,PolylineBarriers,PolygonBarriers</param>
+        /// <param name="dSnapTolerance"></param>
+        public static bool Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IDictionary<string,IFeatureClass> featureClasses, double dSnapTolerance)
         {
-            mapControl.ClearLayers();
+            //首先判断输入的参数要素类是否合法
+            if (!FeatureClassKeyIsRight(featureClasses))
+            {
+                throw new Exception("参数字典错误");
+            }
+           // mapControl.ClearLayers();
             //打开工作空间
             IFeatureWorkspace pFeatureWorkspace = OpenWorkspace(gdbfileName) as IFeatureWorkspace;
+            if (pFeatureWorkspace == null) { return false; }
             //获取网络数据集
             INetworkDataset pNetworkDataset = OpenNetworkDataset(pFeatureWorkspace as IWorkspace, featureDatasetName, ndsName);
-           //获取网络分析上下文
+            if (pNetworkDataset == null)
+            {
+                Debug.Print("无法获取网络数据集"); 
+                return false;
+            }
+            //获取网络分析上下文
             INAContext pNAContext = CreateNAContext(pNetworkDataset);
-            //Initial(mapControl, gdbfileName, featureDatasetName, ndsName);
-           // IFeatureClass pInputFC = pFeatureWorkspace.OpenFeatureClass("stop");
             //打开节点图层 一般和网络数据集放置在一起 名称是xxx_Junctions
             IFeatureClass pVertexFC = pFeatureWorkspace.OpenFeatureClass(ndsName + "_Junctions");
             // 显示网络数据集图层 
@@ -204,8 +197,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             ILayer pLayer = pNetworkLayer as ILayer;
             pLayer.Name = "Network Dataset";
             mapControl.AddLayer(pLayer, 0);
-
-            //Create a Network Analysis Layer and add to ArcMap
+            //创建网络分析图层
             INALayer naLayer = pNAContext.Solver.CreateLayer(pNAContext);
              pLayer = naLayer as ILayer;
             pLayer.Name = pNAContext.Solver.DisplayName;
@@ -214,43 +206,72 @@ namespace RoadRaskEvaltionSystem.HelperClass
             IActiveView pActiveView = mapControl.ActiveView;
             IMap pMap = pActiveView.FocusMap;
             IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
+            mapControl.Refresh();
             INASolver naSolver = pNAContext.Solver;
-            //插入经过点
-            LoadNANetWorkLocations(pNAContext,"Stops", stopFeatureClass, 30);
-            //插入障碍点
-            LoadNANetWorkLocations(pNAContext, "Barriers", barriesFeatureClass, 30);
-            IGPMessages gpMessages = new GPMessagesClass();
-         //   INASolver naSolver = pNAContext.Solver;
-            // naSolver.
-           //  INARouteSolver pRouteSolver = naSolver as INARouteSolver;
-           //   pRouteSolver.
-         //  SetSolverSettings(pNAContext);
-          //  pNAContext.Solver.
-            //寻找最短路径
-            mapControl.Refresh();
-            return;
-            pNAContext.Solver.Solve(pNAContext, gpMessages, new CancelTrackerClass());
-            mapControl.Refresh();
-            if (gpMessages != null)
+            //插入相关数据
+            foreach (var value in featureClasses)
             {
-                for (int i = 0; i < gpMessages.Count; i++)
+                LoadNANetWorkLocations(pNAContext, value.Key, value.Value, dSnapTolerance);
+            }
+            //插入经过点
+            //LoadNANetWorkLocations(pNAContext,"Stops", stopFeatureClass, 30);
+            //插入障碍点
+          //    LoadNANetWorkLocations(pNAContext, "Barriers", barriesFeatureClass, 30);
+            IGPMessages gpMessages = new GPMessagesClass();
+         //  SetSolverSettings(pNAContext);
+            //寻找最短路径
+            try
+            {
+                pNAContext.Solver.Solve(pNAContext, gpMessages, new CancelTrackerClass());
+            }
+            catch (Exception e)
+            {
+                Debug.Print("无法找到最短路径:" + e.Message);
+                return false;
+            }
+             mapControl.Refresh();
+                if (gpMessages != null)
                 {
-                    switch (gpMessages.GetMessage(i).Type)
+                    for (int i = 0; i < gpMessages.Count; i++)
                     {
-                        case esriGPMessageType.esriGPMessageTypeError:
-                            MessageBox.Show("错误 " + gpMessages.GetMessage(i).ErrorCode.ToString() + " " + gpMessages.GetMessage(i).Description);
-                            break;
-                        case esriGPMessageType.esriGPMessageTypeWarning:
-                            MessageBox.Show("警告 " + gpMessages.GetMessage(i).Description);
-                            break;
-                        default:
-                            MessageBox.Show("信息 " + gpMessages.GetMessage(i).Description);
-                            break;
+                        switch (gpMessages.GetMessage(i).Type)
+                        {
+                            case esriGPMessageType.esriGPMessageTypeError:
+                                Debug.Print("错误 " + gpMessages.GetMessage(i).ErrorCode.ToString() + " " + gpMessages.GetMessage(i).Description);
+                                break;
+                            case esriGPMessageType.esriGPMessageTypeWarning:
+                                Debug.Print("警告 " + gpMessages.GetMessage(i).Description);
+                                break;
+                            default:
+                                Debug.Print("信息 " + gpMessages.GetMessage(i).Description);
+                                break;
+                        }
                     }
                 }
-            }
+                return true;
         }
-
+        /// <summary>
+        /// 判断参数要素类字典是否包括意外值
+        /// </summary>
+        /// <param name="featureClasses"></param>
+        /// <returns></returns>
+        private static bool FeatureClassKeyIsRight(IDictionary<string, IFeatureClass> featureClasses)
+        {
+            List<string> tempArray=new List<string> (){"Stops","Barriers","PolylineBarriers","PolygonBarriers"};
+            foreach(var value in featureClasses)
+            {
+                if (!tempArray.Contains(value.Key))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// 设置解决器 暂时没有使用到 
+        /// 有问题待修正
+        /// </summary>
+        /// <param name="pNAContext"></param>
         private static void SetSolverSettings(INAContext pNAContext)
         {
             if (pNAContext.Solver.CanAccumulateAttributes)
