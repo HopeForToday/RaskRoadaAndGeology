@@ -8,7 +8,6 @@ using ESRI.ArcGIS.esriSystem;
 using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.WeatherHander;
-using RoadRaskEvaltionSystem.ServiceLocator;
 
 namespace pixChange
 {
@@ -19,7 +18,7 @@ namespace pixChange
         //把委托和具体的方法关联起来
         private  static GetWeatherHandler calcMethod = new GetWeatherHandler(getWeatherData);
          //获取保存天气的依赖字段
-        private static  ISaveWeather saveWeather = ServerLocator.GetSaveWeather();
+        private static  ISaveWeather saveWeather = ServiceLocator.GetSaveWeather();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

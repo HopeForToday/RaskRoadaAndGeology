@@ -95,7 +95,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
            pNetSolver.SourceNetwork = pNetwork;
            //网络元素
            INetElements pNetElements = pNetwork as INetElements;
-           //根据输入点建立旗帜数组（也就是最短路径所要经过的节点）
+           //根据输入点建立旗帜数组
            IJunctionFlag[] pJunctionFlags = GetJunctionFlags(pMap,pGeometricNet, pCollection, pDisc);
            //将旗帜数组添加到处理类中
            pTraceFlowGen.PutJunctionOrigins(ref pJunctionFlags);

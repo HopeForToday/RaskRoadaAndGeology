@@ -24,6 +24,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
    /// </summary>
    public class Common
     {
+       private static string stopImagePath = Application.StartupPath + "\\" + @"Images\1.jpg";
+       public static string StopImagePath
+       {
+           get { return stopImagePath; }
+       }
        private static string routeBreakImagePath = Application.StartupPath + "\\" + @"Images\routebreak.jpg";
        public static string  RouteBeakImggePath
        {

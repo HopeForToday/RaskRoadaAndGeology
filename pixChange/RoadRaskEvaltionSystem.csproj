@@ -201,6 +201,7 @@
     <Compile Include="HelperClass\ConfigHelper.cs" />
     <Compile Include="HelperClass\CumRaster.cs" />
     <Compile Include="HelperClass\Database.cs" />
+    <Compile Include="HelperClass\DecorateRouteFeatureClass.cs" />
     <Compile Include="HelperClass\DistanceUtil.cs" />
     <Compile Include="HelperClass\FeatureClassUtil.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
@@ -263,9 +264,11 @@
     </Compile>
     <Compile Include="RouteAnalysis\IRouteConfig.cs" />
     <Compile Include="RouteAnalysis\IRouteDecide.cs" />
+    <Compile Include="RouteAnalysis\ISimpleRouteDecide.cs" />
     <Compile Include="RouteAnalysis\RouteConfigClass.cs" />
     <Compile Include="RouteAnalysis\RouteDecideClass.cs" />
     <Compile Include="RouteAnalysis\RouteDecideNew.cs" />
+    <Compile Include="RouteAnalysis\SimpleRouteDecideClass.cs" />
     <Compile Include="ServiceLocator\ServerLocator.cs" />
     <Compile Include="TreeEnter\RainsEnterTree.cs" />
     <Compile Include="TreeEnter\RanisEnViewModel.cs" />

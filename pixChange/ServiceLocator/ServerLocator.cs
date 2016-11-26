@@ -7,12 +7,12 @@ using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem.WeatherHander;
 using HtmlAgilityPackDemo1;
 using RoadRaskEvaltionSystem.RouteAnalysis;
-namespace RoadRaskEvaltionSystem.ServiceLocator
+namespace RoadRaskEvaltionSystem
 {
     /// <summary>
-    /// 采用工厂和单例实现的注入类
+    /// 采用工厂和单例实现的注入类 2016/11/26 fhr
     /// </summary>
-    class ServerLocator
+    class ServiceLocator
     {
         private static IRoadRaskCaculate m_RoadRaskCacluate = null;
         private static IRoadRiskConfig m_RoadConfig = null;
@@ -20,11 +20,12 @@ namespace RoadRaskEvaltionSystem.ServiceLocator
         private static IGetWeather m_GetWeather = null;
         private static IRouteConfig routeConfig = null;
         private static IRouteDecide routeDecide = null;
+        private static ISimpleRouteDecide simpleRouteDecide = null;
         public static IRoadRaskCaculate GetIRoadRaskCaculate()
         {
             if(m_RoadRaskCacluate==null)
             {
-                m_RoadRaskCacluate = new ToRasterControl(ServerLocator.GetRoadRiskConfig());
+                m_RoadRaskCacluate = new ToRasterControl(ServiceLocator.GetRoadRiskConfig());
             }
             return m_RoadRaskCacluate;
         }
@@ -68,6 +69,17 @@ namespace RoadRaskEvaltionSystem.ServiceLocator
                 routeDecide = new RouteDecideNew();
             }
             return routeDecide;
+        }
+        public static ISimpleRouteDecide SimpleRouteDecide
+        {
+            get
+            {
+                if(simpleRouteDecide==null)
+                {
+                    simpleRouteDecide = new SimpleRouteDecideClass();
+                }
+                return simpleRouteDecide;
+            }
         }
     }
 }

@@ -18,20 +18,26 @@ using ESRI.ArcGIS.SystemUI;
 using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem;
-using RoadRaskEvaltionSystem.ServiceLocator;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.RouteAnalysis;
+using ESRI.ArcGIS.NetworkAnalyst;
 
 namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        private List<IPoint> barryPoints = new List<IPoint>();
+        private List<IPoint> stopPoints = new List<IPoint>();
+        //0为不插入 1为插入经过点 2为插入断点
+        private int insetFlag = 0;
         //公路断点
         private IPoint breakPoint =null;
         //公路断点图片注记
         private IElement pixtureElement =null;
         //路线操作接口字段
-        private IRouteDecide routeDecide = ServerLocator.GetRouteDecide();
+        private IRouteDecide routeDecide = ServiceLocator.GetRouteDecide();
+        //路线操作简单接口字段
+        private ISimpleRouteDecide simplRrouteDecide = ServiceLocator.SimpleRouteDecide;
         //公路网图层
         private ILayer routeNetLayer = null;
         //风险图层
@@ -482,9 +488,9 @@ namespace pixChange
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
             }
-            if (isInserting&&this.axMapControl1.CurrentTool==null)
+            if (this.insetFlag!=0&&this.axMapControl1.CurrentTool==null)
             {
-                InsertBreakPoint(e);
+                InsertPoint(e);
             }
         }
 
@@ -624,31 +630,33 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            //如果处于正在编辑状态 则清除断路点和标识
-            if (isInserting)
+            #region 注释
+            ////如果处于正在编辑状态 则清除断路点和标识
+            //if (isInserting)
+            //{
+            //    SymbolUtil.ClearElement(this.axMapControl1);
+            //    this.breakPoint = null;
+            //    this.pixtureElement = null;
+            //    isInserting = false;
+            //    this.barButtonItem15.Caption = "设置断点";
+            //}
+            //else
+            //{
+            //    isInserting = true;
+            //  //  this.barButtonItem15.Caption = "取消断点";
+            //}
+            //if(this.pixtureElement!=null)
+            //{
+            //    SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
+            //}
+            //MainFrom.m_mapControl.Refresh();
+            #endregion
+            if (this.insetFlag == 2)
             {
-                SymbolUtil.ClearElement(this.axMapControl1);
-                this.breakPoint = null;
-                this.pixtureElement = null;
-                isInserting = false;
-                this.barButtonItem15.Caption = "设置断点";
+                this.insetFlag = 0;
+                return;
             }
-            else
-            {
-                isInserting = true;
-              //  this.barButtonItem15.Caption = "取消断点";
-            }
-            if(this.pixtureElement!=null)
-            {
-                SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
-            }
-            MainFrom.m_mapControl.Refresh();
-            /**优先查看是否有公路风险图层**/
-            riskLayer = QueryLayerInMap("公路风险");
-            if (riskLayer == null)
-            {
-                riskLayer = QueryLayerInMap("风险评价");
-            }
+            this.insetFlag = 2;
             routeNetLayer = QueryLayerInMap("公路网");
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
@@ -656,15 +664,11 @@ namespace pixChange
                 routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
                 this.axMapControl1.AddLayer(routeNetLayer);
             }
-            if (riskLayer == null)
-            {
-                riskLayer = RasterSimpleHelper.OpenRasterFile(Common.RiskDataPath);
-                this.axMapControl1.AddLayer(riskLayer);
-            }
         }
         //插入公路断点
-        private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
+        private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
         {
+            /*
             if(this.pixtureElement!=null)
             {
                 SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
@@ -675,12 +679,26 @@ namespace pixChange
             this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
             this.breakPoint = point;
             this.barButtonItem15.Caption = "取消断点";
+              */
+            IPoint point = new PointClass();
+            point.X = e.mapX;
+            point.Y = e.mapY;
+            if (this.insetFlag == 1)
+            {
+               SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath);
+               this.stopPoints.Add(point);
+            }
+            else if(this.insetFlag==2)
+            {
+                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
+                this.barryPoints.Add(point);
+            }
         }
  
         //计算最优路线
         //最后可以考虑使用async进行异步查询
         private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
+        {/*
             this.isInserting = false;
             if (breakPoint == null)
             {
@@ -697,7 +715,26 @@ namespace pixChange
                 //修正短路点的坐标
                 SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
                 // this.breakPoint = rightPoint;
-                //  this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(breakPoint, this.axMapControl1, Common.RouteBeakImggePath);
+                // this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(breakPoint, this.axMapControl1, Common.RouteBeakImggePath);
+            }
+            else
+            {
+                MessageBox.Show("查询失败");
+            }
+            this.barButtonItem16.Caption = "绕行方案";
+          */
+            if (this.stopPoints.Count<2)
+            {
+                MessageBox.Show("流程经过点少于一个");
+                return;
+            }
+            this.barButtonItem16.Caption = "正在查询";
+            bool result = simplRrouteDecide.QueryTheRoue( this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND",stopPoints,barryPoints);
+            if (result)
+            {
+                MessageBox.Show("查询成功");
+                //清除所有图标
+                SymbolUtil.ClearElement(this.axMapControl1);
             }
             else
             {
@@ -729,10 +766,8 @@ namespace pixChange
 
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.pixtureElement != null)
-            {
-                SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
-            }
+            ClearRouteAnalyst();
+            SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
             MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
         }
 
@@ -764,6 +799,51 @@ namespace pixChange
             ILayer rightLayer = ShapeSimpleHelper.OpenFile(Common.BetterRoutesPath, routeName);
             FeatureStyleUtil.SetFetureLineStyle(255, 255, 0, 3, rightLayer as IFeatureLayer);
             this.axMapControl1.AddLayer(rightLayer);
+        }
+
+        private void barButtonItem22_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.insetFlag == 1)
+            {
+                this.insetFlag = 0;
+                this.barButtonItem22.Caption = "设置经过点";
+            }
+            else
+            {
+                this.insetFlag = 1;
+                routeNetLayer = QueryLayerInMap("公路网");
+                //如果公路网的数据没有加载，则直接加载
+                if (routeNetLayer == null)
+                {
+                    routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
+                    this.axMapControl1.AddLayer(routeNetLayer);
+                }
+            }
+        }
+
+        private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ClearRouteAnalyst();
+        }
+        //清除路线分析相关数据
+       private void ClearRouteAnalyst()
+        {
+            this.stopPoints.Clear();
+            this.barryPoints.Clear();
+           for(int i=0;i<this.axMapControl1.LayerCount;i++)
+           {
+               ILayer layer=this.axMapControl1.get_Layer(i);
+               INetworkLayer networkLayer=layer as INetworkLayer;
+               INALayer naLayer=layer as INALayer;
+               if(networkLayer!=null||naLayer!=null)
+               {
+                   this.axMapControl1.DeleteLayer(i);
+               }
+           }
+           IActiveView pActiveView = axMapControl1.ActiveView;
+           IMap pMap = pActiveView.FocusMap;
+           IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
+           axMapControl1.Refresh();
         }
     }
 }

@@ -16,7 +16,6 @@ using pixChange;
 using pixChange.HelperClass;
 using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
-using RoadRaskEvaltionSystem.ServiceLocator;
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
    public class ToRasterControl :IRoadRaskCaculate

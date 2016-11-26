@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RoadRaskEvaltionSystem.ServiceLocator;
 using System.Data.OleDb;
 using System.Text.RegularExpressions;
 namespace RoadRaskEvaltionSystem
@@ -15,7 +14,7 @@ namespace RoadRaskEvaltionSystem
     public partial class ConfigForm : Form
     {
         int areaID = 1;//记录地区id 1为芦山县，2为宝兴县
-        private IRoadRiskConfig roadRisk = ServerLocator.GetRoadRiskConfig();
+        private IRoadRiskConfig roadRisk = ServiceLocator.GetRoadRiskConfig();
         public ConfigForm()
         {
             InitializeComponent();

@@ -1,5 +1,4 @@
 ﻿using RoadRaskEvaltionSystem.RasterAnalysis;
-using RoadRaskEvaltionSystem.ServiceLocator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +20,7 @@ namespace RoadRaskEvaltionSystem
         DateTime NowTime;
         int areaID = 1;//记录地区id 1为芦山县，2为宝兴县
         //栅格接口类
-        IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
+        IRoadRaskCaculate roadRaskCaculate = ServiceLocator.GetIRoadRaskCaculate();
         string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=" + Application.StartupPath + "\\Rources\\雨量信息.mdb";
         public ConditionForm()
         {

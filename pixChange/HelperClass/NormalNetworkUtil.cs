@@ -122,8 +122,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// </summary>
        /// <param name="pNAContext">网络分析上下文</param>
         /// <param name="strNAClassName">Stops、Barriers、PolylineBarriers\PolygonBarriers</param>
-       /// <param name="inputFeatuerClass"></param>
-       /// <param name="dSnapTolerance"></param>
+       /// <param name="inputFeatuerClass">要素类</param>
+       /// <param name="dSnapTolerance">阈值</param>
         public static void LoadNANetWorkLocations(INAContext pNAContext, string strNAClassName, IFeatureClass inputFeatuerClass, double dSnapTolerance)
         {
             INAClass pNAClass;
@@ -167,9 +167,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="gdbfileName">数据库文件</param>
         /// <param name="featureDatasetName">要素集名字</param>
         /// <param name="ndsName">网络数据集名字</param>
-        /// <param name="featureClasses">参数要素类字段,键值包括:Stops(路线经过结点),Barriers,PolylineBarriers,PolygonBarriers</param>
-        /// <param name="dSnapTolerance"></param>
-        public static bool Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IDictionary<string,IFeatureClass> featureClasses, double dSnapTolerance)
+        /// <param name="featureClasses">参数要素类及其阈值,其中键值包括:Stops(路线经过结点),Barriers,PolylineBarriers,PolygonBarriers</param>
+        public static bool Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IDictionary<string,DecorateRouteFeatureClass> featureClasses)
         {
             //首先判断输入的参数要素类是否合法
             if (!FeatureClassKeyIsRight(featureClasses))
@@ -195,7 +194,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             INetworkLayer pNetworkLayer = new NetworkLayerClass();
             pNetworkLayer.NetworkDataset = pNetworkDataset;
             ILayer pLayer = pNetworkLayer as ILayer;
-            pLayer.Name = "Network Dataset";
+            pLayer.Name = "网络数据集";
             mapControl.AddLayer(pLayer, 0);
             //创建网络分析图层
             INALayer naLayer = pNAContext.Solver.CreateLayer(pNAContext);
@@ -211,7 +210,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             //插入相关数据
             foreach (var value in featureClasses)
             {
-                LoadNANetWorkLocations(pNAContext, value.Key, value.Value, dSnapTolerance);
+                LoadNANetWorkLocations(pNAContext, value.Key, value.Value.FeatureClass, value.Value.SnapTolerance);
             }
             //插入经过点
             //LoadNANetWorkLocations(pNAContext,"Stops", stopFeatureClass, 30);
@@ -255,7 +254,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// </summary>
         /// <param name="featureClasses"></param>
         /// <returns></returns>
-        private static bool FeatureClassKeyIsRight(IDictionary<string, IFeatureClass> featureClasses)
+        private static bool FeatureClassKeyIsRight(IDictionary<string, DecorateRouteFeatureClass> featureClasses)
         {
             List<string> tempArray=new List<string> (){"Stops","Barriers","PolylineBarriers","PolygonBarriers"};
             foreach(var value in featureClasses)
