@@ -20,6 +20,7 @@ using RoadRaskEvaltionSystem.RasterAnalysis;
 using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.ServiceLocator;
 using RoadRaskEvaltionSystem.HelperClass;
+using RoadRaskEvaltionSystem.RouteAnalysis;
 
 namespace pixChange
 {
@@ -27,6 +28,7 @@ namespace pixChange
     {
         //公路断点集合
         private List<IPoint> breakPoints = new List<IPoint>();
+        private IRouteDecide routeDecide = ServerLocator.GetRouteDecide();
         ////栅格接口类
         //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
@@ -741,6 +743,8 @@ namespace pixChange
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             m_cTool = CustomTool.DrawBreakPoint;
+            //如果公路网的数据没有加载，则直接加载
+            ShapeHelper.addShapfileLayer(this.axMapControl1.Map as IMapControl3, Common.RouteNetFeaturePath);
         }
         //插入公路断点
         private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -752,6 +756,7 @@ namespace pixChange
             this.breakPoints.Add(point);
         }
         //计算最优路线
+        //最后可以考虑使用async进行异步查询
         private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if(breakPoints.Count==0)
@@ -759,9 +764,32 @@ namespace pixChange
                 MessageBox.Show("尚未设置任何公路断点");
                 return;
             }
+            //公路网要素图层
+            IFeatureLayer featureLayer=null;
+            List<string> queryResults = new List<string>();
             //进行路线查询
+            foreach(var point in this.breakPoints)
+            {
+               queryResults.Add(routeDecide.QueryTheRoute(point, this.axMapControl1.Map, featureLayer));
+            }
+            //进行路线展示
+            for(int i=0;i<queryResults.Count;i++)
+            {
+                string value=queryResults[i];
+                if(string.IsNullOrEmpty(value))
+                {
+                    MessageBox.Show(String.Format("{0}号点未能查询到最佳绕行方案，请检查断点位置",i+1));
+                    continue;
+                }
+                value=value+"绕行";
+                ShowRoute(value);
+            }
         }
-
+        //显示绕行路线
+        private void ShowRoute(string routeName)
+        {
+            RasterSimpleHelper.OpenRasterFile(Common.BetterRoutesPath, routeName);
+        }
       
 
     //    private void axTOCControl1_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)

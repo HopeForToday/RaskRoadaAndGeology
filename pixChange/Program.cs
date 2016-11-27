@@ -46,8 +46,10 @@ namespace pixChange
         {
             try
             {
+                //更新庐山地区
                 saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/lushan.html", 1);
                 Common.DBHander.coloseCon(); //来不及数据库连接
+               //更新宝新
                 saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/baoxing.html", 2);
                 Common.DBHander.coloseCon();
                 saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56279", 1);
