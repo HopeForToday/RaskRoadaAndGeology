@@ -28,6 +28,11 @@ namespace pixChange
     {
         //公路断点集合
         private List<IPoint> breakPoints = new List<IPoint>();
+        //公路断点图片注记
+        private List<IElement> pixtureElements = new List<IElement>();
+        //公路断点文字注记
+        private List<IElement> textElements = new List<IElement>();
+        //路线操作接口字段
         private IRouteDecide routeDecide = ServerLocator.GetRouteDecide();
         //公路网图层
         private ILayer routeNetLayer = null;
@@ -739,7 +744,15 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            //清除所有注记
+            SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
+            SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
+            this.breakPoints.Clear();
+            this.pixtureElements.Clear();
+            this.textElements.Clear();
             isInserting = true;
+            routeNetLayer = QueryLayerInMap("公路网");
+            riskLayer = QueryLayerInMap("风险评价");
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
             {
@@ -758,7 +771,12 @@ namespace pixChange
             IPoint point = new PointClass();
             point.X = e.mapX;
             point.Y = e.mapY;
-            SymbolUtil.DrawSymbolWithPicture(point,this.axMapControl1,@"Images\1.jpg");
+            IPoint textPoint=new PointClass();
+            textPoint.X=e.mapX+5;
+            textPoint.Y=e.mapY+5;
+            string text=string.Format("{0}号断路点",this.breakPoints.Count+1);
+            this.pixtureElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, @"Images\routebreak.jpg"));
+            this.textElements.Add(SymbolUtil.DrawSymbolWithText(textPoint, this.axMapControl1, text));
             this.breakPoints.Add(point);
         }
         //计算最优路线
@@ -783,7 +801,7 @@ namespace pixChange
                 string value=queryResults[i];
                 if(string.IsNullOrEmpty(value))
                 {
-                    MessageBox.Show(String.Format("{0}号点未能查询到最佳绕行方案，请检查断点位置",i+1));
+                    MessageBox.Show(String.Format("{0}号点未能查询到最佳绕行方案，请检查公路断点位置",i+1));
                     continue;
                 }
                 value=value+"绕行";
@@ -793,7 +811,7 @@ namespace pixChange
             if (this.routeNetLayer != null)
             {
                 m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
-                this.routeNetLayer.Visible = false;
+               // this.routeNetLayer.Visible = false;
             }
         }
         //显示绕行路线
