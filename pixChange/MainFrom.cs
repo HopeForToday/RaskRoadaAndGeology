@@ -33,6 +33,8 @@ namespace pixChange
         private ILayer routeNetLayer = null;
         //风险图层
         private ILayer riskLayer = null;
+        //是否在插入公路断点的标志位
+        private bool isInserting = false;
         ////栅格接口类
         //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
@@ -90,8 +92,7 @@ namespace pixChange
             EditUndo = 15,
             EditRedo = 16,
             EditDeleteFeature = 17,
-            EditAttribute = 18,
-            DrawBreakPoint=19
+            EditAttribute = 18
         };
         public MainFrom()
         {
@@ -499,11 +500,11 @@ namespace pixChange
                     m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
-                case CustomTool.DrawBreakPoint:
-                    InsertBreakPoint(e);
-                    break;
             }
-
+            if (isInserting&&this.axMapControl1.CurrentTool==null)
+            {
+                InsertBreakPoint(e);
+            }
         }
 
         #region get dataTable by Ilayer
@@ -738,7 +739,7 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            m_cTool = CustomTool.DrawBreakPoint;
+            isInserting = true;
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
             {
@@ -788,6 +789,12 @@ namespace pixChange
                 value=value+"绕行";
                 ShowRoute(value);
             }
+            this.isInserting = false;
+            if (this.routeNetLayer != null)
+            {
+                m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
+                this.routeNetLayer.Visible = false;
+            }
         }
         //显示绕行路线
         private void ShowRoute(string routeName)
@@ -796,6 +803,21 @@ namespace pixChange
           this.axMapControl1.AddLayer(rightLayer);
         }
 
+        //图层查找 确定图层的存在性
+        private ILayer QueryLayerInMap(string layerName)
+        {
+            ILayer queryLayer = null;
+            int layerCount = this.axMapControl1.Map.LayerCount;
+            for (int i = 0; i < layerCount;i++)
+            {
+                ILayer tempLayer= this.axMapControl1.Map.get_Layer(i);
+                if(tempLayer.Name==layerName)
+                {
+                    queryLayer = tempLayer;
+                }
+            }
+            return queryLayer;
+        }
         private void barButtonItem6_ItemClick_2(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             MainFrom.WhichChecked = 2;
@@ -812,6 +834,11 @@ namespace pixChange
             MainFrom.groupLayer.Name = "生态数据";
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
+        }
+        //指针按钮事件  去除其它操作鼠标命令
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            this.axMapControl1.CurrentTool = null;
         }
       
 
