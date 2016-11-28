@@ -20,21 +20,26 @@ namespace RoadRaskEvaltionSystem.HelperClass
     //存储一些公共的变量，数据等
    public class Common
     {
-       private static string betterRoutesPath = "";
+       private static string betterRoutesPath = @"Resource\绕行线路";
        /// <summary>
-       /// 绕行栅格数据存放路径
+       /// 绕行数据存放路径
        /// </summary>
        public static string BetterRoutesPath
        {
            get { return betterRoutesPath; }
        }
-       private static string routeNetFeaturePath = "";
+       private static string routeNetFeaturePath = @"Resource\公路\公路网";
        /// <summary>
        /// 公路网数据路径
        /// </summary>
        public static string RouteNetFeaturePath
        {
            get { return routeNetFeaturePath; }
+       }
+       public static string riskDataPath = @"Resource\风险评价";
+       public static string RiskDataPath
+       {
+           get { return riskDataPath; }
        }
        /// <summary>
        /// 栅格底图的存储路径

@@ -29,6 +29,10 @@ namespace pixChange
         //公路断点集合
         private List<IPoint> breakPoints = new List<IPoint>();
         private IRouteDecide routeDecide = ServerLocator.GetRouteDecide();
+        //公路网图层
+        private ILayer routeNetLayer = null;
+        //风险图层
+        private ILayer riskLayer = null;
         ////栅格接口类
         //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
@@ -744,7 +748,16 @@ namespace pixChange
         {
             m_cTool = CustomTool.DrawBreakPoint;
             //如果公路网的数据没有加载，则直接加载
-            ShapeHelper.addShapfileLayer(this.axMapControl1.Map as IMapControl3, Common.RouteNetFeaturePath);
+            if (routeNetLayer == null)
+            {
+                routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
+                this.axMapControl1.AddLayer(routeNetLayer);
+            }
+            if(riskLayer==null)
+            {
+                riskLayer = RasterSimpleHelper.OpenRasterFile(Common.RiskDataPath);
+                this.axMapControl1.AddLayer(riskLayer);
+            }
         }
         //插入公路断点
         private void InsertBreakPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -765,12 +778,11 @@ namespace pixChange
                 return;
             }
             //公路网要素图层
-            IFeatureLayer featureLayer=null;
             List<string> queryResults = new List<string>();
             //进行路线查询
             foreach(var point in this.breakPoints)
             {
-               queryResults.Add(routeDecide.QueryTheRoute(point, this.axMapControl1.Map, featureLayer));
+                queryResults.Add(routeDecide.QueryTheRoute(point, this.axMapControl1.Map, routeNetLayer as IFeatureLayer));
             }
             //进行路线展示
             for(int i=0;i<queryResults.Count;i++)
@@ -788,7 +800,8 @@ namespace pixChange
         //显示绕行路线
         private void ShowRoute(string routeName)
         {
-            RasterSimpleHelper.OpenRasterFile(Common.BetterRoutesPath, routeName);
+          ILayer rightLayer=  ShapeSimpleHelper.OpenFile(Common.BetterRoutesPath, routeName);
+          this.axMapControl1.AddLayer(rightLayer);
         }
       
 

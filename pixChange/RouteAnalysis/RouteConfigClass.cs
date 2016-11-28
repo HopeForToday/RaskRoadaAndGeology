@@ -36,7 +36,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             for (int i = 1; i <= count; i++)
             {
                 string lineValue = i.ToString() + (i + 1).ToString();
-                if(readSingleRouteConfig(queryResults,lineValue))
+                if(!readSingleRouteConfig(queryResults,lineValue))
                 {
                     return null;
                 }
@@ -47,7 +47,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         private bool readSingleRouteConfig(Dictionary<int, string> queryResults, string lineValue)
         {
             string tempStr = ConfigHelper.ReadAppConfig("RoadLine" + lineValue);
-            string[] arrys = tempStr.Split(',');
+            string[] arrys = tempStr.Split(' ');
             foreach (var value in arrys)
             {
                 int numberValue;
@@ -57,7 +57,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
                 }
                 else
                 {
-                    return false;
+                    return true;
                 }
             }
             return true;

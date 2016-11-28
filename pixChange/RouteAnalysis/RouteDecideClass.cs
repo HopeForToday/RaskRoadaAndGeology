@@ -1,4 +1,5 @@
 ﻿using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using System;
@@ -33,46 +34,60 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             {
                 throw new Exception("Map中不包括该图层");
             }
-         //   map.SelectByShape()
-            IFeatureClass pFeatureClass = layer.FeatureClass;
+            #region 注释
+            ////   map.SelectByShape()
+            //IFeatureClass pFeatureClass = layer.FeatureClass;
+            //ITopologicalOperator pTopOperator = point as ITopologicalOperator;
+            //IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
+            ////进行选取
+            //map.SelectByShape(pGeometry, null, true);
+            //map.ClearSelection();
+            ////空间过滤运算
+            //ISpatialFilter pSpatialFilter = new SpatialFilterClass();
+            //pSpatialFilter.Geometry = pGeometry;
+            ////设置选取点与待选取要素之间的空间关系
+            //switch (pFeatureClass.ShapeType)
+            //{
+            //    case esriGeometryType.esriGeometryPoint:
+            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelContains;
+            //        break;
+            //    case esriGeometryType.esriGeometryPolyline:
+            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;
+            //        break;
+            //    case esriGeometryType.esriGeometryPolygon:
+            //        pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+            //        break;
+
+            //}
+            //pSpatialFilter.GeometryField = pFeatureClass.ShapeFieldName;
+            ////利用指针进行遍历 不过我们查询单个元素 只需要对第一个进行返回
+            //IFeatureCursor pFeatureCursor;
+            //pFeatureCursor = pFeatureClass.Search(pSpatialFilter, false);
+            //return pFeatureCursor.NextFeature();
+            #endregion
             ITopologicalOperator pTopOperator = point as ITopologicalOperator;
             IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
-            //进行选取
-            map.SelectByShape(pGeometry,null,true);
-            map.ClearSelection();
-            //空间过滤运算
-            ISpatialFilter pSpatialFilter = new SpatialFilterClass();
-            pSpatialFilter.Geometry = pGeometry;
-            //设置选取点与待选取要素之间的空间关系
-            switch (pFeatureClass.ShapeType)
+            IIdentify pIdentity = layer as IIdentify;
+           IArray pArray= pIdentity.Identify(pGeometry);
+          //  IArray pArray = pIdentity.Identify(point);
+            IFeature pFeature = null;
+            if(pArray!=null)
             {
-                case esriGeometryType.esriGeometryPoint:
-                    pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelContains;
-                    break;
-                case esriGeometryType.esriGeometryPolyline:
-                    pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;
-                    break;
-                case esriGeometryType.esriGeometryPolygon:
-                    pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                    break;
-
+                 pFeature = (pArray.get_Element(0) as IRowIdentifyObject).Row as IFeature;
             }
-            pSpatialFilter.GeometryField = pFeatureClass.ShapeFieldName;
-            //利用指针进行遍历 不过我们查询单个元素 只需要对第一个进行返回
-            IFeatureCursor pFeatureCursor;
-            pFeatureCursor = pFeatureClass.Search(pSpatialFilter, false);
-            return pFeatureCursor.NextFeature();
+            return pFeature;
         }
        //查询绕行路线 0代表没有查询到
         public string QueryTheRoute(IPoint point,IMap map,IFeatureLayer featureLayer)
         {
             //查询所点击的要素
-            IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 2);
+            IFeature feature = QuerySingleFeatureByPoint(point, map, featureLayer, 0.002);
             if (feature == null)
             {
                 return null;
             }
-            int objectID = feature.Fields.FindField("ObjectID");
+            int index = feature.Fields.FindField("OBJECTID");
+          int objectID=(int) feature.get_Value(index);
             return routeConfig.QueryGoodRouteIndex(objectID);
         }
     }
