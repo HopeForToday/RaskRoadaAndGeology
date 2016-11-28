@@ -17,28 +17,27 @@ namespace RoadRaskEvaltionSystem
 {
     public partial class ForecastDisplay : Form
     {
-        //string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=C:\\Users\\chen g l\\Desktop\\GitProject\\RaskRoadaAndGeology3\\pixChange\\Rources\\雨量信息.mdb";
         string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=" + Application.StartupPath + "\\Rources\\雨量信息.mdb";
         string ChartSqlStr, GridSqlStr, WeekSqlStr;
-        Series newRains, newTemperature, newWindspeed;
-        Series oldRain1h, oldTemperature, oldHumidity, oldWindspeed;
-        Series series;
-        SecondaryAxisY myAxis;
+        Series newRains, newTemperature, newWindspeed;//未来天气预报Series
+        Series oldRain1h, oldTemperature, oldHumidity, oldWindspeed;//过去24小时天气数据Series
+        Series series;//全局Series变量
+        SecondaryAxisY myAxis;//第二坐标轴
         List<SecondaryAxisY> oldAxisYList, newAxisYList;
-        List<Series> oldlist,newlist;
+        List<Series> oldlist, newlist;
         DataTable dt_Chart, dt_Grid, dt_Week;
-        DateTime NowTime;
-        bool AxisYadd = false;
+        DateTime NowTime;//当前时间
         String day1, day2;
         int AreaId = 1; //1为芦山县，2为宝兴县
         public ForecastDisplay()
         {
             InitializeComponent();
-            int AreaId = 1; //1为芦山县，2为宝兴县
+            int AreaId = 1;
         }
 
         private void ForecastDisplay_Load(object sender, EventArgs e)
         {
+            //为Combox控件添加数据
             comboBoxEdit_Area.Properties.Items.Add("芦山县");
             comboBoxEdit_Area.Properties.Items.Add("宝兴县");
             comboBoxEdit_Area.SelectedItem = "芦山县";
@@ -52,20 +51,24 @@ namespace RoadRaskEvaltionSystem
             oldAxisYList = new List<SecondaryAxisY>();
             newAxisYList = new List<SecondaryAxisY>();
             day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
-            day2 = String.Format("{0}日", (int.Parse(comboBoxEdit_Date.Text.Split('-')[2]) + 1).ToString());
-
+            day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
+            //数据库连接字符串
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE AreaID = {0} ORDER BY ID ASC", AreaId);
+            //获取数据并创建图表
             dt_Chart = getDataTable(ChartSqlStr);
             CreateNewChart(dt_Chart);
             dt_Grid = getDataTable(GridSqlStr);
             CreateTable(dt_Grid);
             dt_Week = getDataTable(WeekSqlStr);
             CreateOldChart(dt_Week);
-
         }
 
+        /// <summary>
+        /// 表格数据建立
+        /// </summary>
+        /// <param name="dt">数据源</param>
         private void CreateTable(DataTable dt)
         {
             //让各列头禁止移动
@@ -83,6 +86,10 @@ namespace RoadRaskEvaltionSystem
             gridControl1.DataSource = dt;
         }
 
+        /// <summary>
+        /// 未来天气预报
+        /// </summary>
+        /// <param name="dt">数据源</param>
         private void CreateNewChart(DataTable dt)
         {
             chartControl1.DataSource = dt;
@@ -96,7 +103,7 @@ namespace RoadRaskEvaltionSystem
 
             newRains.View.Color = Color.GreenYellow;
             newRains.ArgumentScaleType = ScaleType.Qualitative;
-            
+
             chartControl1.Series.Add(newRains);
             ((BarSeriesView)newRains.View).BarWidth = 0.2;
             XYDiagram diagram = (XYDiagram)chartControl1.Diagram;
@@ -113,11 +120,7 @@ namespace RoadRaskEvaltionSystem
 
             newlist = new List<Series>() { newTemperature, newWindspeed };
             chartControl1.Series.AddRange(newlist.ToArray());
-            //chartControl1.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
-            //在图表中间显示标题
-            chartControl1.Legend.Visible = false;
-            chartControl1.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Center;
-            chartControl1.Legend.Direction = LegendDirection.LeftToRight;
+            chartControl1.Legend.Visibility = DefaultBoolean.False;
 
             //十字线参数设置
             chartControl1.CrosshairOptions.ShowArgumentLabels = false;//移动鼠标时动态显示Y轴数据标签
@@ -133,6 +136,10 @@ namespace RoadRaskEvaltionSystem
             }
         }
 
+        /// <summary>
+        /// 过去24小时天气展示
+        /// </summary>
+        /// <param name="dt">数据源</param>
         private void CreateOldChart(DataTable dt)
         {
             chartControl2.DataSource = dt;
@@ -163,11 +170,7 @@ namespace RoadRaskEvaltionSystem
 
             oldlist = new List<Series>() { oldTemperature, oldHumidity, oldWindspeed };
             chartControl2.Series.AddRange(oldlist.ToArray());
-            //chartControl2.SeriesTemplate.LabelsVisibility = DefaultBoolean.True;
-            //在图表中间显示标题
-            chartControl2.Legend.Visible = false;
-            chartControl2.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Center;
-            chartControl2.Legend.Direction = LegendDirection.LeftToRight;
+            chartControl2.Legend.Visibility = DefaultBoolean.False;
 
             //十字线参数设置
             chartControl2.CrosshairOptions.ShowArgumentLabels = false;//移动鼠标时动态显示Y轴数据标签
@@ -362,7 +365,7 @@ namespace RoadRaskEvaltionSystem
                 }
             }
 
-            
+
 
             return myAxis;
         }
@@ -396,6 +399,11 @@ namespace RoadRaskEvaltionSystem
             return _dt;
         }
 
+        /// <summary>
+        /// 为表格添加行标题
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
         {
             e.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -428,13 +436,28 @@ namespace RoadRaskEvaltionSystem
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            day1 = String.Format("{0}日",comboBoxEdit_Date.Text.Split('-')[2].ToString());
-            day2 = String.Format("{0}日", (int.Parse(comboBoxEdit_Date.Text.Split('-')[2]) + 1).ToString());
+            day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
+            day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
 
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
             GridSqlStr = String.Format("SELECT dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
             WeekSqlStr = String.Format("SELECT Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
 
+            initPoints();   // 初始化图表的点位信息
+
+            dt_Chart = getDataTable(ChartSqlStr);
+            CreateNewChart(dt_Chart);
+            dt_Grid = getDataTable(GridSqlStr);
+            CreateTable(dt_Grid);
+            dt_Week = getDataTable(WeekSqlStr);
+            CreateOldChart(dt_Week);
+        }
+
+        /// <summary>
+        /// 初始化图表的点位信息
+        /// </summary>
+        private void initPoints()
+        {
             oldRain1h.Points.Clear();
             oldTemperature.Points.Clear();
             oldHumidity.Points.Clear();
@@ -442,14 +465,6 @@ namespace RoadRaskEvaltionSystem
             newRains.Points.Clear();
             newTemperature.Points.Clear();
             newWindspeed.Points.Clear();
-
-            dt_Chart = getDataTable(ChartSqlStr);
-            CreateNewChart(dt_Chart);
-            ((BarSeriesView)newRains.View).BarWidth = 0.2;
-            dt_Grid = getDataTable(GridSqlStr);
-            CreateTable(dt_Grid);
-            dt_Week = getDataTable(WeekSqlStr);
-            CreateOldChart(dt_Week);
         }
 
         private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)

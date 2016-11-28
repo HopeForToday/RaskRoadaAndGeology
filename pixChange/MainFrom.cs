@@ -731,14 +731,6 @@ namespace pixChange
             }
         }
 
-        private void barButtonItem6_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            MainFrom.groupLayer = new GroupLayerClass();
-            MainFrom.groupLayer.Name = "地质灾害评估数据";
-            LayerMangerView lm = new LayerMangerView();
-            lm.Show();
-        }
-
         private void barButtonItem14_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new ConfigForm().ShowDialog();
@@ -802,6 +794,24 @@ namespace pixChange
         {
           ILayer rightLayer=  ShapeSimpleHelper.OpenFile(Common.BetterRoutesPath, routeName);
           this.axMapControl1.AddLayer(rightLayer);
+        }
+
+        private void barButtonItem6_ItemClick_2(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.WhichChecked = 2;
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "地质灾害评估数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
+        }
+
+        private void barButtonItem12_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            MainFrom.WhichChecked = 4;
+            MainFrom.groupLayer = new GroupLayerClass();
+            MainFrom.groupLayer.Name = "生态数据";
+            LayerMangerView lm = new LayerMangerView();
+            lm.Show();
         }
       
 
