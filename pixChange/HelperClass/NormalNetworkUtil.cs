@@ -17,8 +17,7 @@ using System.Windows.Forms;
 namespace RoadRaskEvaltionSystem.HelperClass
 {
     /// <summary>
-    /// 传输网络分析封装类 
-    /// 2016//11/20 FHR
+    /// 传输网络分析封装类 2016//11/26 FHR
     /// </summary>
     public class NormalNetworkUtil
     {

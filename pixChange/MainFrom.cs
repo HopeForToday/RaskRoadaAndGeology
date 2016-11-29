@@ -840,6 +840,11 @@ namespace pixChange
                    this.axMapControl1.DeleteLayer(i);
                }
            }
+           ILayer datalayer = QueryLayerInMap("网络数据集");
+           if (datalayer != null)
+           {
+               this.axMapControl1.Map.DeleteLayer(datalayer);
+           }
            IActiveView pActiveView = axMapControl1.ActiveView;
            IMap pMap = pActiveView.FocusMap;
            IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;

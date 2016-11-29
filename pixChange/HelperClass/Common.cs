@@ -24,23 +24,23 @@ namespace RoadRaskEvaltionSystem.HelperClass
    /// </summary>
    public class Common
     {
-       private static string stopImagePath = Application.StartupPath + "\\" + @"Images\1.jpg";
+       private static string stopImagePath = Application.StartupPath + @"\Images\stop.jpg";
        public static string StopImagePath
        {
            get { return stopImagePath; }
        }
-       private static string routeBreakImagePath = Application.StartupPath + "\\" + @"Images\routebreak.jpg";
+       private static string routeBreakImagePath = Application.StartupPath + @"\Images\routebreak.jpg";
        public static string  RouteBeakImggePath
        {
            get { return routeBreakImagePath; }
        }
-       private static string mapPath = Application.StartupPath+"\\"+@"Resource\地图文档\ourMap.mxd";
+       private static string mapPath = Application.StartupPath+@"\Resource\地图文档\ourMap.mxd";
         
        public static string MapPath
        {
            get { return mapPath; }
        }
-       private static string betterRoutesPath = Application.StartupPath + "\\" + @"Resource\绕行线路";
+       private static string betterRoutesPath = Application.StartupPath + @"\Resource\绕行线路";
        /// <summary>
        /// 绕行数据存放路径
        /// </summary>
@@ -48,7 +48,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            get { return betterRoutesPath; }
        }
-       private static string routeNetFeaturePath = Application.StartupPath + "\\" + @"Resource\公路\公路网";
+       private static string routeNetFeaturePath = Application.StartupPath + @"\Resource\公路\公路网";
        /// <summary>
        /// 公路网数据路径
        /// </summary>
@@ -56,7 +56,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            get { return routeNetFeaturePath; }
        }
-       private static string riskDataPath = Application.StartupPath + "\\" + @"Resource\风险评价";
+       private static string riskDataPath = Application.StartupPath + @"\Resource\风险评价";
        public static string RiskDataPath
        {
            get { return riskDataPath; }

@@ -620,8 +620,6 @@
     <Content Include="bin\Debug\HtmlAgilityPack.pdb" />
     <Content Include="bin\Debug\HtmlAgilityPack.xml" />
     <Content Include="bin\Debug\Images\1.jpg" />
-    <Content Include="bin\Debug\Images\gpslocation.png" />
-    <Content Include="bin\Debug\Images\pointer.png" />
     <Content Include="bin\Debug\Images\routebreak.jpg" />
     <Content Include="bin\Debug\Resource\公路\公路网.shp.xml" />
     <Content Include="bin\Debug\Resource\公路\公路网点编号.shp.xml" />
