@@ -21,8 +21,9 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         public bool QueryTheRoue(IPoint breakPoint, AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, ref IPoint rightPoint)
         {
             IFeature feature = null;
+            double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature, ref distNum);
+            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
             if (breakLine == null)
             {
                 return false;
@@ -51,8 +52,9 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         {
             
             IFeature feature = null;
+            double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature, ref distNum);
+            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature,ref distance, ref distNum);
             if(breakLine==null)
             {
                 return null;

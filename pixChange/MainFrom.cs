@@ -728,6 +728,7 @@ namespace pixChange
                 MessageBox.Show("流程经过点少于一个");
                 return;
             }
+            this.insetFlag = 0;
             this.barButtonItem16.Caption = "正在查询";
             bool result = simplRrouteDecide.QueryTheRoue( this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND",stopPoints,barryPoints);
             if (result)
@@ -739,6 +740,8 @@ namespace pixChange
             else
             {
                 MessageBox.Show("查询失败");
+                //清除所有图标
+                SymbolUtil.ClearElement(this.axMapControl1);
             }
             this.barButtonItem16.Caption = "绕行方案";
         }
@@ -828,6 +831,7 @@ namespace pixChange
         //清除路线分析相关数据
        private void ClearRouteAnalyst()
         {
+            this.insetFlag = 0;
             this.stopPoints.Clear();
             this.barryPoints.Clear();
            for(int i=0;i<this.axMapControl1.LayerCount;i++)
@@ -846,8 +850,7 @@ namespace pixChange
                this.axMapControl1.Map.DeleteLayer(datalayer);
            }
            IActiveView pActiveView = axMapControl1.ActiveView;
-           IMap pMap = pActiveView.FocusMap;
-           IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
+           pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
            axMapControl1.Refresh();
         }
     }

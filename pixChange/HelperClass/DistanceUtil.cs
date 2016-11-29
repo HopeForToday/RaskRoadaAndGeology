@@ -16,10 +16,13 @@ namespace RoadRaskEvaltionSystem
         /// <summary>
         /// 获取点到线要素图层中的最短线
         /// </summary>
-        /// <param name="listGeo"></param>
-        /// <param name="disNum"></param>
-        /// <returns></returns>
-        public static ILine GetNearestLineInFeature(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature,ref int disNum)
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">离查询点最近要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeature(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum)
         {
             List<IFeature> features = new List<IFeature>();
             IQueryFilter pQueryFilter = new QueryFilter();//实例化一个查询条件对象            
@@ -32,7 +35,7 @@ namespace RoadRaskEvaltionSystem
                 pFeature = pFeatureCursor.NextFeature();
             }
             ILine line = null;
-            double distance = 99999999;
+             distance = 99999999;
             foreach (IFeature feature in features)
             {
                 double dis = -1;
@@ -55,8 +58,8 @@ namespace RoadRaskEvaltionSystem
         /// <param name="pline">线图形元素</param>
         /// <param name="point">点</param>
         /// <param name="dis">最短距离</param>
-        /// <param name="disNum">标识在左手或是右手方</param>
-        /// <returns></returns>
+        /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
+        /// <returns>离点最近的单线</returns>
         public static ILine GetNearestLine(IPolyline pLine, IPoint point, ref double dis, ref int disNum)
         {
             ILine line = null;
@@ -84,22 +87,20 @@ namespace RoadRaskEvaltionSystem
         /// </summary>
         /// <param name="line"></param>
         /// <param name="pnt"></param>
-        /// <param name="disNum"></param>
-        /// <returns></returns>
+        /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
+        /// <returns>最近距离</returns>
         private static double getPointDistance(ILine line, IPoint pnt, ref int disNum)
         {
             return GetNearestDistance(line.FromPoint, line.ToPoint, pnt, ref disNum);
         }
-
-
         /// <summary>
-        /// 
+        /// 求p3到AB线段距离
         /// </summary>
         /// <param name="PA"></param>
         /// <param name="PB"></param>
         /// <param name="P3"></param>
-        /// <param name="disNum">在线段上的位置</param>
-        /// <returns></returns>
+        /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
+        /// <returns>距离</returns>
         private static double GetNearestDistance(IPoint PA, IPoint PB, IPoint P3, ref int disNum)
         {
             double a, b, c;
@@ -141,7 +142,7 @@ namespace RoadRaskEvaltionSystem
         /// </summary>
         /// <param name="line"></param>
         /// <param name="pnt"></param>
-        /// <returns></returns>
+        /// <returns>垂足</returns>
         public static IPoint GetCrossPnt(ILine line, IPoint pnt)
         {
             IPoint pt1 = line.FromPoint;
@@ -160,7 +161,7 @@ namespace RoadRaskEvaltionSystem
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="p2"></param>
-        /// <returns></returns>
+        /// <returns>距离</returns>
         private static double GetPointDistance(IPoint p1, IPoint p2)
         {
             return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
