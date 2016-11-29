@@ -17,7 +17,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
         {
             this.getWeatherObj = getWeatherObj;
         }
-        public    void SaveForeacastWerherMsg(string url,int AreaID)
+        public void SaveForeacastWerherMsg(string url, int AreaID)
         {
             List<forecastWeatherMesg> WeatherList = getWeatherObj.getforcastMessage(url);
             if (WeatherList.Count == 0)
@@ -37,7 +37,11 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                     break;
                 }
             }
-            WeatherList.RemoveRange(index + 2, 8 - (index + 2));
+            if (index < 8)
+            {
+                WeatherList.RemoveRange(index + 2, 8 - (index + 2));
+            }
+
             //第一次录入数据 
             if (idS.Rows.Count == 0 || idS == null)
             {
@@ -49,25 +53,25 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                 Common.DBHander.insertToAccessByBatch(sqllist);
                 idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID).Tables[0];
             }
-
             List<int> IDs = new List<int>();
             foreach (DataRow dr in idS.Rows)
             {
                 IDs.Add(Convert.ToInt32(dr[0]));
             }
-        
             sqllist.Clear();
             for (int i = 0; i < WeatherList.Count; i++)
             {
                 var r = WeatherList[i];
-                sqllist.Add(string.Format("update ForecastWeather set dtime3hour='{0}' , temperature='{1}',rains='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}'  where ID={9} ",
-                    r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd, IDs[8 - (index + 2) + i]));
+                sqllist.Add(
+                    string.Format(
+                        "update ForecastWeather set dtime3hour='{0}' , temperature='{1}',rains='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}'  where ID={9} ",
+                        r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd,
+                        index < 8 ? IDs[8 - (index + 2) + i] : IDs[i]));
             }
-
-
             Common.DBHander.insertToAccessByBatch(sqllist);
 
         }
+
         //实际上只有最近23个小时的数据
         public  void Savelast24hMsg(string url, int AreaID)
         {
