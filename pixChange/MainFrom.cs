@@ -744,7 +744,12 @@ namespace pixChange
             this.textElements.Clear();
             isInserting = true;
             routeNetLayer = QueryLayerInMap("公路网");
-            riskLayer = QueryLayerInMap("风险评价");
+            /**优先查看是否有公路风险图层**/
+            riskLayer = QueryLayerInMap("公路风险");
+            if (riskLayer == null)
+            {
+                riskLayer = QueryLayerInMap("风险评价");
+            }
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
             {
