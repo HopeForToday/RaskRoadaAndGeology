@@ -141,7 +141,7 @@ namespace RoadRaskEvaltionSystem
             }
             try
             {
-                roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", rain, @"..\..\Rources\RoadData\RoadRasterData");
+                roadRaskCaculate.RoadRaskCaulte(@"风险评价1.tif", rain, @"..\..\Rources\RoadData\CheckedRoad");
             }
             catch (Exception)
             {
@@ -194,9 +194,15 @@ namespace RoadRaskEvaltionSystem
                         {
                             st = RainData(sql);
                             this.comboBoxEdit4.Properties.Items.Clear();
-                            foreach (DataRow v in st.Rows)
+                            if(st.Rows.Count>=8){
+                                SetItem();
+                            }
+                            else
                             {
-                                this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                foreach (DataRow v in st.Rows)
+                                {
+                                    this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                } 
                             }
                         }
                         catch (Exception)
@@ -207,22 +213,21 @@ namespace RoadRaskEvaltionSystem
                     else
                     {
                         this.comboBoxEdit4.Properties.Items.Clear();
-                        foreach (DataRow v in st.Rows)
+                        if (st.Rows.Count >= 8)
                         {
-                            this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                            SetItem();
+                        }
+                        else
+                        {
+                            foreach (DataRow v in st.Rows)
+                            {
+                                this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                            }
                         }
                     }
                 }
                 else{
-                    this.comboBoxEdit4.Properties.Items.Clear();
-                    this.comboBoxEdit4.Properties.Items.Add("02:00");
-                    this.comboBoxEdit4.Properties.Items.Add("05:00");
-                    this.comboBoxEdit4.Properties.Items.Add("08:00");
-                    this.comboBoxEdit4.Properties.Items.Add("11:00");
-                    this.comboBoxEdit4.Properties.Items.Add("14:00");
-                    this.comboBoxEdit4.Properties.Items.Add("17:00");
-                    this.comboBoxEdit4.Properties.Items.Add("20:00");
-                    this.comboBoxEdit4.Properties.Items.Add("23:00");
+                    SetItem();
                 }
                 this.comboBoxEdit4.SelectedIndex = 0;
             }
@@ -230,6 +235,19 @@ namespace RoadRaskEvaltionSystem
             {
                 this.comboBoxEdit4.Enabled = false;
             }
+        }
+
+        private void SetItem()
+        {
+            this.comboBoxEdit4.Properties.Items.Clear();
+            this.comboBoxEdit4.Properties.Items.Add("02:00");
+            this.comboBoxEdit4.Properties.Items.Add("05:00");
+            this.comboBoxEdit4.Properties.Items.Add("08:00");
+            this.comboBoxEdit4.Properties.Items.Add("11:00");
+            this.comboBoxEdit4.Properties.Items.Add("14:00");
+            this.comboBoxEdit4.Properties.Items.Add("17:00");
+            this.comboBoxEdit4.Properties.Items.Add("20:00");
+            this.comboBoxEdit4.Properties.Items.Add("23:00");
         }
         private void getDays()
         {
@@ -279,20 +297,12 @@ namespace RoadRaskEvaltionSystem
             {
                 if (this.comboBoxEdit3.SelectedItem.ToString() != DateTime.Now.ToString("yyyy/MM/dd"))
                 {
-                    this.comboBoxEdit4.Properties.Items.Clear();
-                    this.comboBoxEdit4.Properties.Items.Add("02:00");
-                    this.comboBoxEdit4.Properties.Items.Add("05:00");
-                    this.comboBoxEdit4.Properties.Items.Add("08:00");
-                    this.comboBoxEdit4.Properties.Items.Add("11:00");
-                    this.comboBoxEdit4.Properties.Items.Add("14:00");
-                    this.comboBoxEdit4.Properties.Items.Add("17:00");
-                    this.comboBoxEdit4.Properties.Items.Add("20:00");
-                    this.comboBoxEdit4.Properties.Items.Add("23:00");
+                    SetItem();
                 }
                 else
                 {
                     this.comboBoxEdit4.Properties.Items.Clear();
-                    if (st.Rows.Count>0)
+                    if (st.Rows.Count>0&&st.Rows.Count<8)
                     {
                         foreach (DataRow v in st.Rows)
                         {
@@ -306,9 +316,16 @@ namespace RoadRaskEvaltionSystem
                         {
                             st = RainData(sql);
                             this.comboBoxEdit4.Properties.Items.Clear();
-                            foreach (DataRow v in st.Rows)
+                            if (st.Rows.Count >= 8)
                             {
-                                this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                SetItem();
+                            }
+                            else
+                            {
+                                foreach (DataRow v in st.Rows)
+                                {
+                                    this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                }
                             }
                         }
                         catch (Exception)

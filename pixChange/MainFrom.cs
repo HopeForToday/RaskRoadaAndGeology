@@ -690,14 +690,6 @@ namespace pixChange
             //return true;
         //}
 
-        private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            MainFrom.groupLayer = new GroupLayerClass();
-            MainFrom.groupLayer.Name = "地质灾害评估数据";
-            LayerMangerView lm = new LayerMangerView();
-            lm.Show();
-        }
-
 
         private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
         {
