@@ -20,6 +20,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
     //存储一些公共的变量，数据等
    public class Common
     {
+       private static string mapPath = @"Resource\地图文档\ourMap.mxd";
+       public static string MapPath
+       {
+           get { return mapPath; }
+       }
        private static string betterRoutesPath = @"Resource\绕行线路";
        /// <summary>
        /// 绕行数据存放路径

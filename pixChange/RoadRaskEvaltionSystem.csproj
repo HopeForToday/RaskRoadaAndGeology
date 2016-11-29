@@ -189,7 +189,9 @@
     <Compile Include="HelperClass\ConfigHelper.cs" />
     <Compile Include="HelperClass\CumRaster.cs" />
     <Compile Include="HelperClass\Database.cs" />
+    <Compile Include="HelperClass\FeatureStyleUtil.cs" />
     <Compile Include="HelperClass\LayerMange.cs" />
+    <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
     <Compile Include="HelperClass\RainMessage.cs" />
     <Compile Include="HelperClass\RasterSimpleHelper.cs" />

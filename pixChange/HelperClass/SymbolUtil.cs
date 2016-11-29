@@ -14,6 +14,16 @@ namespace RoadRaskEvaltionSystem.HelperClass
 {
     class SymbolUtil
     {
+        //清除所有图形元素
+        public static void ClearElement(AxMapControl mapControl)
+        {
+            IMap map = mapControl.Map;
+            IActiveView pActiveView = map as IActiveView;
+            IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
+            pGraphicsContainer.DeleteAllElements();
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+        }
+        //清除元素
         public static void ClearElement(AxMapControl mapControl, List<IElement> elements)
         {
             IMap map = mapControl.Map;
@@ -23,6 +33,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             {
                 pGraphicsContainer.DeleteElement(element);
             }
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
         }
         //画带图片的地图注记
         public static IElement DrawSymbolWithPicture(IPoint point, AxMapControl mapControl, string pictureUri)

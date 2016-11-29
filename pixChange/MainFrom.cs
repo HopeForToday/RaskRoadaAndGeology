@@ -138,6 +138,8 @@ namespace pixChange
             //右键菜单绑定
             mapMenu.SetHook(m_mapControl);
             layerMenu.SetHook(m_mapControl);
+            IMap map = MapUtil.OpenMap(Common.MapPath);
+            this.axMapControl1.Map = map;
         }
         /// <summary>
         /// 在TocControl的鼠标事件中实现右键菜单
@@ -737,11 +739,21 @@ namespace pixChange
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //清除所有注记
-            SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
-            SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
+            //SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
+            //SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
+            SymbolUtil.ClearElement(this.axMapControl1);
             this.breakPoints.Clear();
             this.pixtureElements.Clear();
             this.textElements.Clear();
+            //根据绕行名称清除所有绕行路线图层
+            for (int i = 0; i < this.axMapControl1.LayerCount;i++ )
+            {
+                ILayer layer = this.axMapControl1.get_Layer(i);
+                if(layer.Name.EndsWith("绕行"))
+                {
+                    this.axMapControl1.DeleteLayer(i);
+                }
+            }
             isInserting = true;
             routeNetLayer = QueryLayerInMap("公路网");
             /**优先查看是否有公路风险图层**/
@@ -808,13 +820,14 @@ namespace pixChange
             if (this.routeNetLayer != null)
             {
                 m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
-               // this.routeNetLayer.Visible = false;
+            //    this.routeNetLayer.Visible = false;
             }
         }
         //显示绕行路线
         private void ShowRoute(string routeName)
         {
           ILayer rightLayer=  ShapeSimpleHelper.OpenFile(Common.BetterRoutesPath, routeName);
+          FeatureStyleUtil.SetFetureLineStyle(255, 0, 0, 5, rightLayer as IFeatureLayer);
           this.axMapControl1.AddLayer(rightLayer);
         }
 
@@ -854,6 +867,11 @@ namespace pixChange
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             this.axMapControl1.CurrentTool = null;
+        }
+
+        private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
         }
       
 
