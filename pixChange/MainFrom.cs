@@ -589,26 +589,6 @@ namespace pixChange
             m_cTool = CustomTool.RuleMeasure;
         }
 
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-        //矢量转栅格测试
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //IFeatureLayer pFeatureLayer;
-            //pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
-            //IFeatureClass fa = pFeatureLayer.FeatureClass;
-            //if (roadRaskCaculate.FeatureToRaster(fa, @"..\..\Rources\xmlData\RainsCrate.tif", "Rains", 200))
-            //{
-            //    Console.WriteLine("转化成功！");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("转化失败！！");
-            //}
-        }
-
 
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -632,7 +612,7 @@ namespace pixChange
             //addRains();  
             //roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", 20, @"..\..\Rources\RoadData\RoadRasterData");
         }
-
+        #region 注释
         //public bool addRains()
         //{
             //var pFeatureLayer = roadRaskCaculate.OpenFeatureClass(@"D:\RoadTest\network_Buffer2.shp");
@@ -693,7 +673,7 @@ namespace pixChange
             //wse.StopEditing(true);
             //return true;
         //}
-
+        #endregion
 
         private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
         {
@@ -740,30 +720,42 @@ namespace pixChange
         //开启编辑公路断点模式
         private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            //清除所有注记
-            //SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
-            //SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
-            SymbolUtil.ClearElement(this.axMapControl1);
-            this.breakPoints.Clear();
-            this.pixtureElements.Clear();
-            this.textElements.Clear();
-            //根据绕行名称清除所有绕行路线图层
-            for (int i = 0; i < this.axMapControl1.LayerCount;i++ )
+            if (isInserting)
             {
-                ILayer layer = this.axMapControl1.get_Layer(i);
-                if(layer.Name.EndsWith("绕行"))
+                if (DialogResult.OK == MessageBox.Show("是否取消当前公路编辑状态", "提示", MessageBoxButtons.OKCancel))
+               {
+                   //SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElements);
+                   //SymbolUtil.ClearElement(this.axMapControl1,this.textElements);
+                   SymbolUtil.ClearElement(this.axMapControl1);
+                   this.breakPoints.Clear();
+                   this.pixtureElements.Clear();
+                   this.textElements.Clear();
+               }
+            }
+            else
+            {
+                SymbolUtil.ClearElement(this.axMapControl1);
+                this.breakPoints.Clear();
+                this.pixtureElements.Clear();
+                this.textElements.Clear();
+                //根据绕行名称清除所有绕行路线图层
+                for (int i = 0; i < this.axMapControl1.LayerCount; i++)
                 {
-                    this.axMapControl1.DeleteLayer(i);
+                    ILayer layer = this.axMapControl1.get_Layer(i);
+                    if (layer.Name.EndsWith("绕行"))
+                    {
+                        this.axMapControl1.DeleteLayer(i);
+                    }
                 }
             }
             isInserting = true;
-            routeNetLayer = QueryLayerInMap("公路网");
             /**优先查看是否有公路风险图层**/
             riskLayer = QueryLayerInMap("公路风险");
             if (riskLayer == null)
             {
                 riskLayer = QueryLayerInMap("风险评价");
             }
+            routeNetLayer = QueryLayerInMap("公路网");
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
             {
@@ -786,7 +778,7 @@ namespace pixChange
             textPoint.X=e.mapX+5;
             textPoint.Y=e.mapY+5;
             string text=string.Format("{0}号断路点",this.breakPoints.Count+1);
-            this.pixtureElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, @"Images\routebreak.jpg"));
+            this.pixtureElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath));
             this.textElements.Add(SymbolUtil.DrawSymbolWithText(textPoint, this.axMapControl1, text));
             this.breakPoints.Add(point);
         }
@@ -794,6 +786,7 @@ namespace pixChange
         //最后可以考虑使用async进行异步查询
         private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            this.isInserting = false;
             if(breakPoints.Count==0)
             {
                 MessageBox.Show("尚未设置任何公路断点");
@@ -818,7 +811,6 @@ namespace pixChange
                 value=value+"绕行";
                 ShowRoute(value);
             }
-            this.isInserting = false;
             if (this.routeNetLayer != null)
             {
                 m_mapControl.Extent = this.routeNetLayer.AreaOfInterest;
@@ -829,7 +821,7 @@ namespace pixChange
         private void ShowRoute(string routeName)
         {
           ILayer rightLayer=  ShapeSimpleHelper.OpenFile(Common.BetterRoutesPath, routeName);
-          FeatureStyleUtil.SetFetureLineStyle(255, 0, 0, 5, rightLayer as IFeatureLayer);
+          FeatureStyleUtil.SetFetureLineStyle(255, 255, 0, 3, rightLayer as IFeatureLayer);
           this.axMapControl1.AddLayer(rightLayer);
         }
 
@@ -874,6 +866,16 @@ namespace pixChange
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
             MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
+        }
+
+        private void barButtonItem10_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
+        }
+
+        private void barButtonItem9_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
         }
       
 

@@ -400,6 +400,7 @@
             this.barButtonItem9.Id = 14;
             this.barButtonItem9.ImageUri.Uri = "BringForward";
             this.barButtonItem9.Name = "barButtonItem9";
+            this.barButtonItem9.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem9_ItemClick);
             // 
             // barButtonItem10
             // 
@@ -407,6 +408,7 @@
             this.barButtonItem10.Id = 15;
             this.barButtonItem10.ImageUri.Uri = "Paste";
             this.barButtonItem10.Name = "barButtonItem10";
+            this.barButtonItem10.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem10_ItemClick);
             // 
             // barButtonItem11
             // 

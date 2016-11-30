@@ -17,15 +17,24 @@ using pixChange.HelperClass;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
-    //存储一些公共的变量，数据等
+   /// <summary>
+   /// 为了防止程序 的工作目录发生变化
+   /// 下面最好全部采用绝对路径
+   /// </summary>
    public class Common
     {
-       private static string mapPath = @"Resource\地图文档\ourMap.mxd";
+       private static string routeBreakImagePath = Application.StartupPath + "\\" + @"Images\routebreak.jpg";
+       public static string  RouteBeakImggePath
+       {
+           get { return routeBreakImagePath; }
+       }
+       private static string mapPath = Application.StartupPath+"\\"+@"Resource\地图文档\ourMap.mxd";
+        
        public static string MapPath
        {
            get { return mapPath; }
        }
-       private static string betterRoutesPath = @"Resource\绕行线路";
+       private static string betterRoutesPath = Application.StartupPath + "\\" + @"Resource\绕行线路";
        /// <summary>
        /// 绕行数据存放路径
        /// </summary>
@@ -33,7 +42,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            get { return betterRoutesPath; }
        }
-       private static string routeNetFeaturePath = @"Resource\公路\公路网";
+       private static string routeNetFeaturePath = Application.StartupPath + "\\" + @"Resource\公路\公路网";
        /// <summary>
        /// 公路网数据路径
        /// </summary>
@@ -41,7 +50,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        {
            get { return routeNetFeaturePath; }
        }
-       public static string riskDataPath = @"Resource\风险评价";
+       public static string riskDataPath = Application.StartupPath + "\\" + @"Resource\风险评价";
        public static string RiskDataPath
        {
            get { return riskDataPath; }

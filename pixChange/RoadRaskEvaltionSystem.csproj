@@ -171,6 +171,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConditionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConditionForm.Designer.cs">
+      <DependentUpon>ConditionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,6 +196,9 @@
     <Compile Include="HelperClass\CumRaster.cs" />
     <Compile Include="HelperClass\Database.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
+    <Compile Include="HelperClass\IPictureConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="HelperClass\LayerMange.cs" />
     <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
@@ -262,6 +271,9 @@
     <Compile Include="XtraUserControl1.Designer.cs">
       <DependentUpon>XtraUserControl1.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConditionForm.resx">
+      <DependentUpon>ConditionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
