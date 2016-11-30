@@ -48,7 +48,6 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
             IIdentify pIdentity = layer as IIdentify;
            IArray pArray= pIdentity.Identify(pGeometry);
-          //  IArray pArray = pIdentity.Identify(point);
             IFeature pFeature = null;
             if(pArray!=null)
             {

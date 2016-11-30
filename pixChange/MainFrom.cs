@@ -21,6 +21,8 @@ using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.RouteAnalysis;
 using ESRI.ArcGIS.NetworkAnalyst;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace pixChange
 {
@@ -697,8 +699,10 @@ namespace pixChange
  
         //计算最优路线
         //最后可以考虑使用async进行异步查询
-        private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {/*
+        private   void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            #region 注释   
+            /*
             this.isInserting = false;
             if (breakPoint == null)
             {
@@ -723,27 +727,118 @@ namespace pixChange
             }
             this.barButtonItem16.Caption = "绕行方案";
           */
-            if (this.stopPoints.Count<2)
+            #endregion
+            if (this.stopPoints.Count < 2)
             {
                 MessageBox.Show("流程经过点少于一个");
                 return;
             }
             this.insetFlag = 0;
             this.barButtonItem16.Caption = "正在查询";
-            bool result = simplRrouteDecide.QueryTheRoue( this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND",stopPoints,barryPoints);
+            this.barButtonItem22.Enabled = false;
+            this.barButtonItem15.Enabled = false;
+            this.barButtonItem23.Enabled = false;
+            List<IPoint> newStopPoints=null;
+            List<IPoint> newBarryPoints=null;
+            bool pointIsRight = false;
+          //  await Task.Run(() =>
+           //   {
+                    TimeSpan ts1 = new TimeSpan(DateTime.Now.Ticks); 
+                   pointIsRight=  UpdatePointsToRouteCore(routeNetLayer as IFeatureLayer, stopPoints, barryPoints, ref newStopPoints, ref newBarryPoints);
+                    TimeSpan ts2 = new TimeSpan(DateTime.Now.Ticks);
+                    TimeSpan ts = ts2.Subtract(ts1).Duration(); //时间差的绝对值  
+                    Debug.Print("运行时间："+ts.TotalSeconds.ToString());
+           //      });
+                    if (!pointIsRight)
+                    {
+                        MessageBox.Show("请检查点位是否太过远离公路网");
+                        return;
+                    }
+            UpdateSymbol(newStopPoints, newBarryPoints);
+            bool result = simplRrouteDecide.QueryTheRoue(this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
             if (result)
             {
                 MessageBox.Show("查询成功");
                 //清除所有图标
-                SymbolUtil.ClearElement(this.axMapControl1);
+               // SymbolUtil.ClearElement(this.axMapControl1);
             }
             else
             {
                 MessageBox.Show("查询失败");
-                //清除所有图标
-                SymbolUtil.ClearElement(this.axMapControl1);
             }
             this.barButtonItem16.Caption = "绕行方案";
+            this.barButtonItem22.Enabled = true;
+            this.barButtonItem15.Enabled = true;
+            this.barButtonItem23.Enabled = true;
+        }
+        /// <summary>
+        /// 求出点到公路网的对应点
+        /// </summary>
+        /// <param name="featureLayer"></param>
+        /// <param name="stopPoints"></param>
+        /// <param name="barryPoints"></param>
+        /// <param name="newStopPoints"></param>
+        /// <param name="newBarryPoints"></param>
+        public bool UpdatePointsToRouteCore(IFeatureLayer featureLayer, List<IPoint> stopPoints, List<IPoint> barryPoints, ref List<IPoint> newStopPoints, ref List<IPoint> newBarryPoints)
+        {
+            #region 注释
+            /*
+            newStopPoints = new List<IPoint>();
+            newBarryPoints = new List<IPoint>();
+            IEnumerable<IPoint> allPoints = stopPoints.Concat(newBarryPoints);
+            List<IFeature> features;
+            List<double> distances;
+            List<int> disNums;
+            List<ILine> lines = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, allPoints.ToList<IPoint>(), out features, out distances, out disNums);
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (i >= stopPoints.Count)
+                {
+                    newBarryPoints.Add(lines[i].FromPoint);
+                    continue;
+                }
+                newStopPoints.Add(lines[i].FromPoint);
+            }
+             */
+            #endregion
+            newStopPoints = new List<IPoint>();
+            newBarryPoints = new List<IPoint>();
+            //stopPoints.
+            foreach (var point in stopPoints)
+            {
+                double distance = 0;
+                int disNum = 0;
+                IFeature feature = null;
+                ILine line = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
+               if(line==null){
+                   return false;
+               }
+                newStopPoints.Add(line.FromPoint);
+            }
+            foreach (var point in barryPoints)
+            {
+                double distance = 0;
+                int disNum = 0;
+                IFeature feature = null;
+                 ILine line=DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum,0.1);
+                if(line==null){
+                   return false;
+               }
+                newBarryPoints.Add(line.FromPoint);
+            }
+            return true;
+        }
+        private void UpdateSymbol(List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
+        {
+            SymbolUtil.ClearElement(this.axMapControl1);
+            foreach (var point in newStopPoints)
+            {
+                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath);
+            }
+            foreach (var point in newBarryPoints)
+            {
+                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
+            }
         }
         //图层查找 确定图层的存在性
         private ILayer QueryLayerInMap(string layerName)
@@ -832,6 +927,8 @@ namespace pixChange
        private void ClearRouteAnalyst()
         {
             this.insetFlag = 0;
+            //清除所有图标
+            SymbolUtil.ClearElement(this.axMapControl1);
             this.stopPoints.Clear();
             this.barryPoints.Clear();
            for(int i=0;i<this.axMapControl1.LayerCount;i++)

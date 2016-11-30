@@ -23,7 +23,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IFeature feature = null;
             double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
+            ILine breakLine = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
             if (breakLine == null)
             {
                 return false;
@@ -54,7 +54,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IFeature feature = null;
             double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeature(featureLayer, breakPoint, ref feature,ref distance, ref distNum);
+            ILine breakLine = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature,ref distance, ref distNum);
             if(breakLine==null)
             {
                 return null;

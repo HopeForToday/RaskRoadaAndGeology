@@ -1,4 +1,5 @@
 ﻿using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using System;
@@ -10,11 +11,294 @@ using System.Windows.Forms;
 
 namespace RoadRaskEvaltionSystem
 {
+    /// <summary>
+    /// 点线关系判断类
+    /// 2016/11/30 FHR
+    /// </summary>
     public class DistanceUtil
     {
-
         /// <summary>
-        /// 获取点到线要素图层中的最短线
+        /// 通过梯级缓冲区递推获取点到线要素中的最短距离
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">缓冲区中第一个要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,0在中间</param>
+        /// <param name="buffer_Span">缓冲区梯度</param>
+        /// <param name="initialBuffer">初始缓冲区距离</param>
+        /// <param name="maxBuffer">最大缓冲区距离</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeatureLayerByBufferRecur(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum, double buffer_Span, double initialBuffer, double maxBuffer)
+        {
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.WhereClause = "";
+            //要素个数为0则直接返回null
+            if (featureLayer.FeatureClass.FeatureCount(pQueryFilter) < 0)
+            {
+                return null;
+            }
+            ILine line = null;
+            double buffer_distance = initialBuffer;
+            IGeometry pGeometry = point as IGeometry;
+            while (true)
+            {
+                if (buffer_distance > maxBuffer)
+                {
+                    break;
+                }
+                ITopologicalOperator pTopOperator = pGeometry as ITopologicalOperator;
+                if (buffer_distance == initialBuffer)
+                {
+                    pGeometry = pTopOperator.Buffer(buffer_distance);
+                }
+                else
+                {
+                    pGeometry = pTopOperator.Buffer(buffer_Span);
+                }
+                ILayer layer = featureLayer as ILayer;
+                IIdentify pIdentity = layer as IIdentify;
+                IArray pArray = pIdentity.Identify(pGeometry);
+                if (pArray == null)
+                {
+                    return null;
+                }
+                if (pArray.Count == 0)
+                {
+                    continue;
+                }
+                distance = 9999999;
+                for (int i = 0; i < pArray.Count; i++)
+                {
+                    IFeature feature = (pArray.get_Element(i) as IRowIdentifyObject).Row as IFeature;
+                    double dis = -1;
+                    int dnum = -1;
+                    ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                    if (distance > dis)
+                    {
+                        disNum = dnum;
+                        distance = dis;
+                        line = L;
+                        thefeature = feature;
+                    }
+                }
+                break;
+            }
+            return line;
+        }
+        /// <summary>
+        /// 通过梯级缓冲区递推获取点到线要素中的最短距离
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">缓冲区中第一个要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,0在中间</param>
+        /// <param name="buffer_Span">缓冲区梯度</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeatureLayerByBufferRecur(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum, double buffer_Span)
+        {
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.WhereClause = "";
+            //要素个数为0则直接返回null
+            if (featureLayer.FeatureClass.FeatureCount(pQueryFilter) < 0)
+            {
+                return null;
+            }
+            ILine line = null;
+            IGeometry pGeometry = point as IGeometry;
+            while (true)
+            {
+                ITopologicalOperator pTopOperator = pGeometry as ITopologicalOperator;
+                pGeometry = pTopOperator.Buffer(buffer_Span);
+                ILayer layer = featureLayer as ILayer;
+                IIdentify pIdentity = layer as IIdentify;
+                IArray pArray = pIdentity.Identify(pGeometry);
+                if (pArray == null)
+                {
+                    return null;
+                }
+                if (pArray.Count == 0)
+                {
+                    continue;
+                }
+                distance = 9999999;
+                for (int i = 0; i < pArray.Count; i++)
+                {
+                    IFeature feature = (pArray.get_Element(i) as IRowIdentifyObject).Row as IFeature;
+                    double dis = -1;
+                    int dnum = -1;
+                    ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                    if (distance > dis)
+                    {
+                        disNum = dnum;
+                        distance = dis;
+                        line = L;
+                        thefeature = feature;
+                    }
+                }
+                break;
+            }
+            return line;
+        }
+        /// <summary>
+        /// 通过梯级缓冲区获取点到线要素中的最短距离
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">缓冲区中第一个要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,0在中间</param>
+        /// <param name="buffer_Span">缓冲区梯度</param>
+        /// <param name="initialBuffer">初始缓冲区距离</param>
+        /// <param name="maxBuffer">最大缓冲区距离</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeatureLayerByBuffer(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum, double buffer_Span,double initialBuffer,double maxBuffer)
+        {
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.WhereClause = "";
+            //要素个数为0则直接返回null
+            if (featureLayer.FeatureClass.FeatureCount(pQueryFilter) < 0)
+            {
+                return null;
+            }
+            ILine line = null;
+            double buffer_distance = initialBuffer;
+            while (true)
+            {
+                buffer_distance += buffer_Span;
+                if (maxBuffer < buffer_distance)
+                {
+                    break;
+                }
+                ITopologicalOperator pTopOperator = point as ITopologicalOperator;
+                IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
+                ILayer layer = featureLayer as ILayer;
+                IIdentify pIdentity = layer as IIdentify;
+                IArray pArray = pIdentity.Identify(pGeometry);
+                if (pArray == null)
+                {
+                    return null;
+                }
+                if (pArray.Count == 0)
+                {
+                    continue;
+                }
+                distance = 9999999;
+                for (int i = 0; i < pArray.Count; i++)
+                {
+                    IFeature feature = (pArray.get_Element(i) as IRowIdentifyObject).Row as IFeature;
+                    double dis = -1;
+                    int dnum = -1;
+                    ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                    if (distance > dis)
+                    {
+                        disNum = dnum;
+                        distance = dis;
+                        line = L;
+                        thefeature = feature;
+                    }
+                }
+                break;
+            }
+            return line;
+        }
+        /// <summary>
+        /// 通过梯级缓冲区获取点到线要素中的最短距离
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">缓冲区中第一个要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,0在中间</param>
+        /// <param name="buffer_Span">缓冲区梯度</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeatureLayerByBuffer(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum, double buffer_Span)
+        {
+             IQueryFilter pQueryFilter = new QueryFilter();  
+            pQueryFilter.WhereClause = "";     
+            //要素个数为0则直接返回null
+            if(featureLayer.FeatureClass.FeatureCount(pQueryFilter)<0){
+                return null;
+            }
+            ILine line = null;
+            double buffer_distance=0;
+            while (true)
+            {
+                buffer_distance += buffer_Span;
+                ITopologicalOperator pTopOperator = point as ITopologicalOperator;
+                IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
+                ILayer layer = featureLayer as ILayer;
+                IIdentify pIdentity = layer as IIdentify;
+                IArray pArray = pIdentity.Identify(pGeometry);
+                if (pArray == null)
+                {
+                    return null;
+                }
+                if (pArray.Count == 0)
+                {
+                    continue;
+                }
+                distance = 9999999;
+                for (int i = 0; i < pArray.Count; i++)
+                {
+                    IFeature feature = (pArray.get_Element(i) as IRowIdentifyObject).Row as IFeature;
+                    double dis = -1;
+                    int dnum = -1;
+                    ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                    if (distance > dis)
+                    {
+                        disNum = dnum;
+                        distance = dis;
+                        line = L;
+                        thefeature = feature;
+                    }
+                }
+                break;
+            }
+            return line;
+        }
+         /// <summary>
+        /// 获取点到其缓冲区中的最短距离
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="point">被查询点</param>
+        /// <param name="thefeature">缓冲区中第一个要素</param>
+        /// <param name="distance">最短距离</param>
+        /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
+        /// <param name="buffer_distance">缓冲区距离</param>
+        /// <returns>离点最近的单线</returns>
+        public static ILine GetNearestLineInFeatureLayer(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum, double buffer_distance)
+        {
+            ITopologicalOperator pTopOperator = point as ITopologicalOperator;
+            IGeometry pGeometry = pTopOperator.Buffer(buffer_distance);
+            ILayer layer = featureLayer as ILayer;
+            IIdentify pIdentity = layer as IIdentify;
+            IArray pArray = pIdentity.Identify(pGeometry);
+            if(pArray ==null)
+            {
+                return null;
+            }
+            distance = 9999999;
+            ILine line = null;
+            for (int i = 0; i < pArray.Count;i++)
+            {
+                IFeature feature = (pArray.get_Element(i) as IRowIdentifyObject).Row as IFeature;
+                double dis = -1;
+                int dnum = -1;
+                ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                if (distance > dis)
+                {
+                    disNum = dnum;
+                    distance = dis;
+                    line = L;
+                    thefeature = feature;
+                }
+            }
+            return line;
+        }
+        /// <summary>
+        /// 暴力获取点到线要素图层中的最短线
         /// </summary>
         /// <param name="featureLayer">要素图层</param>
         /// <param name="point">被查询点</param>
@@ -22,7 +306,7 @@ namespace RoadRaskEvaltionSystem
         /// <param name="distance">最短距离</param>
         /// <param name="disNum">在线段上的位置,1在A点,2在B点，0在中间</param>
         /// <returns>离点最近的单线</returns>
-        public static ILine GetNearestLineInFeature(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum)
+        public static ILine GetNearestLineInFeatureLayer(IFeatureLayer featureLayer, IPoint point, ref IFeature thefeature, ref double distance, ref int disNum)
         {
             List<IFeature> features = new List<IFeature>();
             IQueryFilter pQueryFilter = new QueryFilter();//实例化一个查询条件对象            
@@ -51,7 +335,59 @@ namespace RoadRaskEvaltionSystem
             }
             return line;
         }
-
+        /// <summary>
+        /// 暴力获取点到线要素图层中的最短线
+        /// </summary>
+        /// <param name="featureLayer">要素图层</param>
+        /// <param name="points">被查询点集合</param>
+        /// <param name="thefeatures">离查询点最近要素集合</param>
+        /// <param name="distances">最短距离集合</param>
+        /// <param name="disNums">在线段上的位置j集合,1在A点,2在B点，0在中间</param>
+        /// <returns>离点最近的单线集合</returns>
+        public static List<ILine> GetNearestLineInFeatureLayer(IFeatureLayer featureLayer, List<IPoint> points, out List<IFeature> thefeatures,out  List<double> distances,out List<int>disNums)
+        {
+            List<IFeature> features = new List<IFeature>();
+            IQueryFilter pQueryFilter = new QueryFilter();//实例化一个查询条件对象            
+            pQueryFilter.WhereClause = "";//将查询条件赋值            
+            IFeatureCursor pFeatureCursor = featureLayer.Search(pQueryFilter, false);//进行查询            
+            IFeature pFeature = pFeatureCursor.NextFeature();
+            while (pFeature != null)
+            {
+                features.Add(pFeature);
+                pFeature = pFeatureCursor.NextFeature();
+            }
+            #region 初始化操作
+            List<ILine> lines = new List<ILine>();
+            thefeatures = new List<IFeature>();
+            distances = new List<double>();
+            disNums = new List<int>();
+            foreach (var point in points)
+            {
+                thefeatures.Add(null);
+                lines.Add(null);
+                distances.Add(99999999);
+                disNums.Add(0);
+            }
+            #endregion
+            foreach (IFeature feature in features)
+            {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    IPoint point = points[i];
+                    double dis = -1;
+                    int dnum = -1;
+                    ILine L = GetNearestLine(feature.Shape as IPolyline, point, ref dis, ref dnum);
+                    if (distances[i] > dis)
+                    {
+                        disNums[i] = dnum;
+                        distances[i] = dis;
+                        lines[i] = L;
+                        thefeatures[i] = feature;
+                    }
+                }
+            }
+            return lines;
+        }
         /// <summary>
         /// 获取点到线的最短距离
         /// </summary>
@@ -116,18 +452,18 @@ namespace RoadRaskEvaltionSystem
                 disNum = 1;//在线段的A点
                 return 0.0f;
             }
+            //如果PA和PB坐标相同，则退出函数，并返回距离   
             c = GetPointDistance(PA, PB);
             if (c <= 0.00001)
-                return a;//如果PA和PB坐标相同，则退出函数，并返回距离   
-            //------------------------------   
-
-
-            if (a * a >= b * b + c * c)//--------图3--------   
+            {
+                return a;
+            }
+            if (a * a >= b * b + c * c)
             {
                 disNum = 1;
                 return b;
             }
-            if (b * b >= a * a + c * c)//--------图4-------   
+            if (b * b >= a * a + c * c) 
             {
                 disNum = 2;
                 return a;
