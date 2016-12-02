@@ -656,6 +656,9 @@
     <Content Include="bin\Debug\Rources\Images\图层.png" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif.aux.xml" />
+    <Content Include="bin\Debug\Rources\雨量信息.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HtmlAgilityPack.dll" />
     <Content Include="Rources\BaseData\BaseShapeData\乡村点.jpg" />
     <Content Include="Rources\BaseData\BaseShapeData\乡村点.shp.xml" />

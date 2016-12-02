@@ -85,7 +85,7 @@
             this.chartControl1.Padding.Right = 10;
             this.chartControl1.Padding.Top = 10;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl1.Size = new System.Drawing.Size(713, 383);
+            this.chartControl1.Size = new System.Drawing.Size(713, 379);
             this.chartControl1.TabIndex = 0;
             // 
             // xtraTabControl1
@@ -106,7 +106,7 @@
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(717, 411);
+            this.xtraTabControl1.Size = new System.Drawing.Size(719, 411);
             this.xtraTabControl1.TabIndex = 1;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
@@ -121,7 +121,7 @@
             this.xtraTabPage1.Appearance.Header.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.xtraTabPage1.Controls.Add(this.chartControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(713, 383);
+            this.xtraTabPage1.Size = new System.Drawing.Size(713, 379);
             this.xtraTabPage1.Text = "预测天气";
             // 
             // xtraTabPage2
@@ -197,7 +197,7 @@
             // 
             this.gridColumn1.AppearanceHeader.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.gridColumn1.AppearanceHeader.Options.UseFont = true;
-            this.gridColumn1.Caption = "温度";
+            this.gridColumn1.Caption = "温度(℃)";
             this.gridColumn1.FieldName = "temperature";
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.Visible = true;
@@ -207,7 +207,7 @@
             // 
             this.gridColumn5.AppearanceHeader.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.gridColumn5.AppearanceHeader.Options.UseFont = true;
-            this.gridColumn5.Caption = "降雨量";
+            this.gridColumn5.Caption = "降雨量(mm)";
             this.gridColumn5.FieldName = "rains";
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
@@ -217,7 +217,7 @@
             // 
             this.gridColumn6.AppearanceHeader.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.gridColumn6.AppearanceHeader.Options.UseFont = true;
-            this.gridColumn6.Caption = "风速";
+            this.gridColumn6.Caption = "风速(m/s)";
             this.gridColumn6.FieldName = "wind";
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.Visible = true;
@@ -237,7 +237,7 @@
             // 
             this.gridColumn8.AppearanceHeader.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.gridColumn8.AppearanceHeader.Options.UseFont = true;
-            this.gridColumn8.Caption = "云量";
+            this.gridColumn8.Caption = "云量(%)";
             this.gridColumn8.FieldName = "yl";
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.Visible = true;
@@ -247,7 +247,7 @@
             // 
             this.gridColumn2.AppearanceHeader.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.gridColumn2.AppearanceHeader.Options.UseFont = true;
-            this.gridColumn2.Caption = "相对湿度";
+            this.gridColumn2.Caption = "相对湿度(%)";
             this.gridColumn2.FieldName = "xdsd";
             this.gridColumn2.Name = "gridColumn2";
             this.gridColumn2.Visible = true;

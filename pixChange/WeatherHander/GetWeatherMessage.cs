@@ -21,15 +21,13 @@ namespace HtmlAgilityPackDemo1
             HtmlAgilityPack.HtmlDocument doc = web.Load(url);
             HtmlNode rootnode = doc.DocumentNode;
             var htmls = doc.DocumentNode.SelectNodes("//*[@id='hour3']/div[@class='hour3']");
-            if (htmls == null)
+
+            do
             {
-                for (int i = 0; i < 10000; i++)
-                {
-                    doc = web.Load(url);
-                    htmls = doc.DocumentNode.SelectNodes("//*[@id='hour3']/div[@class='hour3']");
-                    if (htmls != null) break;
-                }
-            }
+                doc = web.Load(url);
+                htmls = doc.DocumentNode.SelectNodes("//*[@id='hour3']/div[@class='hour3']");
+            } while (htmls == null);
+
             List<forecastWeatherMesg> forWeMsgList = new List<forecastWeatherMesg>();
             for (int k = 1; k <= htmls.Count; k++)
             {
@@ -61,18 +59,72 @@ namespace HtmlAgilityPackDemo1
                     forWeMsgList.Add(fm);
                 }
 
+                for (int j = 1, d = 0; j < datetimes.Count; j++)
+                {
+                    string oritime = datetimes[j].InnerText.Replace("\n", "").Trim();
+                    string alltime = "";
+                    if (j==1)
+                    {
+                        if (oritime.Contains("日"))
+                        {
+                            alltime = DateTime.Today.ToString("yyyy-MM-") + oritime.Replace("日", " ");
+                            //alltime = oritime.Insert(3, " ").ToString();
+                            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0].ToString();
+                            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1].ToString();
+                        }
+                        else
+                        {
+                            if (oritime.Equals("02:00"))
+                            {
+                                alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                                forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
+                            }
+                            else
+                            {
+                                alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                                forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
+                            }
+
+                        }
+                    }
+                    else if (j>1)
+                    {
+                        if (oritime.Contains("日"))
+                        {
+                            alltime = DateTime.Today.ToString("yyyy-MM-") + oritime.Replace("日", " ");
+                            //alltime = oritime.Insert(3, " ").ToString();
+                            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
+                        }
+                        else
+                        {
+                            alltime = (forWeMsgList[8 * k + (j - 1) - 9].timedate7 + " " + oritime).ToString();
+                            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
+                        } 
+                    }
+                }
+
                 for (int j = 1; j < rains.Count; j++)
                 {
-                    //8*(k-1)+j-1==>8*k+j-9
-                    forWeMsgList[8 * k + j - 9].rains = rains[j].InnerText.Replace("\n", "").Trim();
+                    if (rains[j].InnerText.Replace("\n", "").Trim().Equals("无降水"))
+                    {
+                        forWeMsgList[8 * k + j - 9].rains = 0.0f;
+                    }
+                    else
+                    {
+                        forWeMsgList[8 * k + j - 9].rains = float.Parse(rains[j].InnerText.Replace("\n", "").Trim().Split('毫')[0].ToString());
+                    }
                 }
                 for (int j = 1; j < temps.Count; j++)
                 {
-                    forWeMsgList[8 * k + j - 9].temperature = temps[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].temperature = float.Parse(temps[j].InnerText.Replace("\n", "").Trim().Split('℃')[0].ToString());
                 }
                 for (int j = 1; j < winds.Count; j++)
                 {
-                    forWeMsgList[8 * k + j - 9].wind = winds[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].wind = float.Parse(winds[j].InnerText.Replace("\n", "").Trim().Split('米')[0].ToString());
                 }
                 for (int j = 1; j < windd.Count; j++)
                 {
@@ -85,11 +137,11 @@ namespace HtmlAgilityPackDemo1
                 }
                 for (int j = 1; j < xdsd.Count; j++)
                 {
-                    forWeMsgList[8 * k + j - 9].xdsd = xdsd[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].xdsd = float.Parse(xdsd[j].InnerText.Replace("\n", "").Trim().Split('%')[0].ToString());
                 }
                 for (int j = 1; j < yl.Count; j++)
                 {
-                    forWeMsgList[8 * k + j - 9].yl = yl[j].InnerText.Replace("\n", "").Trim();
+                    forWeMsgList[8 * k + j - 9].yl = float.Parse(yl[j].InnerText.Replace("\n", "").Trim().Split('%')[0].ToString());
                 }
                 for (int j = 1; j < njd.Count; j++)
                 {
