@@ -88,22 +88,18 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             List<IFeature> featuers = QueryAllFeatureInConfig(featureLayer);
             IFeature feature = null;
             double resultDistance = 9999999999;
-            ILine resultLine = null;
             foreach (IFeature value in featuers)
             {
                 double tempValue=0;
                 int disNum=0;
-                ILine line=DistanceUtil.GetNearestLine(value.Shape as  IPolyline, point, ref tempValue, ref disNum);
+                IPoint tempPoint=DistanceUtil.GetNearestLine(value.Shape as  IPolyline, point, ref tempValue, ref disNum);
                 if(tempValue<resultDistance)
                 {
                     resultDistance = tempValue;
                     feature = value;
-                    resultLine = line;
+                    rightPoint = tempPoint;
                 }
             }
-            rightPoint = new PointClass();
-            rightPoint.X = resultLine.FromPoint.X;
-            rightPoint.Y = resultLine.FromPoint.Y;
             return feature;
         }
         /// <summary>

@@ -809,22 +809,24 @@ namespace pixChange
                 double distance = 0;
                 int disNum = 0;
                 IFeature feature = null;
-                ILine line = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
-               if(line==null){
+                IPoint rightPoint=DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
+                if (rightPoint == null)
+                {
                    return false;
                }
-                newStopPoints.Add(line.FromPoint);
+                newStopPoints.Add(rightPoint);
             }
             foreach (var point in barryPoints)
             {
                 double distance = 0;
                 int disNum = 0;
                 IFeature feature = null;
-                 ILine line=DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum,0.1);
-                if(line==null){
+                IPoint rightPoint = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
+                if (rightPoint == null)
+                {
                    return false;
                }
-                newBarryPoints.Add(line.FromPoint);
+                newBarryPoints.Add(rightPoint);
             }
             return true;
         }

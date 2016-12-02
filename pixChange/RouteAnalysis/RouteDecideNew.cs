@@ -23,12 +23,11 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IFeature feature = null;
             double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
-            if (breakLine == null)
+           rightPoint= DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
+           if (rightPoint == null)
             {
                 return false;
             }
-            rightPoint = breakLine.FromPoint;
             //获取线要素的点集合
             IPointCollection lineCollection = feature.Shape as IPointCollection;
             //实例化站点和障碍点要素
@@ -54,12 +53,11 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IFeature feature = null;
             double distance = 0;
             int distNum = 0;
-            ILine breakLine = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature,ref distance, ref distNum);
-            if(breakLine==null)
+             rightPoint = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, breakPoint, ref feature, ref distance, ref distNum);
+             if (rightPoint == null)
             {
                 return null;
             }
-            rightPoint = breakLine.FromPoint;
             //获取线要素的点集合
             IPointCollection lineCollection = feature.Shape as IPointCollection;
             //将线要素的起点和终点加入路线点集合中
