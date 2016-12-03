@@ -28,8 +28,8 @@ namespace RoadRaskEvaltionSystem
             getDays();
             this.comboBoxEdit3.SelectedIndex = 0;
             this.comboBoxEdit4.Enabled = false;
-            day1 = String.Format("{0}日", DateTime.Now.AddDays(1).ToString("dd"));
-            day2 = String.Format("{0}日", DateTime.Now.AddDays(2).ToString("dd"));
+            day1 = String.Format("{0}", DateTime.Now.AddDays(1).ToString("yyyy/MM/dd"));
+            day2 = String.Format("{0}", DateTime.Now.AddDays(2).ToString("yyyy/MM/dd"));
         }
 
         private void comboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
@@ -43,7 +43,8 @@ namespace RoadRaskEvaltionSystem
                 {
                     if (st.Rows.Count == 0)
                     {
-                        sql = String.Format("SELECT dtime3hour FROM ForecastWeather WHERE AreaID = {0} AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0} ORDER BY ID)", areaID, day1);
+                        sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
+                        //sql = String.Format("SELECT dtime3hour,timedate7 FROM ForecastWeather WHERE AreaID = {0} AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0} ORDER BY ID)", areaID, day1);
                         try
                         {
                             st = RainData(sql);
@@ -56,9 +57,9 @@ namespace RoadRaskEvaltionSystem
                             {
                                 foreach (DataRow v in st.Rows)
                                 {
-                                    if (v["dtime3hour"].ToString()!="")
+                                    if (v["timehour7"].ToString() != "")
                                     {
-                                        this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString()); 
+                                        this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString()); 
                                     }
                                 }
                             }
@@ -79,9 +80,9 @@ namespace RoadRaskEvaltionSystem
                         {
                             foreach (DataRow v in st.Rows)
                             {
-                                if (v["dtime3hour"].ToString() != "")
+                                if (v["timehour7"].ToString() != "")
                                 {
-                                    this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                    this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
                                 }
                             }
                         }
@@ -133,15 +134,15 @@ namespace RoadRaskEvaltionSystem
                     {
                         foreach (DataRow v in st.Rows)
                         {
-                            if (v["dtime3hour"].ToString() != "")
+                            if (v["timehour7"].ToString() != "")
                             {
-                                this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
                             }
                         }
                     }
                     else
                     {
-                        string sql = String.Format("SELECT dtime3hour FROM ForecastWeather WHERE AreaID = {0} AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0})", areaID, day1);
+                        string sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
                         try
                         {
                             st = RainData(sql);
@@ -154,9 +155,9 @@ namespace RoadRaskEvaltionSystem
                             {
                                 foreach (DataRow v in st.Rows)
                                 {
-                                    if (v["dtime3hour"].ToString() != "")
+                                    if (v["timehour7"].ToString() != "")
                                     {
-                                        this.comboBoxEdit4.Properties.Items.Add(v["dtime3hour"].ToString());
+                                        this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
                                     }
                                 }
                             }
@@ -199,14 +200,15 @@ namespace RoadRaskEvaltionSystem
             string hour = null;
             string sqlString = null;
             string _24hAgoStr = null;//24小时前降雨量
+            string NowDate = String.Format("{0}", DateTime.Now.ToString("yyyy/MM/dd"));
             if (_24hAgoRain < 0)
             {
-                _24hAgoStr = String.Format("SELECT TOP 1 rain24h FROM OneHourWeather WHERE AreaID = {0} order by ID", areaID);
+                _24hAgoStr = String.Format("SELECT TOP 1 rain24h FROM OneHourWeather WHERE AreaID = {0} AND OneHourWeather.timedate24 = #{1}# order by ID", areaID, NowDate);
                 _24hAgoRain = AddRain(_24hAgoStr, "rain24h");
             }
             if (todayRain < 0)
             {
-                sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0})", areaID, day1);
+                sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
                 todayRain = AddRain(sqlString, "rains");
             }
             if (this.comboBoxEdit2.SelectedItem.ToString() == "时刻")
@@ -229,7 +231,7 @@ namespace RoadRaskEvaltionSystem
                 }
                 else
                 {
-                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ID>=(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", areaID, day1, day2);
+                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day2);
                     tomorrowRain = AddRain(sqlString, "rains");
                     rain = _24hAgoRain * 0.64 + todayRain * 0.8 + tomorrowRain;
                 }
@@ -250,25 +252,17 @@ namespace RoadRaskEvaltionSystem
             double rains = 0;
             foreach (DataRow v in rain.Rows)
             {
-                if (v[FildName].ToString().IndexOf("毫米") > 0)
-                {
-                    string raindata = v[FildName].ToString();
-                    string result = raindata.Substring(0, raindata.Length - 2);
-                    rains = rains + Convert.ToDouble(result);
-                }
-                else if (v[FildName].ToString() == "无降水" || v[FildName].ToString() == "")
-                {
-                    rains = rains + 0;
-                }
-                else
-                {
-                    rains = Convert.ToDouble(v[FildName].ToString());
-                }
+                rains =rains+ Convert.ToDouble(v[FildName].ToString());
             }
             return rains;
         }
 
         private void simpleButton2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void simpleButton2_Click_1(object sender, EventArgs e)
         {
             this.Close();
         }
