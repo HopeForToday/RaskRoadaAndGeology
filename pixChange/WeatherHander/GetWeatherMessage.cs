@@ -59,7 +59,7 @@ namespace HtmlAgilityPackDemo1
                     forWeMsgList.Add(fm);
                 }
 
-                for (int j = 1, d = 0; j < datetimes.Count; j++)
+                for (int j = 1; j < datetimes.Count; j++)
                 {
                     string oritime = datetimes[j].InnerText.Replace("\n", "").Trim();
                     string alltime = "";
@@ -76,9 +76,18 @@ namespace HtmlAgilityPackDemo1
                         {
                             if (oritime.Equals("02:00"))
                             {
-                                alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
-                                forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                                forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
+                                if (int.Parse(DateTime.Now.ToString("HH"))==23)
+                                {
+                                    alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                    forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                                    forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
+                                }
+                                else
+                                {
+                                    alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                    forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
+                                    forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
+                                }
                             }
                             else
                             {
