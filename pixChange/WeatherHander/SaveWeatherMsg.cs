@@ -27,6 +27,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
             }
             DataTable idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID + " order by ID asc").Tables[0];
             List<string> sqllist = new List<string>();
+            
             // var dd=WeatherList.Find(t=>t.dateTime.Contains("日"));var index1=WeatherList.IndexOf(dd);  下面的方式效率会高一些
             int index = 0, count = WeatherList.Count;
             for (int k = 0; k < count; k++)

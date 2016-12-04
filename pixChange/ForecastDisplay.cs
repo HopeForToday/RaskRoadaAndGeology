@@ -50,11 +50,12 @@ namespace RoadRaskEvaltionSystem
 
             oldAxisYList = new List<SecondaryAxisY>();
             newAxisYList = new List<SecondaryAxisY>();
-            day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
-            day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
+            //day1 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(1).ToString("yyyy-MM-dd");
+            day1 = NowTime.ToString("yyyy-MM-dd");
+            day2 = NowTime.AddDays(6).ToString("yyyy-MM-dd");
             //数据库连接字符串
-            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
-            GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID ASC", AreaId);
+            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, comboBoxEdit_Date.Text);
+            GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
             //获取数据并创建图表 
             dt_Chart = getDataTable(ChartSqlStr);
@@ -223,7 +224,7 @@ namespace RoadRaskEvaltionSystem
                     {
                         //OneHourWeather
                         case "Hourtime":
-                            if (dt.Rows[i][xBindName].ToString().Contains("00:00:00"))
+                            if (dt.Rows[i][xBindName].ToString().Contains("0:00:00") || dt.Rows[i][xBindName].ToString().Contains("00:00:00"))
                             {
                                 argument = dt.Rows[i][xBindName].ToString().Split(' ')[0].ToString();
                             }
@@ -459,11 +460,16 @@ namespace RoadRaskEvaltionSystem
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
-            day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
+            //day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
+            //day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
+            //day1 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(1).ToString("yyyy-MM-dd");
+            //day2 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(5).ToString("yyyy-MM-dd");
+            day1 = NowTime.ToString("yyyy-MM-dd");
+            day2 = NowTime.AddDays(6).ToString("yyyy-MM-dd");
 
-            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
-            GridSqlStr = String.Format("SELECT dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
+            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, comboBoxEdit_Date.Text);
+            //GridSqlStr = String.Format("SELECT dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
+            GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
 
             initPoints();   // 初始化图表的点位信息

@@ -14,6 +14,7 @@ namespace HtmlAgilityPackDemo1
 {
     public class GetWeatherMessage : IGetWeather
     {
+       
         //获取预报信息
         public List<forecastWeatherMesg> getforcastMessage(string url)
         {
