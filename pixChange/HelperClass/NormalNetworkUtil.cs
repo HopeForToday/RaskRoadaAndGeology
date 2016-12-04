@@ -120,7 +120,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// 以图层的方法插入相关元素 如经过站点、障碍点、障碍线、障碍多边形等
        /// </summary>
        /// <param name="pNAContext">网络分析上下文</param>
-        /// <param name="strNAClassName">Stops、Barriers、PolylineBarriers\PolygonBarriers</param>
+        /// <param name="strNAClassName">Routes,Stops、Barriers、PolylineBarriers\PolygonBarriers</param>
        /// <param name="inputFeatuerClass">要素类</param>
        /// <param name="dSnapTolerance">阈值</param>
         public static void LoadNANetWorkLocations(INAContext pNAContext, string strNAClassName, IFeatureClass inputFeatuerClass, double dSnapTolerance)
@@ -129,11 +129,6 @@ namespace RoadRaskEvaltionSystem.HelperClass
             INamedSet pNamedSet;
             pNamedSet = pNAContext.NAClasses;
             pNAClass = pNamedSet.get_ItemByName(strNAClassName) as INAClass;
-            for (int i = 0; i < pNamedSet.Count; i++)
-            {
-                INAClass temp = pNamedSet.get_Item(i) as INAClass;
-                string name=pNamedSet.get_Name(i);
-            }
             ISpatialFilter filer = new SpatialFilterClass();
             filer.WhereClause = "";
             int count = inputFeatuerClass.FeatureCount(filer as IQueryFilter);
@@ -167,7 +162,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="featureDatasetName">要素集名字</param>
         /// <param name="ndsName">网络数据集名字</param>
         /// <param name="featureClasses">参数要素类及其阈值,其中键值包括:Stops(路线经过结点),Barriers,PolylineBarriers,PolygonBarriers</param>
-        public static bool Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IDictionary<string,DecorateRouteFeatureClass> featureClasses)
+        /// <param name="isShowDataBase">是否显示网络数据集</param>
+        ///  <param name="isShowNalayer">是否显示网络分析图层</param>
+        ///  <param name="routeLayer">最近路线图层</param>
+        public static bool Short_Path(AxMapControl mapControl, string gdbfileName, string featureDatasetName, string ndsName, IDictionary<string, DecorateRouteFeatureClass> featureClasses, bool isShowDataBase, bool isShowNalayer, ref ILayer routeLayer)
         {
             //首先判断输入的参数要素类是否合法
             if (!FeatureClassKeyIsRight(featureClasses))
@@ -189,22 +187,30 @@ namespace RoadRaskEvaltionSystem.HelperClass
             INAContext pNAContext = CreateNAContext(pNetworkDataset);
             //打开节点图层 一般和网络数据集放置在一起 名称是xxx_Junctions
             IFeatureClass pVertexFC = pFeatureWorkspace.OpenFeatureClass(ndsName + "_Junctions");
+            ILayer pLayer=null;
             // 显示网络数据集图层 
-            INetworkLayer pNetworkLayer = new NetworkLayerClass();
-            pNetworkLayer.NetworkDataset = pNetworkDataset;
-            ILayer pLayer = pNetworkLayer as ILayer;
-            pLayer.Name = "网络数据集";
-            mapControl.AddLayer(pLayer, 0);
+            if(isShowDataBase)
+            {
+                INetworkLayer pNetworkLayer = new NetworkLayerClass();
+                pNetworkLayer.NetworkDataset = pNetworkDataset;
+                pLayer = pNetworkLayer as ILayer;
+                pLayer.Name = "网络数据集";
+                mapControl.AddLayer(pLayer, 0);
+            }
             //创建网络分析图层
             INALayer naLayer = pNAContext.Solver.CreateLayer(pNAContext);
-             pLayer = naLayer as ILayer;
-            pLayer.Name = pNAContext.Solver.DisplayName;
-            pLayer.SpatialReference = mapControl.SpatialReference;
-            mapControl.AddLayer(pLayer, 0);
-            IActiveView pActiveView = mapControl.ActiveView;
-            IMap pMap = pActiveView.FocusMap;
-            IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
-            mapControl.Refresh();
+            //显示网络分析图层
+            if (isShowNalayer)
+            {
+                pLayer = naLayer as ILayer;
+                pLayer.Name = pNAContext.Solver.DisplayName;
+                pLayer.SpatialReference = mapControl.SpatialReference;
+                mapControl.AddLayer(pLayer, 0);
+                IActiveView pActiveView = mapControl.ActiveView;
+                IMap pMap = pActiveView.FocusMap;
+                IGraphicsContainer pGraphicsContainer = pMap as IGraphicsContainer;
+                mapControl.Refresh();
+            }
             INASolver naSolver = pNAContext.Solver;
             //插入相关数据
             foreach (var value in featureClasses)
@@ -221,6 +227,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             try
             {
                 pNAContext.Solver.Solve(pNAContext, gpMessages, new CancelTrackerClass());
+                routeLayer = naLayer.get_LayerByNAClassName("Routes");
             }
             catch (Exception e)
             {
@@ -290,6 +297,5 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 
             }
         }
-
     }
 }

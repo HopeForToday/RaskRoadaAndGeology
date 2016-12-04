@@ -44,8 +44,9 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IDictionary<string, DecorateRouteFeatureClass> featureClasses = new Dictionary<string, DecorateRouteFeatureClass>();
             featureClasses.Add("Stops", new DecorateRouteFeatureClass(0.2, stopFeatureClass));
             featureClasses.Add("Barriers", new DecorateRouteFeatureClass(0.2, barriesFeatureClass));
+            ILayer routeLayer = null;
             //最短路径分析
-            return NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses);
+            return NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses, false, false, ref routeLayer);
         }
         public IPolyline QueryTheRoue2(IPoint breakPoint, IMap pMap, IFeatureLayer featureLayer, string dbPath, ref IPoint rightPoint)
         {
@@ -67,7 +68,7 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             //查询最短路径
             IPolyline polyline = UtilityNetWorkUtil.DistanceFun(pMap, dbPath, "roads",1, routePointCollection, "length", 50);
             return polyline;
-             
+            
         }
     }
 }

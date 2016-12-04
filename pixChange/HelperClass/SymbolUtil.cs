@@ -84,11 +84,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
             //添加元素到对应位置
             IElement pEle = (IElement)pMarkerEle;
             pEle.Geometry = point;
-            IActiveView pActiveView = map as IActiveView;
-            IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
-            pGraphicsContainer.AddElement(pEle, 0);
-            //刷新
-            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            //添加标注
+            InsertElement(mapControl, pEle, 1);
             return pEle;
         }
         //画带文字的注记
@@ -119,12 +116,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             IElement pEle = pTextElment as IElement;
             pEle.Geometry = point;
             //添加标注
-            IMap map = mapControl.Map;
-            IActiveView pActiveView = map as IActiveView;
-            IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
-            pGraphicsContainer.AddElement(pEle, 1);
-            //刷新
-            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            InsertElement(mapControl, pEle, 1);
             return pEle;
         }
         //构造RGB颜色     
@@ -136,6 +128,44 @@ namespace RoadRaskEvaltionSystem.HelperClass
                         Blue = green,
                         Green = blue,
                     };
+        }
+        /// <summary>
+        /// 插入线标记 并且将线标记移动到后面
+        /// </summary>
+        /// <param name="mapControl"></param>
+        /// <param name="pGeometry"></param>
+        /// <returns></returns>
+        public static IElement DrawLineSymbol(AxMapControl mapControl, IGeometry pGeometry)
+        {
+            IRgbColor pColor = GetColor(0, 255, 255);
+            pColor.Transparency = 255;
+            //产生一个线符号对象   
+            ILineSymbol pOutline = new SimpleLineSymbolClass();
+            pOutline.Width = 4;
+            pOutline.Color = pColor;
+            ILineElement pLineElement =new LineElementClass();
+            pLineElement.Symbol= pOutline;
+            IElement pElement = pLineElement as IElement;
+            pElement.Geometry = pGeometry;
+            //添加标注
+            InsertElement(mapControl, pElement, 0);
+            IGraphicsContainerSelect tmpGSelect = (IGraphicsContainerSelect)mapControl.Map;
+            //将元素移动到后面
+            tmpGSelect.SelectElement(pElement);
+            IGraphicsContainer pGraphicsContainer = mapControl.Map as IGraphicsContainer;
+            pGraphicsContainer.SendToBack(tmpGSelect.SelectedElements);
+            tmpGSelect.UnselectAllElements();  
+            return pElement;
+        }
+
+        private static void InsertElement(AxMapControl mapControl, IElement pElement, int zorder)
+        {
+            IMap map = mapControl.Map;
+            IActiveView pActiveView = map as IActiveView;
+            IGraphicsContainer pGraphicsContainer = pActiveView.GraphicsContainer;
+            pGraphicsContainer.AddElement(pElement, zorder);
+            //刷新
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
         }
     }
 }

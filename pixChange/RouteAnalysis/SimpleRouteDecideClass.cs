@@ -1,4 +1,5 @@
 ﻿using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
@@ -50,8 +51,27 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IDictionary<string, DecorateRouteFeatureClass> featureClasses = new Dictionary<string, DecorateRouteFeatureClass>();
             featureClasses.Add("Stops", new DecorateRouteFeatureClass(0.2,stopFeatureClass));
             featureClasses.Add("Barriers", new DecorateRouteFeatureClass(0.2,barriesFeatureClass));
+            ILayer routeLayer=null;
             //最短路径分析
-            return NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses);
+            bool result=NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses, false, false, ref routeLayer);
+            if (result)
+            {
+                showRouteShape(routeLayer as IFeatureLayer, mapControl);
+            }
+            return result;
+        }
+        private void showRouteShape(IFeatureLayer featureLayer, AxMapControl mapControl)
+        {
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.WhereClause = "";
+            IFeatureCursor pCursor=featureLayer.FeatureClass.Search(pQueryFilter, false);
+            mapControl.Map.AreaOfInterest = featureLayer.AreaOfInterest;
+            IFeature pFeature = pCursor.NextFeature();
+            while (pFeature != null)
+            {
+                 SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
+                 pFeature = pCursor.NextFeature();
+            }
         }
     }
 }

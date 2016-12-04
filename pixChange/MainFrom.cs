@@ -699,9 +699,9 @@ namespace pixChange
  
         //计算最优路线
         //最后可以考虑使用async进行异步查询
-        private   void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            #region 注释   
+            #region 注释
             /*
             this.isInserting = false;
             if (breakPoint == null)
@@ -738,31 +738,25 @@ namespace pixChange
             this.barButtonItem22.Enabled = false;
             this.barButtonItem15.Enabled = false;
             this.barButtonItem23.Enabled = false;
-            List<IPoint> newStopPoints=null;
-            List<IPoint> newBarryPoints=null;
+            List<IPoint> newStopPoints = null;
+            List<IPoint> newBarryPoints = null;
             bool pointIsRight = false;
-          //  await Task.Run(() =>
-           //   {
-                    TimeSpan ts1 = new TimeSpan(DateTime.Now.Ticks); 
-                   pointIsRight=  UpdatePointsToRouteCore(routeNetLayer as IFeatureLayer, stopPoints, barryPoints, ref newStopPoints, ref newBarryPoints);
-                    TimeSpan ts2 = new TimeSpan(DateTime.Now.Ticks);
-                    TimeSpan ts = ts2.Subtract(ts1).Duration(); //时间差的绝对值  
-                    Debug.Print("运行时间："+ts.TotalSeconds.ToString());
-           //      });
-                    if (!pointIsRight)
-                    {
-                        MessageBox.Show("请检查点位是否太过远离公路网");
-                        return;
-                    }
+            //  await Task.Run(() =>
+            //   {
+            TimeSpan ts1 = new TimeSpan(DateTime.Now.Ticks);
+            pointIsRight = UpdatePointsToRouteCore(routeNetLayer as IFeatureLayer, stopPoints, barryPoints, ref newStopPoints, ref newBarryPoints);
+            TimeSpan ts2 = new TimeSpan(DateTime.Now.Ticks);
+            TimeSpan ts = ts2.Subtract(ts1).Duration(); //时间差的绝对值  
+            Debug.Print("运行时间：" + ts.TotalSeconds.ToString());
+            //      });
+            if (!pointIsRight)
+            {
+                MessageBox.Show("请检查点位是否太过远离公路网");
+                return;
+            }
             UpdateSymbol(newStopPoints, newBarryPoints);
             bool result = simplRrouteDecide.QueryTheRoue(this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
-            if (result)
-            {
-                MessageBox.Show("查询成功");
-                //清除所有图标
-               // SymbolUtil.ClearElement(this.axMapControl1);
-            }
-            else
+            if (!result)
             {
                 MessageBox.Show("查询失败");
             }
