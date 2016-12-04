@@ -60,6 +60,19 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                 string sq = "select ID from ForecastWeather where  AreaID=" + AreaID + " order by ID asc";
                 idS = Common.DBHander.ReturnDataSet(sq).Tables[0];
             }
+            if (idS.Rows.Count < 56)
+            {
+                string sqlStr = "DELETE FROM ForecastWeather WHERE AreaID = "+AreaID;
+                Common.DBHander.deleteDt(sqlStr);
+                for (int i = 0; i < 56; i++)
+                {
+                    string sql = "INSERT INTO  ForecastWeather (AreaID) values (" + AreaID + ")";
+                    sqllist.Add(sql);
+                }
+                Common.DBHander.insertToAccessByBatch(sqllist);
+                string sq = "select ID from ForecastWeather where  AreaID=" + AreaID + " order by ID asc";
+                idS = Common.DBHander.ReturnDataSet(sq).Tables[0];
+            }
             List<int> IDs = new List<int>();
             foreach (DataRow dr in idS.Rows)
             {
@@ -74,8 +87,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                 sqllist.Add(
                     string.Format(
                         "update ForecastWeather set dtime3hour='{0}' , temperature='{1}',rains='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}',timedate7='{10}',timehour7='{11}' where ID={9} ",
-                        r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd,
-                        index < 8 ? IDs[8 - (index + 2) + i] : IDs[i], r.timedate7, r.timehour7));
+                        r.dateTime, r.temperature, r.rains, r.wind, r.windd, r.qy, r.yl, r.njd, r.xdsd, IDs[i], r.timedate7, r.timehour7));
             }
             Common.DBHander.insertToAccessByBatch(sqllist);
         }
@@ -87,7 +99,6 @@ namespace RoadRaskEvaltionSystem.WeatherHander
             foreach (var r in Last23h)
             {
                 DataTable dt = Common.DBHander.ReturnDataSet("select ID from OneHourWeather where Hourtime=#" + r.time + "# and AreaID=" + AreaID).Tables[0];
-              //  DataTable dt = Common.DBHander.ReturnDataSet("select ID from OneHourWeather where Hourtime='" + r.time + "' and AreaID=" + AreaID).Tables[0];
                 r.timedate24 = r.time.Split(' ')[0].ToString();
                 r.timehour24 = r.time.Split(' ')[1].ToString();
 

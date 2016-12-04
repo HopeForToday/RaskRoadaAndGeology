@@ -41,11 +41,11 @@ Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltio
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.vshost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.vshost.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
+
 
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\Rources\雨量信息.mdb"; DestDir: "{app}\Rources"; Flags: ignoreversion
 
-Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\bin\Debug\Rources\*"; DestDir: "{app}\bin\Debug\Rources"; Flags: ignoreversion
+
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\Images\*"; DestDir: "{app}\Images"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\Resource\地图文档\*"; DestDir: "{app}\Resource\地图文档"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\Resource\风险评价\*"; DestDir: "{app}\Resource\风险评价"; Flags: ignoreversion

@@ -190,7 +190,6 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 {
 
                     aCommand.CommandText = sqlArray[i];
-
                     aCommand.ExecuteNonQuery();
 
               //      LogHelper.log(Convert.ToString(i));
@@ -210,6 +209,18 @@ namespace RoadRaskEvaltionSystem.HelperClass
            
             }
 
+        }
+
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        /// <param name="sqlStr"></param>
+        public void deleteDt(string sqlStr)
+        {
+            Connection.Open();
+            OleDbCommand odc = new OleDbCommand(sqlStr, Connection);
+            odc.ExecuteNonQuery();
+            Connection.Close();
         }
 
     }

@@ -121,3 +121,4 @@ G:\学习\开发项目\西科大系统\RaskRoadaAndGeology\pixChange\obj\x86\Deb
 G:\学习\开发项目\西科大系统\RaskRoadaAndGeology\pixChange\obj\x86\Debug\RoadRaskEvaltionSystem.exe.licenses
 G:\学习\开发项目\西科大系统\RaskRoadaAndGeology\pixChange\bin\Debug\bin\Debug\Rources\雨量信息.mdb
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Debug\bin\Debug\Rources\雨量信息.mdb
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Debug\RoadRaskEvaltionSystem.exe.licenses

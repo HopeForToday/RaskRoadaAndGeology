@@ -224,7 +224,7 @@ namespace RoadRaskEvaltionSystem
                     {
                         //OneHourWeather
                         case "Hourtime":
-                            if (dt.Rows[i][xBindName].ToString().Contains("0:00:00") || dt.Rows[i][xBindName].ToString().Contains("00:00:00"))
+                            if ((Convert.ToDateTime(dt.Rows[i][xBindName])).ToString("HH:mm").Equals("00:00"))
                             {
                                 argument = dt.Rows[i][xBindName].ToString().Split(' ')[0].ToString();
                             }
