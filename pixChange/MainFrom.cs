@@ -203,12 +203,39 @@ namespace pixChange
             m_cTool = CustomTool.Pan;
             m_mapControl.CurrentTool = pan as ITool;
         }
-        //全景
+        /// <summary>
+        /// 全景 获取图层中最大的包围壳进行显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
         private void ToolButtonFull_Click(object sender, EventArgs e)
         {
-            m_mapControl.Extent = m_mapControl.FullExtent;
+            double maxArea = -1;
+            IEnvelope pEnvelope = null;
+            for (int i = 0; i < this.axMapControl1.LayerCount; i++)
+            {
+                ILayer layer = this.axMapControl1.get_Layer(i);
+                double area=getLayerAreaEnvelop(layer);
+                if(maxArea<area)
+                {
+                    pEnvelope = layer.AreaOfInterest;
+                    maxArea = area;
+                }
+            }
+            m_mapControl.Extent = pEnvelope;
+            m_mapControl.Refresh();
         }
-
+        /// <summary>
+        /// 获取感兴趣区的面积
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        private double getLayerAreaEnvelop(ILayer layer)
+        {
+             IEnvelope pEnvelope=layer.AreaOfInterest;
+             return pEnvelope.Height * pEnvelope.Width;
+        }
         private void axTOCControl1_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
         {
             //鼠标未落下,退出

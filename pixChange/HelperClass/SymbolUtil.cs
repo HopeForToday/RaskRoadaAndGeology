@@ -12,9 +12,15 @@ using System.Threading.Tasks;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
+    /// <summary>
+    /// 注记操作类 fhr 2016/12/4 修改
+    /// </summary>
     class SymbolUtil
     {
-        //清除所有图形元素
+        /// <summary>
+        /// 清除所有图形元素
+        /// </summary>
+        /// <param name="mapControl"></param>
         public static void ClearElement(AxMapControl mapControl)
         {
             IMap map = mapControl.Map;
@@ -23,7 +29,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
             pGraphicsContainer.DeleteAllElements();
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
         }
-        //清除元素
+        /// <summary>
+        /// 清除元素
+        /// </summary>
+        /// <param name="mapControl"></param>
+        /// <param name="elements"></param>
         public static void ClearElement(AxMapControl mapControl, List<IElement> elements)
         {
             IMap map = mapControl.Map;
@@ -35,7 +45,12 @@ namespace RoadRaskEvaltionSystem.HelperClass
             }
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
         }
-        //清除元素
+        /// <summary>
+        /// 清除元素
+        /// </summary>
+        /// <param name="mapControl"></param>
+        /// <param name="element"></param>
+
         public static void ClearElement(AxMapControl mapControl, IElement element)
         {
             try
@@ -51,7 +66,14 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 
             }
         }
-        //画带图片的地图注记
+        /// <summary>
+        /// 插入带图片的地图注记
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="mapControl"></param>
+        /// <param name="pictureUri"></param>
+        /// <returns></returns>
+
         public static IElement DrawSymbolWithPicture(IPoint point, AxMapControl mapControl, string pictureUri)
         {
             #region 注释
@@ -74,10 +96,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
             //实例化图片注记
             IPictureMarkerSymbol pPicturemksb = new PictureMarkerSymbolClass();
             pPicturemksb.Size = 20;
-           // pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureJPG, pictureUri);
-            Image image=Image.FromFile(pictureUri);
-            IPictureDisp pictureDisp= IPictureConverter.ImageToIPictureDisp(image);
-            pPicturemksb.Picture = pictureDisp;
+            pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureJPG, pictureUri);
+          //  Image image=Image.FromFile(pictureUri);
+           // IPictureDisp pictureDisp= IPictureConverter.ImageToIPictureDisp(image);
+          //  pPicturemksb.Picture = pictureDisp;
             IMarkerElement pMarkerEle = new MarkerElement() as IMarkerElement;
             //将注记添加到元素中
             pMarkerEle.Symbol = pPicturemksb as IMarkerSymbol;
@@ -88,7 +110,14 @@ namespace RoadRaskEvaltionSystem.HelperClass
             InsertElement(mapControl, pEle, 1);
             return pEle;
         }
-        //画带文字的注记
+        /// <summary>
+        /// 插入带文字的注记
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="mapControl"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+
         public static IElement DrawSymbolWithText(IPoint point, AxMapControl mapControl, string text)
         {
             #region 设置样式
@@ -119,7 +148,13 @@ namespace RoadRaskEvaltionSystem.HelperClass
             InsertElement(mapControl, pEle, 1);
             return pEle;
         }
-        //构造RGB颜色     
+        /// <summary>
+        /// 构造RGB颜色    
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        /// <returns></returns>
         public static IRgbColor GetColor(int red, int green, int blue)
         {
             return new RgbColorClass()
@@ -157,7 +192,12 @@ namespace RoadRaskEvaltionSystem.HelperClass
             tmpGSelect.UnselectAllElements();  
             return pElement;
         }
-
+        /// <summary>
+        /// 插入元素
+        /// </summary>
+        /// <param name="mapControl"></param>
+        /// <param name="pElement"></param>
+        /// <param name="zorder"></param>
         private static void InsertElement(AxMapControl mapControl, IElement pElement, int zorder)
         {
             IMap map = mapControl.Map;
