@@ -55,8 +55,8 @@ namespace RoadRaskEvaltionSystem
             //数据库连接字符串
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID ASC", AreaId);
-            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd"), NowTime.AddDays(-1).ToString("yyyy-MM-dd"));
-            //获取数据并创建图表
+            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
+            //获取数据并创建图表 
             dt_Chart = getDataTable(ChartSqlStr);
             CreateNewChart(dt_Chart);
             dt_Grid = getDataTable(GridSqlStr);
@@ -464,7 +464,7 @@ namespace RoadRaskEvaltionSystem
 
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE ID>= (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0}) AND ID< (SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{2}%' AND ForecastWeather.AreaID={0})", AreaId, day1, day2);
             GridSqlStr = String.Format("SELECT dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
-            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd"), NowTime.AddDays(-1).ToString("yyyy-MM-dd"));
+            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
 
             initPoints();   // 初始化图表的点位信息
 
