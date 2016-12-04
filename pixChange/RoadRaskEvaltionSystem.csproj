@@ -524,7 +524,6 @@
     <Folder Include="bin\Debug\Rources\ConditionData\ConditionShapeData\" />
     <Folder Include="bin\Debug\Rources\RoadData\RoadRasterData\" />
     <Folder Include="bin\Debug\Rources\RoadData\RoadShapeData\" />
-    <Folder Include="HelperClass\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
