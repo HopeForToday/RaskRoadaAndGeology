@@ -54,6 +54,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CustomControls">
       <HintPath>..\CustomControls\bin\Debug\CustomControls.dll</HintPath>
@@ -304,6 +307,7 @@
     <EmbeddedResource Include="ProListView.resx">
       <DependentUpon>ProListView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -612,6 +616,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.ico" />
     <Content Include="bin\Debug\bin\Debug\Rources\雨量信息.mdb" />
     <Content Include="bin\Debug\CustomControls.dll" />
     <Content Include="bin\Debug\CustomControls.pdb" />

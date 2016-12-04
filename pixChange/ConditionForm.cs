@@ -238,7 +238,7 @@ namespace RoadRaskEvaltionSystem
             }
             try
             {
-                roadRaskCaculate.RoadRaskCaulte(@"风险评价1.tif", rain, @"..\..\Rources\RoadData\CheckedRoad");
+                roadRaskCaculate.RoadRaskCaulte(@"风险评价1.tif", rain,  Application.StartupPath+@"\Rources\RoadData\CheckedRoad");
             }
             catch (Exception)
             {

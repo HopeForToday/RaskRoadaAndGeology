@@ -73,11 +73,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// 栅格底图的存储路径
        /// </summary>
         //基础数据
-        public static string BaserasterPath = @"..\..\Rources\BaseData\BaseRasterData\";
+        public static string BaserasterPath = Application.StartupPath+@"\Rources\BaseData\BaseRasterData\";
        //风险因素数据
-        public static string conditionRaster = @"..\..\Rources\ConditionData\ConditionRasterData\";
+        public static string conditionRaster = Application.StartupPath + @"\Rources\ConditionData\ConditionRasterData\";
        //风险综合数据
-        public static string conditionAllRaster = @"..\..\Rources\ConditionAllData\ConditionAllRasterData\";
+        public static string conditionAllRaster = Application.StartupPath + @"\Rources\ConditionAllData\ConditionAllRasterData\";
         ////生态数据
         //public static string EcologyrasterPath = @"..\..\Rources\EcologyData\EcologyRasterData\";
         ////地质灾害数据
@@ -89,11 +89,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// 矢量底图的存储路径
         /// </summary>
         /// //基础数据
-        public static string BaseshapePath = @"..\..\Rources\BaseData\BaseShapeData\";
+        public static string BaseshapePath = Application.StartupPath + @"\Rources\BaseData\BaseShapeData\";
         //风险因素数据
-        public static string conditionShape = @"..\..\Rources\ConditionData\ConditionShapeData\";
+        public static string conditionShape = Application.StartupPath + @"\Rources\ConditionData\ConditionShapeData\";
         //风险综合数据
-        public static string conditionAllShape = @"..\..\Rources\ConditionAllData\ConditionAllShapeData\";
+        public static string conditionAllShape = Application.StartupPath + @"\Rources\ConditionAllData\ConditionAllShapeData\";
         //生态数据
         //public static string EcologyshapePath = @"..\..\Rources\EcologyData\EcologyShapeData\";
         ////地质灾害数据
@@ -104,7 +104,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// <summary>
        /// areaXML保存路径
        /// </summary>
-       public static string arexmlPath = @"..\..\Rources\xmlData\AreaXML.xml";
+        public static string arexmlPath = Application.StartupPath + @"\Rources\xmlData\AreaXML.xml";
        public
             static string[] hour = { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22","23"};
 

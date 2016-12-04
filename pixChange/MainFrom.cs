@@ -653,12 +653,6 @@ namespace pixChange
             //}
             //MainFrom.m_mapControl.Refresh();
             #endregion
-            if (this.insetFlag == 2)
-            {
-                this.insetFlag = 0;
-                return;
-            }
-            this.insetFlag = 2;
             routeNetLayer = QueryLayerInMap("公路网");
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
@@ -666,6 +660,12 @@ namespace pixChange
                 routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
                 this.axMapControl1.AddLayer(routeNetLayer);
             }
+            if (this.insetFlag == 2)
+            {
+                this.insetFlag = 0;
+                return;
+            }
+            this.insetFlag = 2;
         }
         //插入公路断点
         private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
