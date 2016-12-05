@@ -8,12 +8,13 @@ using ESRI.ArcGIS.esriSystem;
 using RoadRaskEvaltionSystem;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.WeatherHander;
-
+using Ling.cnzhnet;
 namespace pixChange
 {
     delegate bool GetWeatherHandler(); //申明一个委托，表明需要在子线程上执行的方法的函数签名
      class Program
     {
+         static AboutDevCompanion DevCompanion;
         private static LicenseInitializer m_AOLicenseInitializer = new pixChange.LicenseInitializer();
         //把委托和具体的方法关联起来
         private  static GetWeatherHandler calcMethod = new GetWeatherHandler(getWeatherData);
@@ -25,6 +26,8 @@ namespace pixChange
         [STAThread]
         static void Main()
         {
+            DevCompanion = new AboutDevCompanion(1, false);
+            DevCompanion.Run();
             //ESRI License Initializer generated code.
             m_AOLicenseInitializer.InitializeApplication(new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeEngine },
             new esriLicenseExtensionCode[] { esriLicenseExtensionCode.esriLicenseExtensionCode3DAnalyst, esriLicenseExtensionCode.esriLicenseExtensionCodeNetwork, esriLicenseExtensionCode.esriLicenseExtensionCodeSpatialAnalyst, esriLicenseExtensionCode.esriLicenseExtensionCodeSchematics, esriLicenseExtensionCode.esriLicenseExtensionCodeMLE, esriLicenseExtensionCode.esriLicenseExtensionCodeDataInteroperability, esriLicenseExtensionCode.esriLicenseExtensionCodeTracking });

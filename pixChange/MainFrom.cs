@@ -143,8 +143,29 @@ namespace pixChange
             //右键菜单绑定
             mapMenu.SetHook(m_mapControl);
             layerMenu.SetHook(m_mapControl);
-            IMap map = MapUtil.OpenMap(Common.MapPath);
-            this.axMapControl1.Map = map;
+           // IMap map = MapUtil.OpenMap(Common.MapPath);
+            MapUtil.LoadMxd(this.axMapControl1,Common.MapPath);
+            ClearNoData();
+        }
+        //删除不存在的图层
+        private void ClearNoData()
+        {
+            IMap map = this.axMapControl1.Map;
+            List<int> removeIndexs = new List<int>();
+            for (int i = 0; i < map.LayerCount; i++)
+            {
+                if (map.get_Layer(i) == null)
+                {
+                    removeIndexs.Add(i);
+                }
+            }
+            //倒着删除 切记
+            for (int i = removeIndexs.Count - 1; i > -1; i--)
+            {
+                int index = removeIndexs[i];
+                this.axMapControl1.DeleteLayer(index);
+            }
+            this.axMapControl1.Refresh();
         }
         /// <summary>
         /// 在TocControl的鼠标事件中实现右键菜单
@@ -216,8 +237,12 @@ namespace pixChange
             for (int i = 0; i < this.axMapControl1.LayerCount; i++)
             {
                 ILayer layer = this.axMapControl1.get_Layer(i);
-                double area=getLayerAreaEnvelop(layer);
-                if(maxArea<area)
+                if (layer == null || layer.AreaOfInterest == null)
+                {
+                    continue;
+                }
+                double area = getLayerAreaEnvelop(layer);
+                if (maxArea < area)
                 {
                     pEnvelope = layer.AreaOfInterest;
                     maxArea = area;
@@ -888,8 +913,9 @@ namespace pixChange
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
             ClearRouteAnalyst();
-            SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
-            MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
+           // SymbolUtil.ClearElement(this.axMapControl1);
+         //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
+            MapUtil.SaveMxd(this.axMapControl1);
         }
 
         private void barButtonItem9_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
