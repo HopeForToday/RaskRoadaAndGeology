@@ -14,7 +14,7 @@ namespace pixChange
     delegate bool GetWeatherHandler(); //申明一个委托，表明需要在子线程上执行的方法的函数签名
      class Program
     {
-         static AboutDevCompanion DevCompanion;
+        static AboutDevCompanion DevCompanion;
         private static LicenseInitializer m_AOLicenseInitializer = new pixChange.LicenseInitializer();
         //把委托和具体的方法关联起来
         private  static GetWeatherHandler calcMethod = new GetWeatherHandler(getWeatherData);
@@ -42,6 +42,9 @@ namespace pixChange
             //http://www.nmc.cn/f/rest/passed/56279
             //http://www.nmc.cn/publish/forecast/ASC/baoxing.html 宝兴  http://www.nmc.cn/f/rest/passed/56273
             m_AOLicenseInitializer.ShutdownApplication();
+
+            //防止未弹出注册页面而持续不退出 关闭Dev检测程序
+            DevCompanion.Stop();
         }
 
         public static  bool getWeatherData()

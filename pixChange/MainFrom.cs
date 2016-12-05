@@ -705,19 +705,13 @@ namespace pixChange
             //}
             //MainFrom.m_mapControl.Refresh();
             #endregion
-            routeNetLayer = QueryLayerInMap("公路网");
-            //如果公路网的数据没有加载，则直接加载
-            if (routeNetLayer == null)
-            {
-                routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
-                this.axMapControl1.AddLayer(routeNetLayer);
-            }
             if (this.insetFlag == 2)
             {
                 this.insetFlag = 0;
                 return;
             }
             this.insetFlag = 2;
+            DealRoutenetLayer();
         }
         //插入公路断点
         private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -807,10 +801,17 @@ namespace pixChange
                 return;
             }
             UpdateSymbol(newStopPoints, newBarryPoints);
-            bool result = simplRrouteDecide.QueryTheRoue(this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
-            if (!result)
+            try
             {
-                MessageBox.Show("查询失败");
+                bool result = simplRrouteDecide.QueryTheRoue(this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
+                if (!result)
+                {
+                    MessageBox.Show("查询失败");
+                }
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message);
             }
             this.barButtonItem16.Caption = "绕行方案";
             this.barButtonItem22.Enabled = true;
@@ -888,22 +889,7 @@ namespace pixChange
                 SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
             }
         }
-        //图层查找 确定图层的存在性
-        private ILayer QueryLayerInMap(string layerName)
-        {
-            ILayer queryLayer = null;
-            int layerCount = this.axMapControl1.Map.LayerCount;
-            for (int i = 0; i < layerCount;i++)
-            {
-                ILayer tempLayer= this.axMapControl1.Map.get_Layer(i);
-                if(tempLayer.Name==layerName)
-                {
-                    queryLayer = tempLayer;
-                }
-            }
-            return queryLayer;
-        }
-
+     
         //指针按钮事件  去除其它操作鼠标命令
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
@@ -953,18 +939,41 @@ namespace pixChange
             if (this.insetFlag == 1)
             {
                 this.insetFlag = 0;
-                this.barButtonItem22.Caption = "设置经过点";
             }
             else
             {
                 this.insetFlag = 1;
-                routeNetLayer = QueryLayerInMap("公路网");
-                //如果公路网的数据没有加载，则直接加载
-                if (routeNetLayer == null)
+                //处理公路网图层
+                DealRoutenetLayer();
+            }
+        }
+        /// <summary>
+        /// 对公路网图层进行处理
+        /// 如果有则将其提取到第一个位置
+        /// 如果没有直接加载
+        /// </summary>
+        private void DealRoutenetLayer()
+        {
+            IGroupLayer myGroupLayer=null;
+            routeNetLayer = LayerUtil.QueryLayerInMap(axMapControl1, "公路网", ref myGroupLayer);
+            //如果公路网的数据没有加载，则直接加载
+            if (routeNetLayer == null)
+            {
+                routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
+                this.axMapControl1.AddLayer(routeNetLayer);
+            }
+            //否则 先移除 再加载 保证在第一个位置 也就是图层最上面
+            else
+            {
+                if (myGroupLayer != null)
                 {
-                    routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
-                    this.axMapControl1.AddLayer(routeNetLayer);
+                    myGroupLayer.Delete(routeNetLayer);
                 }
+                else
+                {
+                    this.axMapControl1.Map.DeleteLayer(routeNetLayer);
+                }
+                this.axMapControl1.AddLayer(routeNetLayer);
             }
         }
 
@@ -990,7 +999,7 @@ namespace pixChange
                    this.axMapControl1.DeleteLayer(i);
                }
            }
-           ILayer datalayer = QueryLayerInMap("网络数据集");
+           ILayer datalayer = LayerUtil.QueryLayerInMap(axMapControl1,"网络数据集");
            if (datalayer != null)
            {
                this.axMapControl1.Map.DeleteLayer(datalayer);
