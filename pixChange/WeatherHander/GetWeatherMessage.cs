@@ -79,13 +79,13 @@ namespace HtmlAgilityPackDemo1
                             {
                                 if (int.Parse(DateTime.Now.ToString("HH"))==23)
                                 {
-                                    alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                    alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
                                     forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
                                     forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
                                 }
                                 else
                                 {
-                                    alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
+                                    alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
                                     forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
                                     forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
                                 }
