@@ -23,6 +23,7 @@ using RoadRaskEvaltionSystem.RouteAnalysis;
 using ESRI.ArcGIS.NetworkAnalyst;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using RoadRaskEvaltionSystem.RouteUIDeal;
 
 namespace pixChange
 {
@@ -31,21 +32,13 @@ namespace pixChange
         private List<IPoint> barryPoints = new List<IPoint>();
         private List<IPoint> stopPoints = new List<IPoint>();
         //0为不插入 1为插入经过点 2为插入断点
-        private int insetFlag = 0;
-        //公路断点
-        private IPoint breakPoint =null;
-        //公路断点图片注记
-        private IElement pixtureElement =null;
+        private int insertFlag = 0;
         //路线操作接口字段
         private IRouteDecide routeDecide = ServiceLocator.GetRouteDecide();
-        //路线操作简单接口字段
-        private ISimpleRouteDecide simplRrouteDecide = ServiceLocator.SimpleRouteDecide;
+        //路线操作
+        private IRouteUI routeUI = ServiceLocator.RouteUI;
         //公路网图层
         private ILayer routeNetLayer = null;
-        //风险图层
-        private ILayer riskLayer = null;
-        //是否在插入公路断点的标志位
-        private bool isInserting = false;
         ////栅格接口类
         //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
         //提交测试
@@ -56,9 +49,7 @@ namespace pixChange
         public static ToolStripComboBox toolComboBox = null;
         public static IGroupLayer groupLayer = null;//数据分组
         public static string groupLayerName = null;
-        String m_mapDocumentName = "";
         public static int WhichChecked = 0;//记录哪一个模块被点击 1:基础数据 2:地质数据 3:公路数据 4:生态数据
-        IToolbarMenu m_pMenuLayer;
         //用于判断当前鼠标点击的菜单命令,以备在地图控件中判断操作
         static public CustomTool m_cTool;
         IScreenDisplay m_focusScreenDisplay;// For 平移
@@ -232,34 +223,7 @@ namespace pixChange
 
         private void ToolButtonFull_Click(object sender, EventArgs e)
         {
-            double maxArea = -1;
-            IEnvelope pEnvelope = null;
-            for (int i = 0; i < this.axMapControl1.LayerCount; i++)
-            {
-                ILayer layer = this.axMapControl1.get_Layer(i);
-                if (layer == null || layer.AreaOfInterest == null)
-                {
-                    continue;
-                }
-                double area = getLayerAreaEnvelop(layer);
-                if (maxArea < area)
-                {
-                    pEnvelope = layer.AreaOfInterest;
-                    maxArea = area;
-                }
-            }
-            m_mapControl.Extent = pEnvelope;
-            m_mapControl.Refresh();
-        }
-        /// <summary>
-        /// 获取感兴趣区的面积
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        private double getLayerAreaEnvelop(ILayer layer)
-        {
-             IEnvelope pEnvelope=layer.AreaOfInterest;
-             return pEnvelope.Height * pEnvelope.Width;
+            MapAreaUtil.ZoomToByMaxLayer(this.axMapControl1);
         }
         private void axTOCControl1_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
         {
@@ -542,7 +506,7 @@ namespace pixChange
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
             }
-            if (this.insetFlag!=0&&this.axMapControl1.CurrentTool==null)
+            if (this.insertFlag!=0&&this.axMapControl1.CurrentTool==null)
             {
                 InsertPoint(e);
             }
@@ -705,13 +669,24 @@ namespace pixChange
             //}
             //MainFrom.m_mapControl.Refresh();
             #endregion
-            if (this.insetFlag == 2)
+            if (this.insertFlag == 2)
             {
-                this.insetFlag = 0;
+                this.insertFlag = 0;
                 return;
             }
-            this.insetFlag = 2;
-            DealRoutenetLayer();
+            this.insertFlag = 2;
+            routeUI.DealRoutenetLayer(this.axMapControl1);
+        }
+        private void barButtonItem22_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.insertFlag == 1)
+            {
+                this.insertFlag = 0;
+                return;
+            }
+            this.insertFlag = 1;
+            //处理公路网图层
+            routeUI.DealRoutenetLayer(this.axMapControl1);
         }
         //插入公路断点
         private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
@@ -731,12 +706,12 @@ namespace pixChange
             IPoint point = new PointClass();
             point.X = e.mapX;
             point.Y = e.mapY;
-            if (this.insetFlag == 1)
+            if (this.insertFlag == 1)
             {
                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath);
                this.stopPoints.Add(point);
             }
-            else if(this.insetFlag==2)
+            else if(this.insertFlag==2)
             {
                 SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
                 this.barryPoints.Add(point);
@@ -779,114 +754,27 @@ namespace pixChange
                 MessageBox.Show("流程经过点少于一个");
                 return;
             }
-            this.insetFlag = 0;
-            this.barButtonItem16.Caption = "正在查询";
-            this.barButtonItem22.Enabled = false;
-            this.barButtonItem15.Enabled = false;
-            this.barButtonItem23.Enabled = false;
-            List<IPoint> newStopPoints = null;
-            List<IPoint> newBarryPoints = null;
-            bool pointIsRight = false;
-            //  await Task.Run(() =>
-            //   {
-            TimeSpan ts1 = new TimeSpan(DateTime.Now.Ticks);
-            pointIsRight = UpdatePointsToRouteCore(routeNetLayer as IFeatureLayer, stopPoints, barryPoints, ref newStopPoints, ref newBarryPoints);
-            TimeSpan ts2 = new TimeSpan(DateTime.Now.Ticks);
-            TimeSpan ts = ts2.Subtract(ts1).Duration(); //时间差的绝对值  
-            Debug.Print("运行时间：" + ts.TotalSeconds.ToString());
-            //      });
-            if (!pointIsRight)
+            this.insertFlag = 0;
+            ILayer layer = routeUI.DealRoutenetLayer(this.axMapControl1);
+            if (layer == null)
             {
-                MessageBox.Show("请检查点位是否太过远离公路网");
                 return;
             }
-            UpdateSymbol(newStopPoints, newBarryPoints);
             try
             {
-                bool result = simplRrouteDecide.QueryTheRoue(this.axMapControl1, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
+                bool result = routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer);
                 if (!result)
                 {
                     MessageBox.Show("查询失败");
                 }
             }
-            catch (Exception er)
+            catch (PointIsFarException e1)
             {
-                MessageBox.Show(er.Message);
+                MessageBox.Show(e1.Message);
             }
-            this.barButtonItem16.Caption = "绕行方案";
-            this.barButtonItem22.Enabled = true;
-            this.barButtonItem15.Enabled = true;
-            this.barButtonItem23.Enabled = true;
-        }
-        /// <summary>
-        /// 求出点到公路网的对应点
-        /// </summary>
-        /// <param name="featureLayer"></param>
-        /// <param name="stopPoints"></param>
-        /// <param name="barryPoints"></param>
-        /// <param name="newStopPoints"></param>
-        /// <param name="newBarryPoints"></param>
-        public bool UpdatePointsToRouteCore(IFeatureLayer featureLayer, List<IPoint> stopPoints, List<IPoint> barryPoints, ref List<IPoint> newStopPoints, ref List<IPoint> newBarryPoints)
-        {
-            #region 注释
-            /*
-            newStopPoints = new List<IPoint>();
-            newBarryPoints = new List<IPoint>();
-            IEnumerable<IPoint> allPoints = stopPoints.Concat(newBarryPoints);
-            List<IFeature> features;
-            List<double> distances;
-            List<int> disNums;
-            List<ILine> lines = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, allPoints.ToList<IPoint>(), out features, out distances, out disNums);
-            for (int i = 0; i < lines.Count; i++)
+            catch (NetworkDbException e2)
             {
-                if (i >= stopPoints.Count)
-                {
-                    newBarryPoints.Add(lines[i].FromPoint);
-                    continue;
-                }
-                newStopPoints.Add(lines[i].FromPoint);
-            }
-             */
-            #endregion
-            newStopPoints = new List<IPoint>();
-            newBarryPoints = new List<IPoint>();
-            //stopPoints.
-            foreach (var point in stopPoints)
-            {
-                double distance = 0;
-                int disNum = 0;
-                IFeature feature = null;
-                IPoint rightPoint=DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
-                if (rightPoint == null)
-                {
-                   return false;
-               }
-                newStopPoints.Add(rightPoint);
-            }
-            foreach (var point in barryPoints)
-            {
-                double distance = 0;
-                int disNum = 0;
-                IFeature feature = null;
-                IPoint rightPoint = DistanceUtil.GetNearestLineInFeatureLayer(featureLayer, point, ref feature, ref distance, ref disNum, 0.1);
-                if (rightPoint == null)
-                {
-                   return false;
-               }
-                newBarryPoints.Add(rightPoint);
-            }
-            return true;
-        }
-        private void UpdateSymbol(List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
-        {
-            SymbolUtil.ClearElement(this.axMapControl1);
-            foreach (var point in newStopPoints)
-            {
-                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath);
-            }
-            foreach (var point in newBarryPoints)
-            {
-                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
+                MessageBox.Show(e2.Message);
             }
         }
      
@@ -898,7 +786,7 @@ namespace pixChange
 
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ClearRouteAnalyst();
+            routeUI.ClearRouteAnalyst(this.axMapControl1,ref this.insertFlag,stopPoints,barryPoints);
            // SymbolUtil.ClearElement(this.axMapControl1);
          //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
             MapUtil.SaveMxd(this.axMapControl1);
@@ -934,79 +822,11 @@ namespace pixChange
             this.axMapControl1.AddLayer(rightLayer);
         }
 
-        private void barButtonItem22_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (this.insetFlag == 1)
-            {
-                this.insetFlag = 0;
-            }
-            else
-            {
-                this.insetFlag = 1;
-                //处理公路网图层
-                DealRoutenetLayer();
-            }
-        }
-        /// <summary>
-        /// 对公路网图层进行处理
-        /// 如果有则将其提取到第一个位置
-        /// 如果没有直接加载
-        /// </summary>
-        private void DealRoutenetLayer()
-        {
-            IGroupLayer myGroupLayer=null;
-            routeNetLayer = LayerUtil.QueryLayerInMap(axMapControl1, "公路网", ref myGroupLayer);
-            //如果公路网的数据没有加载，则直接加载
-            if (routeNetLayer == null)
-            {
-                routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
-                this.axMapControl1.AddLayer(routeNetLayer);
-            }
-            //否则 先移除 再加载 保证在第一个位置 也就是图层最上面
-            else
-            {
-                if (myGroupLayer != null)
-                {
-                    myGroupLayer.Delete(routeNetLayer);
-                }
-                else
-                {
-                    this.axMapControl1.Map.DeleteLayer(routeNetLayer);
-                }
-                this.axMapControl1.AddLayer(routeNetLayer);
-            }
-        }
+       
 
         private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            ClearRouteAnalyst();
-        }
-        //清除路线分析相关数据
-       private void ClearRouteAnalyst()
-        {
-            this.insetFlag = 0;
-            //清除所有图标
-            SymbolUtil.ClearElement(this.axMapControl1);
-            this.stopPoints.Clear();
-            this.barryPoints.Clear();
-           for(int i=0;i<this.axMapControl1.LayerCount;i++)
-           {
-               ILayer layer=this.axMapControl1.get_Layer(i);
-               INetworkLayer networkLayer=layer as INetworkLayer;
-               INALayer naLayer=layer as INALayer;
-               if(networkLayer!=null||naLayer!=null)
-               {
-                   this.axMapControl1.DeleteLayer(i);
-               }
-           }
-           ILayer datalayer = LayerUtil.QueryLayerInMap(axMapControl1,"网络数据集");
-           if (datalayer != null)
-           {
-               this.axMapControl1.Map.DeleteLayer(datalayer);
-           }
-           IActiveView pActiveView = axMapControl1.ActiveView;
-           pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-           axMapControl1.Refresh();
+            routeUI.ClearRouteAnalyst(this.axMapControl1, ref this.insertFlag, stopPoints, barryPoints);
         }
     }
 }
