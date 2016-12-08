@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using timespace=System.Timers;
 using System.Runtime.InteropServices;
 
 namespace Ling.cnzhnet
@@ -303,19 +304,24 @@ namespace Ling.cnzhnet
 
     /// <summary>
     /// DevExpress 控件毒手伴侣（专门用来检测关闭它的注册弹框）。
+    /// 未考虑到多线程下的变量同步问题
+    /// 后期优化
     /// </summary>
     public class AboutDevCompanion
     {
-        private int Interval;
-        private bool ResidentMode;
-        private bool StopCompanion;
-        private Thread m_Thread;
-
         /// <summary>
-        /// 按指定的模式创建 <see cref="Wunion.Budget.PowerBasicFramework.AboutDevCompanion"/> 对象实例。
-        /// <param name="interval">检测Dev注册弹框的时间间隔（以毫秒为单位）。</param>
-        /// <param name="resident">检测程序是否以常驻模式运行（默认值 true）。</param>
+        /// 检测Dev注册弹框的时间间隔(以毫秒为单位)。
         /// </summary>
+        private int Interval;
+        /// <summary>
+        /// 检测程序是否以常驻模式运行(默认值 true)
+        /// </summary>
+        private bool ResidentMode;
+        /// <summary>
+        /// 是否检测的标志位 
+        /// </summary>
+        private bool StopCompanion;
+
         public AboutDevCompanion(int interval, bool resident = true)
         {
             Interval = interval;
@@ -343,23 +349,74 @@ namespace Ling.cnzhnet
         /// </summary>
         public void Run()
         {
+            // 防止多次运行导致可能的线程错误
             if (!StopCompanion)
-                return; // 防止多次运行导致可能的线程错误。
+            {
+                return;
+            }
             StopCompanion = false;
-            m_Thread = new Thread(new ThreadStart(() => {
+            Thread m_Thread = new Thread(() =>
+            {
                 while (!StopCompanion)
                 {
+                    //常驻模式持续检测
                     if (ResidentMode)
+                    {
                         CloseAboutDev();
-                    else // 如果非常驻模式，则在检测并关闭Dev注册弹框后应结束程序。
+                    }
+                    // 如果非常驻模式，则在检测并关闭Dev注册弹框后应结束程序。
+                    else 
+                    {
                         StopCompanion = CloseAboutDev();
+                    }
                     Thread.Sleep(Interval);
                 }
-                m_Thread = null;
-            }));
+            });
             m_Thread.Start();
         }
-
+        /// <summary>
+        /// 关闭毒手运行 引入超时机制
+        /// </summary>
+        /// <param name="times"></param>
+        public void Run(uint times)
+        {
+            // 防止多次运行导致可能的线程错误
+            if (!StopCompanion)
+            {
+                return;
+            }
+            StopCompanion = false;
+            Thread m_Thread = new Thread(() =>
+            {
+                #region 采用计时器 保证达到规定时间后停止检测
+                timespace.Timer timer = new timespace.Timer(times);
+                timer.Elapsed += new timespace.ElapsedEventHandler((q, p) => {
+                  StopCompanion = true;
+                  timer.Stop();
+                });
+                #endregion
+                timer.Start();
+                while (!StopCompanion)
+                {
+                    //常驻模式持续检测
+                    if (ResidentMode)
+                    {
+                        CloseAboutDev();
+                    }
+                    // 如果非常驻模式，则在检测并关闭Dev注册弹框后应结束程序。
+                    else
+                    {
+                        StopCompanion = CloseAboutDev();
+                        if (StopCompanion)
+                        {
+                            timer.Close();
+                        }
+                    }
+                    Thread.Sleep(Interval);
+                }
+            });
+            m_Thread.Start();
+        }
         /// <summary>
         /// 关闭毒手程序的运行。
         /// </summary>

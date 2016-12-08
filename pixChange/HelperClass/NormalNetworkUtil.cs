@@ -37,6 +37,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             catch (Exception e)
             {
                 Debug.Print("打开工作空间出错:"+e.Message);
+                throw new NetworkDbException("网络数据库打开错误");
             }
             return pWorkspace;
         }

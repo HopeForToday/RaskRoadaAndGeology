@@ -210,8 +210,11 @@
     <Compile Include="HelperClass\FeatureClassUtil.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
     <Compile Include="HelperClass\LayerMange.cs" />
+    <Compile Include="HelperClass\LayerUtil.cs" />
+    <Compile Include="HelperClass\MapAreaUtil.cs" />
     <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
+    <Compile Include="HelperClass\NetworkDbException.cs" />
     <Compile Include="HelperClass\UtilityNetWorkUtil.cs" />
     <Compile Include="HelperClass\NormalNetworkUtil.cs" />
     <Compile Include="HelperClass\RainMessage.cs" />
@@ -270,6 +273,9 @@
     <Compile Include="RouteAnalysis\RouteDecideClass.cs" />
     <Compile Include="RouteAnalysis\RouteDecideNew.cs" />
     <Compile Include="RouteAnalysis\SimpleRouteDecideClass.cs" />
+    <Compile Include="RouteUIDeal\IRouteUI.cs" />
+    <Compile Include="RouteUIDeal\PointIsFarException.cs" />
+    <Compile Include="RouteUIDeal\RouteUIHelp.cs" />
     <Compile Include="ServiceLocator\ServerLocator.cs" />
     <Compile Include="TreeEnter\RainsEnterTree.cs" />
     <Compile Include="TreeEnter\RanisEnViewModel.cs" />
@@ -517,7 +523,6 @@
     <Content Include="bin\Debug\Rources\雨量信息.mdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="HtmlAgilityPack.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Rources\BaseData\BaseRasterData\" />

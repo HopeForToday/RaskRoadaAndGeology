@@ -27,7 +27,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 IMapDocument mapDoc = new MapDocumentClass();
                 mapDoc.Open(mapControl.DocumentFilename, string.Empty);
                 mapDoc.ReplaceContents((IMxdContents)mapControl.Map);
-                mapDoc.Save(mapDoc.UsesRelativePaths, false);
+                mapDoc.Save(mapDoc.UsesRelativePaths,false);
                 mapDoc.Close();
                 return true;
             }
