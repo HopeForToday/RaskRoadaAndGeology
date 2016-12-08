@@ -220,6 +220,8 @@ namespace RoadRaskEvaltionSystem
                 }
                 else
                 {
+                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day2);
+                    tomorrowRain = AddRain(sqlString, "rains");
                     rain = _24hAgoRain * 0.64 + todayRain * 0.8 + tomorrowRain;
                 }
             }
