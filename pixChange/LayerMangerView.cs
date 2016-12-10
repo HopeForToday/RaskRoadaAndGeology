@@ -179,6 +179,10 @@ namespace pixChange
                     pFLayer.FeatureClass = pFClass;
                     pFLayer.Name = pFClass.AliasName;
                     //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    if(pFLayer.Name=="公路网")
+                    {
+                        RouteLayerUtil.SetRouteLayerStyle(pFLayer);
+                    }
                     IsEqual = Common.InsertShapeLayer(IsEqual,(ILayer)pFLayer);
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
@@ -208,7 +212,7 @@ namespace pixChange
                 try
                 {
                     //这里需要注意的是矢量文件在图层中没有后缀名 而栅格文件在图层中有后缀名 如.tif
-                    MainFrom.m_mapControl.Map.DeleteLayer(LayerMange.returnIndexByLayerName(MainFrom.m_mapControl, layerName));
+                    MainFrom.m_mapControl.Map.DeleteLayer(LayerManager.returnIndexByLayerName(MainFrom.m_mapControl, layerName));
                     MainFrom.m_mapControl.Refresh();
                     MainFrom.m_pTocControl.Update();
                 }

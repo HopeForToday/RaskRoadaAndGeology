@@ -209,12 +209,13 @@
     <Compile Include="HelperClass\DistanceUtil.cs" />
     <Compile Include="HelperClass\FeatureClassUtil.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
-    <Compile Include="HelperClass\LayerMange.cs" />
+    <Compile Include="HelperClass\LayerManager.cs" />
     <Compile Include="HelperClass\LayerUtil.cs" />
     <Compile Include="HelperClass\MapAreaUtil.cs" />
     <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
     <Compile Include="HelperClass\NetworkDbException.cs" />
+    <Compile Include="HelperClass\RouteLayerUtil.cs" />
     <Compile Include="HelperClass\UtilityNetWorkUtil.cs" />
     <Compile Include="HelperClass\NormalNetworkUtil.cs" />
     <Compile Include="HelperClass\RainMessage.cs" />

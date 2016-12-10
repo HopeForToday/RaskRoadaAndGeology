@@ -569,7 +569,7 @@
             this.Name = "MainFrom";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
-            this.Text = "雅安市芦山~宝兴公路风险预警系统";
+            this.Text = "雅安市芦山~宝山公路风险预警系统";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrom_FormClosing);
             this.Load += new System.EventHandler(this.MainFrom_Load);

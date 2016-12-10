@@ -393,7 +393,7 @@ namespace pixChange
                     break;
                 case CustomTool.RectSelect:
                     //    pFeatureLayer = (IFeatureLayer)m_mapControl.get_Layer(toolComboBox.SelectedIndex);
-                    pFeatureLayer = (IFeatureLayer)LayerMange.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
+                    pFeatureLayer = (IFeatureLayer)LayerManager.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
                     pFeatureClass = pFeatureLayer.FeatureClass;
                     IEnvelope pRect = new Envelope() as IEnvelope;
                     pRect = m_mapControl.TrackRectangle();

@@ -1,8 +1,10 @@
 ﻿using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.NetworkAnalyst;
+using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.RouteAnalysis;
 using System;
@@ -26,13 +28,40 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         {
             this.simpleRrouteDecide = simpleRrouteDecide;
         }
+        //设置公路分级显示
+        public void SetRoutesGrade(ILayer layer)
+        {
+            //四级公路符号
+            ILineSymbol pOutline4 = new SimpleLineSymbolClass();
+            //三级公路符号
+            ILineSymbol pOutline3 = new SimpleLineSymbolClass();
+            //等外公路符号
+            ILineSymbol pOutlineEqual = new SimpleLineSymbolClass();
+            //其它公路符号
+            ILineSymbol pOutlineOther = new SimpleLineSymbolClass();
+            pOutline4.Color = SymbolUtil.GetColor(255, 0, 0);
+            pOutline4.Width = 2;
+            pOutline3.Color = SymbolUtil.GetColor(0, 255, 0);
+            pOutline3.Width = 1.5;
+            pOutlineEqual.Color = SymbolUtil.GetColor(0, 255, 255);
+            pOutlineEqual.Width = 1.2;
+            pOutlineOther.Color = SymbolUtil.GetColor(0, 0, 255);
+            pOutlineOther.Width = 1;
+            IDictionary<string, ISymbol> symbolDic = new Dictionary<string, ISymbol>();
+            symbolDic.Add("四级", pOutline4 as ISymbol);
+            symbolDic.Add("三级", pOutline3 as ISymbol);
+            symbolDic.Add("等外", pOutlineEqual as ISymbol);
+            symbolDic.Add("其他", pOutlineOther as ISymbol);
+            LayerManager.SetLayerGraderSymbol(layer, "RTEG", symbolDic);
+        }
+
         /// <summary>
         /// 更新经过点和障碍点标志
         /// </summary>
         /// <param name="mapControl"></param>
         /// <param name="newStopPoints"></param>
         /// <param name="newBarryPoints"></param>
-        void UpdateSymbol(AxMapControl mapControl,List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
+        void UpdateSymbol(AxMapControl mapControl, List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
         {
             SymbolUtil.ClearElement(mapControl);
             foreach (var point in newStopPoints)
@@ -117,6 +146,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             if (routeNetLayer == null)
             {
                 routeNetLayer = ShapeSimpleHelper.OpenFile(Common.RouteNetFeaturePath);
+                RouteLayerUtil.SetRouteLayerStyle(routeNetLayer);
                 mapControl.AddLayer(routeNetLayer);
             }
             //否则 先移除 再加载 保证在第一个位置 也就是图层最上面
@@ -141,7 +171,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         /// <param name="insertFlag"></param>
         /// <param name="stopPoints"></param>
         /// <param name="barryPoints"></param>
-        public  void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag, List<IPoint> stopPoints, List<IPoint> barryPoints)
+        public void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag, List<IPoint> stopPoints, List<IPoint> barryPoints)
         {
             //标志初始化
             insertFlag = 0;
@@ -185,10 +215,11 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             {
                 throw new PointIsFarException("请检查点位是否太过远离图层");
             }
-            UpdateSymbol(mapControl,newStopPoints, newBarryPoints);
+            UpdateSymbol(mapControl, newStopPoints, newBarryPoints);
             bool result = simpleRrouteDecide.QueryTheRoue(mapControl, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
             return result;
-          
+
         }
+
     }
 }

@@ -160,8 +160,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
             return new RgbColorClass()
                     {
                         Red = red,
-                        Blue = green,
-                        Green = blue,
+                        Blue = blue,
+                        Green = green,
                     };
         }
         /// <summary>
