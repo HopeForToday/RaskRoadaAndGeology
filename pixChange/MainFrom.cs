@@ -751,7 +751,7 @@ namespace pixChange
             #endregion
             if (this.stopPoints.Count < 2)
             {
-                MessageBox.Show("流程经过点少于一个");
+                MessageBox.Show("路线经过点少于一个");
                 return;
             }
             this.insertFlag = 0;

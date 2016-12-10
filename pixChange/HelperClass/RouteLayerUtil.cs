@@ -22,7 +22,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
         {
             SetRouteLayerSymbolGrade(layer);
             ShowRouteName(layer);
-            SetLayerTran(layer);
+           // SetLayerTran(layer);
         }
         /// <summary>
         /// 设置公路网图层按照公路等级分级显示
@@ -38,14 +38,14 @@ namespace RoadRaskEvaltionSystem.HelperClass
             ILineSymbol pOutlineEqual = new SimpleLineSymbolClass();
             //其它公路符号
             ILineSymbol pOutlineOther = new SimpleLineSymbolClass();
-            pOutline3.Color = SymbolUtil.GetColor(0, 255, 0);
-            pOutline3.Width = 1.5;
-            pOutline4.Color = SymbolUtil.GetColor(0, 255, 120);
-            pOutline4.Width = 1.2;
-            pOutlineEqual.Color = SymbolUtil.GetColor(0, 200, 100);
-            pOutlineEqual.Width = 1;
+            pOutline3.Color = SymbolUtil.GetColor(0, 0, 0);
+            pOutline3.Width = 2.5;
+            pOutline4.Color = SymbolUtil.GetColor(0, 0, 0);
+            pOutline4.Width = 2;
+            pOutlineEqual.Color = SymbolUtil.GetColor(0, 0, 0);
+            pOutlineEqual.Width = 1.5;
             pOutlineOther.Color = SymbolUtil.GetColor(0, 0, 0);
-            pOutlineOther.Width =0.5;
+            pOutlineOther.Width =1;
             IDictionary<string, ISymbol> symbolDic = new Dictionary<string, ISymbol>();
             symbolDic.Add("四级", pOutline3 as ISymbol);
             symbolDic.Add("三级", pOutline4 as ISymbol);
@@ -60,7 +60,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
         public static void ShowRouteName(ILayer layer)
         {
             IFeatureLayer pFeatureLayer = layer as IFeatureLayer;
-            LayerManager.EnableFeatureLayerLabel(pFeatureLayer,"NAME", SymbolUtil.GetColor(255, 0, 0), 9, "");
+            LayerManager.EnableFeatureLayerLabel(pFeatureLayer,"NAME", SymbolUtil.GetColor(50, 50, 0), 10, "");
         }
         //设置公路网透明度
         public static void SetLayerTran(ILayer layer)

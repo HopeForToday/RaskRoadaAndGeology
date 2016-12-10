@@ -53,7 +53,8 @@ namespace pixChange.HelperClass
             IAnnotateLayerPropertiesCollection pAnnoLayerPropsCollection;
             pAnnoLayerPropsCollection = pGeoFeaturelayer.AnnotationProperties;
             pAnnoLayerPropsCollection.Clear();
-            //stdole.IFontDisp  pFont; //字体  
+            //stdole.IFontDisp pFont; //字体  
+            //pFont.Bold = true;
             //pFont.Name = "新宋体";  
             //pFont.Size = 9;  
             //未指定字体颜色则默认为黑色  
@@ -68,6 +69,7 @@ namespace pixChange.HelperClass
             pTextSymbol = new TextSymbolClass();
             pTextSymbol.Color = (IColor)pRGB;
             pTextSymbol.Size = size; //标注大小  
+            pTextSymbol.Font.Bold=true;//加粗
             IBasicOverposterLayerProperties4 pBasicOverposterlayerProps4 = new BasicOverposterLayerPropertiesClass();
             switch (pFeaturelayer.FeatureClass.ShapeType)//判断图层类型  
             {
