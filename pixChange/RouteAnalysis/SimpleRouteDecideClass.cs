@@ -60,17 +60,33 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             }
             return result;
         }
+        /// <summary>
+        /// 路线结果显示方法
+        /// </summary>
+        /// <param name="featureLayer"></param>
+        /// <param name="mapControl"></param>
         private void showRouteShape(IFeatureLayer featureLayer, AxMapControl mapControl)
         {
             IQueryFilter pQueryFilter = new QueryFilter();
             pQueryFilter.WhereClause = "";
             IFeatureCursor pCursor=featureLayer.FeatureClass.Search(pQueryFilter, false);
             mapControl.Map.AreaOfInterest = featureLayer.AreaOfInterest;
+            //实际上路线分析结果只有一个要素 只是为了保险
             IFeature pFeature = pCursor.NextFeature();
             while (pFeature != null)
             {
-                 SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
-                 pFeature = pCursor.NextFeature();
+                #region 更新地图显示范围为要素范围
+                IEnvelope pEnvelope = pFeature.Extent;
+                double width = pEnvelope.Width;
+                double height = pEnvelope.Height;
+                pEnvelope.XMax += width * 1.5;
+                pEnvelope.XMin -= width * 1.5;
+                pEnvelope.YMax += height * 1.5;
+                pEnvelope.YMin -= height * 1.5;
+                mapControl.Extent = pEnvelope;
+                #endregion
+                SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
+                pFeature = pCursor.NextFeature();
             }
         }
     }

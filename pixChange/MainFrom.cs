@@ -24,6 +24,7 @@ using ESRI.ArcGIS.NetworkAnalyst;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using RoadRaskEvaltionSystem.RouteUIDeal;
+using RoadRaskEvaltionSystem.QueryAndUIDeal;
 
 namespace pixChange
 {
@@ -37,6 +38,8 @@ namespace pixChange
         private IRouteDecide routeDecide = ServiceLocator.GetRouteDecide();
         //路线操作
         private IRouteUI routeUI = ServiceLocator.RouteUI;
+        //空间查询操作
+        private ISpatialQueryUI spatiallUI=ServiceLocator.SpatialQueryUI;
         //公路网图层
         private ILayer routeNetLayer = null;
         ////栅格接口类
@@ -225,30 +228,6 @@ namespace pixChange
         {
             MapAreaUtil.ZoomToByMaxLayer(this.axMapControl1);
         }
-        private void axTOCControl1_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
-        {
-            //鼠标未落下,退出
-            IPoint pt = new ESRI.ArcGIS.Geometry.Point();
-            pt.PutCoords(e.x, e.y);
-
-            switch (m_cTool)
-            {
-                case CustomTool.ZoomIn:
-                case CustomTool.ZoomOut:
-                    //'Get 
-
-
-                    break;
-                case CustomTool.Pan:
-                    m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
-                    m_focusScreenDisplay.PanMoveTo(pt);
-                    break;
-
-
-
-            }
-        }
-
 
         private void axMapControl1_OnKeyUp(object sender, IMapControlEvents2_OnKeyUpEvent e)
         {
@@ -359,25 +338,11 @@ namespace pixChange
 
 
         }
-
+      
         private void axMapControl1_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
-            IFeatureLayer pFeatureLayer;
-            IFeatureClass pFeatureClass;
-            //新建一个空间过滤器
-            ISpatialFilter pSpatialFilter;
-            IQueryFilter pFilter;
-
-            IFeatureCursor pCursor;
-
-            //定义各种空间类型数据的符号
-            ISimpleMarkerSymbol simplePointSymbol;
-            ISimpleFillSymbol simpleFillSymbol;
-            ISimpleLineSymbol simpleLineSymbol;
-            //用于闪烁的符号
-            ISymbol symbol;
-
-            IFeature pFeature;
+            this.axMapControl1.Focus();
+            this.axMapControl1.Map.ClearSelection();
             switch (m_cTool)
             {
                 case CustomTool.ZoomIn:
@@ -392,108 +357,9 @@ namespace pixChange
                     m_isMouseDown = true;
                     break;
                 case CustomTool.RectSelect:
-                    //    pFeatureLayer = (IFeatureLayer)m_mapControl.get_Layer(toolComboBox.SelectedIndex);
-                    pFeatureLayer = (IFeatureLayer)LayerManager.RetuenLayerByLayerNameLayer(m_mapControl, toolComboBox.SelectedItem.ToString());
-                    pFeatureClass = pFeatureLayer.FeatureClass;
-                    IEnvelope pRect = new Envelope() as IEnvelope;
-                    pRect = m_mapControl.TrackRectangle();
-
-                    //新建一个空间过滤器
-                    pSpatialFilter = new SpatialFilter();
-                    pSpatialFilter.Geometry = pRect;
-                    //依据被选择的要素类的类型不同，设置不同的空间过滤关系
-                    switch (pFeatureClass.ShapeType)
-                    {
-                        case esriGeometryType.esriGeometryPoint:
-                        case esriGeometryType.esriGeometryMultipoint:
-                            pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelContains;
-                            break;
-                        case esriGeometryType.esriGeometryPolyline:
-                        case esriGeometryType.esriGeometryLine:
-                            pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;
-                            break;
-                        case esriGeometryType.esriGeometryPolygon:
-                        case esriGeometryType.esriGeometryEnvelope:
-                            pSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                            break;
-                    }
-
-
-                    pSpatialFilter.GeometryField = pFeatureClass.ShapeFieldName;
-                    pFilter = pSpatialFilter;
-                    //通过空间关系查询
-                    pCursor = pFeatureLayer.Search(pFilter, false);
-
-                    //定义各种空间类型数据的符号
-                    simplePointSymbol = new SimpleMarkerSymbol();
-                    simpleFillSymbol = new SimpleFillSymbol();
-                    simpleLineSymbol = new SimpleLineSymbol();
-                    simplePointSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
-                    simplePointSymbol.Size = 5;
-                    simplePointSymbol.Color = ColorHelper.GetRGBColor(255, 0, 0);
-
-                    simpleLineSymbol.Width = 2;
-                    simpleLineSymbol.Color = ColorHelper.GetRGBColor(255, 0, 99);
-                    simpleFillSymbol.Outline = simpleLineSymbol;
-                    simpleFillSymbol.Color = ColorHelper.GetRGBColor(222, 222, 222);
-                    //用于闪烁的符号
-                    pFeature = pCursor.NextFeature();
-                    DataTable pDataTable = createDataTableByLayer(pFeatureLayer as ILayer);
-                    while (pFeature != null)
-                    {
-                        axMapControl1.Map.SelectFeature(pFeatureLayer, pFeature);  //高亮显示
-                        IGeometry pShape;
-                        pShape = pFeature.Shape;
-                        ITable pTable = pFeature as ITable;
-                        DataRow pDataRow = pDataTable.NewRow();
-                        for (int i = 0; i < pFeature.Fields.FieldCount; i++)
-                        {
-
-                            if (pFeature.Fields.get_Field(i).Type == esriFieldType.esriFieldTypeGeometry)
-                            {
-                                pDataRow[i] = getShapeType(pFeatureLayer as ILayer);
-                            }
-                            else if (pFeature.Fields.get_Field(i).Type == esriFieldType.esriFieldTypeBlob)
-                            {
-                                pDataRow[i] = "Element";
-                            }
-                            else
-                            {
-                                pDataRow[i] = pFeature.get_Value(i);
-                            }
-
-                        }
-                        pDataTable.Rows.Add(pDataRow);
-                        switch (pFeatureClass.ShapeType)
-                        {
-                            case esriGeometryType.esriGeometryPoint:
-                            case esriGeometryType.esriGeometryMultipoint:
-                                symbol = (ISymbol)simplePointSymbol;
-                                m_mapControl.FlashShape(pShape, 5, 100, symbol);
-                                break;
-                            case esriGeometryType.esriGeometryPolyline:
-                            case esriGeometryType.esriGeometryLine:
-                                symbol = (ISymbol)simpleLineSymbol;
-                                m_mapControl.FlashShape(pShape, 5, 100, symbol);
-                                break;
-                            case esriGeometryType.esriGeometryPolygon:
-                            case esriGeometryType.esriGeometryEnvelope:
-                                symbol = (ISymbol)simpleFillSymbol;
-                                m_mapControl.FlashShape(pShape, 5, 100, symbol);
-                                break;
-                        }
-
-                        pFeature = pCursor.NextFeature();
-                    }
-                    m_cTool = CustomTool.None;
-
-                    ProListView result = new ProListView();
-                    result.showTable(pDataTable);
-
-                    result.getLayerName(pFeatureLayer.Name);
-                    result.Show();
-                    //可以让选中的区域立即显示出来
-                    MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    IEnvelope pRect = m_mapControl.TrackRectangle();
+                    spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,this.toolStripComboBox2.Text);
+                  //  MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     break;
 
                 case CustomTool.Pan:
@@ -512,72 +378,24 @@ namespace pixChange
             }
         }
 
-        #region get dataTable by Ilayer
-        private DataTable createDataTableByLayer(ILayer player)
-        {
-            DataTable dataTable = new DataTable();
-            ITable ptable = player as ITable;
-            IField pField;
-            DataColumn pDataColumn;
-            for (int i = 0; i < ptable.Fields.FieldCount; i++)
-            {
-                pField = ptable.Fields.get_Field(i);
-                pDataColumn = new DataColumn(pField.Name);
-                dataTable.Columns.Add(pDataColumn);
-                pField = null;
-                pDataColumn = null;
-            }
-            return dataTable;
-        }
-        private DataTable createDataTable()
-        {
-            DataTable dataTable = new DataTable();
-            //ITable ptable = player as ITable;
-            //IField pField;
-            //DataRow pDataRow;
-            DataColumn pColumn1 = new DataColumn("Feilds");
-            DataColumn pColumn2 = new DataColumn("Value");
-            dataTable.Columns.Add(pColumn1);
-            dataTable.Columns.Add(pColumn2);
-            /*
-            for (int i = 0; i < ptable.Fields.FieldCount; i++)
-               {
-                    pField = ptable.Fields.get_Field(i);
-                    pDataRow = new DataRow();
-                }
-            */
-            return dataTable;
-        }
-        private string getShapeType(ILayer player)
-        {
-            IFeatureLayer pFlayer = (IFeatureLayer)player;
-            switch (pFlayer.FeatureClass.ShapeType)
-            {
-                case esriGeometryType.esriGeometryPoint:
-                    return "Point";
-                case esriGeometryType.esriGeometryPolyline:
-                    return "Polyline";
-                case esriGeometryType.esriGeometryPolygon:
-                    return "Polygon";
-                default:
-                    return "";
-            }
-        }
-        #endregion
-
         //操作图层选择
         private void LayerSelect_Click(object sender, EventArgs e)
         {
-            if (toolComboBox.SelectedIndex < 0)
+            if( m_cTool == CustomTool.RectSelect)
+            {
+                m_cTool = CustomTool.None;
+                return;
+            }
+            if (toolComboBox.SelectedItem ==null)
             {
                 MessageBox.Show("请先选择操作图层");
+                return;
             }
             //改变鼠标形状
             m_mapControl.MousePointer = esriControlsMousePointer.esriPointerArrow;
             // //将mapcontrol的tool设为nothing，不然会影响效果
             m_mapControl.CurrentTool = null;
             m_cTool = CustomTool.RectSelect;
-
         }
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -691,18 +509,6 @@ namespace pixChange
         //插入公路断点
         private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
         {
-            /*
-            if(this.pixtureElement!=null)
-            {
-                SymbolUtil.ClearElement(this.axMapControl1, this.pixtureElement as IElement);
-            }
-            IPoint point = new PointClass();
-            point.X = e.mapX;
-            point.Y = e.mapY;
-            this.pixtureElement = SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
-            this.breakPoint = point;
-            this.barButtonItem15.Caption = "取消断点";
-              */
             IPoint point = new PointClass();
             point.X = e.mapX;
             point.Y = e.mapY;
@@ -758,11 +564,15 @@ namespace pixChange
             ILayer layer = routeUI.DealRoutenetLayer(this.axMapControl1);
             if (layer == null)
             {
+                MessageBox.Show("未找到公路网图层");
                 return;
             }
             try
             {
+                ProInfoWindow proWindow = new ProInfoWindow();
+                proWindow.Show();
                 bool result = routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer);
+                proWindow.Close();
                 if (!result)
                 {
                     MessageBox.Show("查询失败");
@@ -786,6 +596,7 @@ namespace pixChange
 
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.axMapControl1.Map.ClearSelection();
             routeUI.ClearRouteAnalyst(this.axMapControl1,ref this.insertFlag,stopPoints,barryPoints);
            // SymbolUtil.ClearElement(this.axMapControl1);
          //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
@@ -822,11 +633,24 @@ namespace pixChange
             this.axMapControl1.AddLayer(rightLayer);
         }
 
-       
-
         private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             routeUI.ClearRouteAnalyst(this.axMapControl1, ref this.insertFlag, stopPoints, barryPoints);
+        }
+        /// <summary>
+        /// 地图视图刷新事件
+        /// 往图层下拉框中添加数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void axMapControl1_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
+        {
+            toolStripComboBox2.Items.Clear();
+            List<ILayer> layers = MapUtil.GetAllLayers(this.axMapControl1);
+            layers.ForEach(p =>
+            {
+                toolStripComboBox2.Items.Add(p.Name);
+            });
         }
     }
 }

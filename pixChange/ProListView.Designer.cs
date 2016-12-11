@@ -29,17 +29,29 @@
         private void InitializeComponent()
         {
             this.DataGrdView = new System.Windows.Forms.DataGridView();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.DataGrdView)).BeginInit();
             this.SuspendLayout();
             // 
             // DataGrdView
             // 
+            this.DataGrdView.AllowUserToAddRows = false;
+            this.DataGrdView.AllowUserToDeleteRows = false;
             this.DataGrdView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGrdView.Location = new System.Drawing.Point(2, 12);
+            this.DataGrdView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGrdView.Location = new System.Drawing.Point(0, 28);
             this.DataGrdView.Name = "DataGrdView";
             this.DataGrdView.RowTemplate.Height = 23;
-            this.DataGrdView.Size = new System.Drawing.Size(766, 343);
+            this.DataGrdView.Size = new System.Drawing.Size(770, 339);
             this.DataGrdView.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(770, 28);
+            this.panel1.TabIndex = 1;
             // 
             // ProListView
             // 
@@ -47,7 +59,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(770, 367);
             this.Controls.Add(this.DataGrdView);
+            this.Controls.Add(this.panel1);
             this.Name = "ProListView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ProListView";
             ((System.ComponentModel.ISupportInitialize)(this.DataGrdView)).EndInit();
             this.ResumeLayout(false);
@@ -57,6 +71,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView DataGrdView;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }

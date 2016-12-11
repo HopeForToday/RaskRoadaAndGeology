@@ -128,7 +128,7 @@
             this.axTOCControl1.Size = new System.Drawing.Size(239, 546);
             this.axTOCControl1.TabIndex = 0;
             this.axTOCControl1.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl1_OnMouseDown);
-            this.axTOCControl1.OnMouseMove += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseMoveEventHandler(this.axTOCControl1_OnMouseMove);
+          //  this.axTOCControl1.OnMouseMove += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseMoveEventHandler(this.axTOCControl1_OnMouseMove);
             // 
             // toolStrip2
             // 
@@ -214,7 +214,6 @@
             this.toolStripButton9.Name = "toolStripButton9";
             this.toolStripButton9.Size = new System.Drawing.Size(76, 22);
             this.toolStripButton9.Text = "拉框查询";
-            this.toolStripButton9.Visible = false;
             this.toolStripButton9.Click += new System.EventHandler(this.LayerSelect_Click);
             // 
             // toolStripLabel3
@@ -226,14 +225,12 @@
             // 
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(140, 25);
-            this.toolStripComboBox2.Visible = false;
             // 
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
             this.toolStripLabel4.Size = new System.Drawing.Size(56, 22);
             this.toolStripLabel4.Text = "图层选择";
-            this.toolStripLabel4.Visible = false;
             // 
             // toolStripSeparator6
             // 
@@ -260,6 +257,7 @@
             this.axMapControl1.Size = new System.Drawing.Size(642, 524);
             this.axMapControl1.TabIndex = 0;
             this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
+            this.axMapControl1.OnViewRefreshed += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnViewRefreshedEventHandler(this.axMapControl1_OnViewRefreshed);
             this.axMapControl1.OnKeyUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnKeyUpEventHandler(this.axMapControl1_OnKeyUp);
             // 
             // defaultLookAndFeel1

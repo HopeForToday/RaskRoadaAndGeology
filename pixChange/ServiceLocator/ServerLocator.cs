@@ -8,6 +8,7 @@ using RoadRaskEvaltionSystem.WeatherHander;
 using HtmlAgilityPackDemo1;
 using RoadRaskEvaltionSystem.RouteAnalysis;
 using RoadRaskEvaltionSystem.RouteUIDeal;
+using RoadRaskEvaltionSystem.QueryAndUIDeal;
 namespace RoadRaskEvaltionSystem
 {
     /// <summary>
@@ -23,6 +24,7 @@ namespace RoadRaskEvaltionSystem
         private static IRouteDecide routeDecide = null;
         private static ISimpleRouteDecide simpleRouteDecide = null;
         private static IRouteUI routeUI = null;
+        private static ISpatialQueryUI spatialQueryUI = null;
         public static IRoadRaskCaculate GetIRoadRaskCaculate()
         {
             if(m_RoadRaskCacluate==null)
@@ -92,6 +94,17 @@ namespace RoadRaskEvaltionSystem
                     routeUI = new RouteUIHelp(SimpleRouteDecide);
                 }
                 return routeUI;
+            }
+        }
+        public static ISpatialQueryUI SpatialQueryUI
+        {
+            get
+            {
+                if(spatialQueryUI==null)
+                {
+                    spatialQueryUI = new SpatialQueryUIClass();
+                }
+                return spatialQueryUI;
             }
         }
     }

@@ -38,3 +38,4 @@ E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSy
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.exe
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.pdb
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.csprojResolveAssemblyReference.cache
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.ProInfoWindow.resources

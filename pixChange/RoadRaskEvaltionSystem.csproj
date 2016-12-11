@@ -200,6 +200,7 @@
       <DependentUpon>ForecastDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperClass\AccessDataBase.cs" />
+    <Compile Include="HelperClass\AtrributeUtil.cs" />
     <Compile Include="HelperClass\ColorHelper.cs" />
     <Compile Include="HelperClass\Common.cs" />
     <Compile Include="HelperClass\ConfigHelper.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="HelperClass\DecorateRouteFeatureClass.cs" />
     <Compile Include="HelperClass\DistanceUtil.cs" />
     <Compile Include="HelperClass\FeatureClassUtil.cs" />
+    <Compile Include="HelperClass\FeatureQueryUtil.cs" />
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
     <Compile Include="HelperClass\LayerManager.cs" />
     <Compile Include="HelperClass\LayerUtil.cs" />
@@ -225,11 +227,19 @@
     <Compile Include="LayerCommand\LayerVisibility.cs" />
     <Compile Include="LayerCommand\RemoveLayer.cs" />
     <Compile Include="LayerCommand\ZoomToLayer.cs" />
+    <Compile Include="ProInfoWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProInfoWindow.Designer.cs">
+      <DependentUpon>ProInfoWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="QueryAndUIDeal\ISpatialQueryUI.cs" />
+    <Compile Include="QueryAndUIDeal\SpatialQueryUIClass.cs" />
     <Compile Include="RasterAnalysis\IRoadRaskCaculate.cs" />
     <Compile Include="RasterAnalysis\IRoadRisk.cs" />
     <Compile Include="RasterAnalysis\RasterHelper.cs" />
@@ -308,6 +318,9 @@
     <EmbeddedResource Include="MainFrom.resx">
       <DependentUpon>MainFrom.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProInfoWindow.resx">
+      <DependentUpon>ProInfoWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProListView.resx">
       <DependentUpon>ProListView.cs</DependentUpon>
