@@ -128,7 +128,6 @@
             this.axTOCControl1.Size = new System.Drawing.Size(239, 546);
             this.axTOCControl1.TabIndex = 0;
             this.axTOCControl1.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl1_OnMouseDown);
-          //  this.axTOCControl1.OnMouseMove += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseMoveEventHandler(this.axTOCControl1_OnMouseMove);
             // 
             // toolStrip2
             // 
@@ -212,8 +211,8 @@
             this.toolStripButton9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton9.Image")));
             this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton9.Name = "toolStripButton9";
-            this.toolStripButton9.Size = new System.Drawing.Size(76, 22);
-            this.toolStripButton9.Text = "拉框查询";
+            this.toolStripButton9.Size = new System.Drawing.Size(88, 22);
+            this.toolStripButton9.Text = "矩形框查询";
             this.toolStripButton9.Click += new System.EventHandler(this.LayerSelect_Click);
             // 
             // toolStripLabel3
@@ -225,6 +224,7 @@
             // 
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(140, 25);
+            this.toolStripComboBox2.Enter += new System.EventHandler(this.toolStripComboBox2_Enter);
             // 
             // toolStripLabel4
             // 

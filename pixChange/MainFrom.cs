@@ -384,16 +384,18 @@ namespace pixChange
         {
             if( m_cTool == CustomTool.RectSelect)
             {
+                this.toolStripButton9.Text = "矩形框查询";
                 m_cTool = CustomTool.None;
                 return;
             }
-            if (toolComboBox.SelectedItem ==null)
+            if (string.IsNullOrEmpty(toolComboBox.Text))
             {
                 MessageBox.Show("请先选择操作图层");
                 return;
             }
             //改变鼠标形状
             m_mapControl.MousePointer = esriControlsMousePointer.esriPointerArrow;
+            this.toolStripButton9.Text = "停止查询";
             // //将mapcontrol的tool设为nothing，不然会影响效果
             m_mapControl.CurrentTool = null;
             m_cTool = CustomTool.RectSelect;
@@ -669,6 +671,16 @@ namespace pixChange
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void axMapControl1_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
+        {
+            UpdateLayerCombox();
+        }
+
+        private void toolStripComboBox2_Enter(object sender, EventArgs e)
+        {
+            toolStripComboBox2.SelectedText = "";
+            UpdateLayerCombox();
+        }
+        private void UpdateLayerCombox()
         {
             toolStripComboBox2.Items.Clear();
             List<ILayer> layers = MapUtil.GetAllLayers(this.axMapControl1);

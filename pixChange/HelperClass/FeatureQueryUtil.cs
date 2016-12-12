@@ -49,7 +49,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                     spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelContains;
                     break;
                 case esriGeometryType.esriGeometryPolyline:
-                    spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelCrosses;
+                    spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelEnvelopeIntersects;
                     break;
                 case esriGeometryType.esriGeometryPolygon:
                     spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
