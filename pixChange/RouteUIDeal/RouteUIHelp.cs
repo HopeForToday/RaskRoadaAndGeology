@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RoadRaskEvaltionSystem.RouteUIDeal
 {
@@ -28,40 +29,13 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         {
             this.simpleRrouteDecide = simpleRrouteDecide;
         }
-        //设置公路分级显示
-        public void SetRoutesGrade(ILayer layer)
-        {
-            //四级公路符号
-            ILineSymbol pOutline4 = new SimpleLineSymbolClass();
-            //三级公路符号
-            ILineSymbol pOutline3 = new SimpleLineSymbolClass();
-            //等外公路符号
-            ILineSymbol pOutlineEqual = new SimpleLineSymbolClass();
-            //其它公路符号
-            ILineSymbol pOutlineOther = new SimpleLineSymbolClass();
-            pOutline4.Color = SymbolUtil.GetColor(255, 0, 0);
-            pOutline4.Width = 2;
-            pOutline3.Color = SymbolUtil.GetColor(0, 255, 0);
-            pOutline3.Width = 1.5;
-            pOutlineEqual.Color = SymbolUtil.GetColor(0, 255, 255);
-            pOutlineEqual.Width = 1.2;
-            pOutlineOther.Color = SymbolUtil.GetColor(0, 0, 255);
-            pOutlineOther.Width = 1;
-            IDictionary<string, ISymbol> symbolDic = new Dictionary<string, ISymbol>();
-            symbolDic.Add("四级", pOutline4 as ISymbol);
-            symbolDic.Add("三级", pOutline3 as ISymbol);
-            symbolDic.Add("等外", pOutlineEqual as ISymbol);
-            symbolDic.Add("其他", pOutlineOther as ISymbol);
-            LayerManager.SetLayerGraderSymbol(layer, "RTEG", symbolDic);
-        }
-
         /// <summary>
         /// 更新经过点和障碍点标志
         /// </summary>
         /// <param name="mapControl"></param>
         /// <param name="newStopPoints"></param>
         /// <param name="newBarryPoints"></param>
-        void UpdateSymbol(AxMapControl mapControl, List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
+        public void UpdateSymbol(AxMapControl mapControl, List<IPoint> newStopPoints, List<IPoint> newBarryPoints)
         {
             SymbolUtil.ClearElement(mapControl);
             foreach (var point in newStopPoints)
@@ -133,7 +107,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             return true;
         }
         /// <summary>
-        /// 对公路网图层进行处理
+        /// 对公路网图层进行处理 线程安全
         /// 如果有则将其提取到第一个位置
         /// 如果没有直接加载
         /// </summary>
@@ -158,7 +132,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
                 }
                 else
                 {
-                    mapControl.Map.DeleteLayer(routeNetLayer);
+                        mapControl.Map.DeleteLayer(routeNetLayer);
                 }
                 mapControl.AddLayer(routeNetLayer);
             }
@@ -200,11 +174,16 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             mapControl.Refresh();
         }
-
-        public bool FindTheShortRoute(AxMapControl mapControl, List<IPoint> stopPoints, List<IPoint> barryPoints, IFeatureLayer routeNetLayer)
+        /// <summary>
+        /// 最短路径路径方法
+        /// </summary>
+        /// <param name="mapControl"></param>
+        /// <param name="stopPoints"></param>
+        /// <param name="barryPoints"></param>
+        /// <param name="routeNetLayer"></param>
+        /// <returns></returns>
+        public bool FindTheShortRoute(AxMapControl mapControl, List<IPoint> stopPoints, List<IPoint> barryPoints, IFeatureLayer routeNetLayer, ref ILayer layer, ref List<IPoint> newStopPoints, ref List<IPoint> newBarryPoints)
         {
-            List<IPoint> newStopPoints = null;
-            List<IPoint> newBarryPoints = null;
             bool pointIsRight = false;
             TimeSpan ts1 = new TimeSpan(DateTime.Now.Ticks);
             pointIsRight = UpdatePointsToRouteCore(routeNetLayer as IFeatureLayer, stopPoints, barryPoints, ref newStopPoints, ref newBarryPoints);
@@ -215,11 +194,42 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             {
                 throw new PointIsFarException("请检查点位是否太过远离图层");
             }
-            UpdateSymbol(mapControl, newStopPoints, newBarryPoints);
-            bool result = simpleRrouteDecide.QueryTheRoue(mapControl, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints);
-            return result;
-
+            return  simpleRrouteDecide.QueryTheRoue(mapControl, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", newStopPoints, newBarryPoints,ref layer);
+        }
+        /// <summary>
+        /// 路线结果显示方法 线程安全
+        /// </summary>
+        /// <param name="featureLayer"></param>
+        /// <param name="mapControl"></param>
+        public void showRouteShape(IFeatureLayer featureLayer, AxMapControl mapControl)
+        {
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.WhereClause = "";
+            IFeatureCursor pCursor = featureLayer.FeatureClass.Search(pQueryFilter, false);
+            mapControl.Map.AreaOfInterest = featureLayer.AreaOfInterest;
+            //实际上路线分析结果只有一个要素 只是为了保险
+            IFeature pFeature = pCursor.NextFeature();
+            while (pFeature != null)
+            {
+                #region 更新地图显示范围为要素范围
+                    ShowRouteMethod(mapControl, pFeature);
+                #endregion
+                SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
+                pFeature = pCursor.NextFeature();
+            }
         }
 
+        private static void ShowRouteMethod(AxMapControl mapControl, IFeature pFeature)
+        {
+            IEnvelope pEnvelope = pFeature.Extent;
+            double width = pEnvelope.Width;
+            double height = pEnvelope.Height;
+            pEnvelope.XMax += width * 1.5;
+            pEnvelope.XMin -= width * 1.5;
+            pEnvelope.YMax += height * 1.5;
+            pEnvelope.YMin -= height * 1.5;
+            mapControl.Extent = pEnvelope;
+            SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
+        }
     }
 }

@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using RoadRaskEvaltionSystem.RouteUIDeal;
 using RoadRaskEvaltionSystem.QueryAndUIDeal;
+using System.Threading;
 
 namespace pixChange
 {
@@ -526,7 +527,7 @@ namespace pixChange
  
         //计算最优路线
         //最后可以考虑使用async进行异步查询
-        private void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private  void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             #region 注释
             /*
@@ -569,14 +570,38 @@ namespace pixChange
             }
             try
             {
-                ProInfoWindow proWindow = new ProInfoWindow();
-                proWindow.Show();
-                bool result = routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer);
-                proWindow.Close();
+                //Thread thread = new Thread(() =>{
+                //    proWindow.Invoke((MethodInvoker)(() => proWindow.Show()));
+                //});
+                //thread.Start();
+                //      proWindow.Show();
+                //       System.Threading.Thread.Sleep(100);
+                //Thread thread = new Thread(() =>
+                //{
+                //     routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer);
+                //});
+                ILayer routeLayer = null;
+                List<IPoint> newStopPoints = new List<IPoint>();
+                List<IPoint> newBarryPoints = new List<IPoint>();
+                Debug.Print("当前运行线程："+Thread.CurrentThread.ManagedThreadId);
+                Func<bool> routdelegate = new Func<bool>(() => routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer, ref routeLayer, ref newStopPoints, ref newBarryPoints));
+                IAsyncResult asyncResult = routdelegate.BeginInvoke(null, null);
+               // ProInfoWindow proWindow = new ProInfoWindow();
+              //  proWindow.Show();
+                bool result = routdelegate.EndInvoke(asyncResult);
+         //       bool result = routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer, ref routeLayer, ref newStopPoints, ref newBarryPoints);
+              //  proWindow.Close();
+                Debug.Print("当前运行线程：" + Thread.CurrentThread.ManagedThreadId);
+                //更新点位标志
+                routeUI.UpdateSymbol(this.axMapControl1, newStopPoints, newBarryPoints);
                 if (!result)
                 {
                     MessageBox.Show("查询失败");
+                    return;
                 }
+                //显示路线
+                routeUI.showRouteShape(routeLayer as IFeatureLayer, this.axMapControl1);
+                this.axMapControl1.Refresh();
             }
             catch (PointIsFarException e1)
             {

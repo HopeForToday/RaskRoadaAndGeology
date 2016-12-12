@@ -24,7 +24,8 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         /// <param name="ndsName"></param>
         /// <param name="stopPoints"></param>
         /// <param name="barryPoints"></param>
+        /// <param name="routeLayer"></param>
         /// <returns></returns>
-        bool QueryTheRoue(AxMapControl mapControl, IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, List<IPoint> stopPoints, List<IPoint> barryPoints);
+        bool QueryTheRoue(ESRI.ArcGIS.Controls.AxMapControl mapControl, ESRI.ArcGIS.Carto.IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, List<ESRI.ArcGIS.Geometry.IPoint> stopPoints, List<ESRI.ArcGIS.Geometry.IPoint> barryPoints, ref ILayer routeLayer);
     }
 }

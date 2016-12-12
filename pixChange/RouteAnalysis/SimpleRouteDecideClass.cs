@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RoadRaskEvaltionSystem.RouteAnalysis
 {
@@ -26,8 +27,9 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
         /// <param name="ndsName"></param>
         /// <param name="stopPoints"></param>
         /// <param name="barryPoints"></param>
+        /// <param name="routeLayer"></param>
         /// <returns></returns>
-        public bool QueryTheRoue(ESRI.ArcGIS.Controls.AxMapControl mapControl, ESRI.ArcGIS.Carto.IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, List<ESRI.ArcGIS.Geometry.IPoint> stopPoints, List<ESRI.ArcGIS.Geometry.IPoint> barryPoints)
+        public bool QueryTheRoue(ESRI.ArcGIS.Controls.AxMapControl mapControl, ESRI.ArcGIS.Carto.IFeatureLayer featureLayer, string dbPath, string featureSetName, string ndsName, List<ESRI.ArcGIS.Geometry.IPoint> stopPoints, List<ESRI.ArcGIS.Geometry.IPoint> barryPoints, ref ILayer routeLayer)
         {
            // List<IPoint>   newStopPoints;
           //  List<IPoint>  newBarryPoints;
@@ -51,43 +53,13 @@ namespace RoadRaskEvaltionSystem.RouteAnalysis
             IDictionary<string, DecorateRouteFeatureClass> featureClasses = new Dictionary<string, DecorateRouteFeatureClass>();
             featureClasses.Add("Stops", new DecorateRouteFeatureClass(0.2,stopFeatureClass));
             featureClasses.Add("Barriers", new DecorateRouteFeatureClass(0.2,barriesFeatureClass));
-            ILayer routeLayer=null;
             //最短路径分析
             bool result=NormalNetworkUtil.Short_Path(mapControl, dbPath, featureSetName, ndsName, featureClasses, false, false, ref routeLayer);
-            if (result)
-            {
-                showRouteShape(routeLayer as IFeatureLayer, mapControl);
-            }
+            //if (result)
+           //    {
+          //        showRouteShape(routeLayer as IFeatureLayer, mapControl);
+          //  }
             return result;
-        }
-        /// <summary>
-        /// 路线结果显示方法
-        /// </summary>
-        /// <param name="featureLayer"></param>
-        /// <param name="mapControl"></param>
-        private void showRouteShape(IFeatureLayer featureLayer, AxMapControl mapControl)
-        {
-            IQueryFilter pQueryFilter = new QueryFilter();
-            pQueryFilter.WhereClause = "";
-            IFeatureCursor pCursor=featureLayer.FeatureClass.Search(pQueryFilter, false);
-            mapControl.Map.AreaOfInterest = featureLayer.AreaOfInterest;
-            //实际上路线分析结果只有一个要素 只是为了保险
-            IFeature pFeature = pCursor.NextFeature();
-            while (pFeature != null)
-            {
-                #region 更新地图显示范围为要素范围
-                IEnvelope pEnvelope = pFeature.Extent;
-                double width = pEnvelope.Width;
-                double height = pEnvelope.Height;
-                pEnvelope.XMax += width * 1.5;
-                pEnvelope.XMin -= width * 1.5;
-                pEnvelope.YMax += height * 1.5;
-                pEnvelope.YMin -= height * 1.5;
-                mapControl.Extent = pEnvelope;
-                #endregion
-                SymbolUtil.DrawLineSymbol(mapControl, pFeature.Shape as IGeometry);
-                pFeature = pCursor.NextFeature();
-            }
         }
     }
 }
