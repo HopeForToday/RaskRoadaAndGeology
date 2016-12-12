@@ -31,6 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ok = new System.Windows.Forms.Button();
             this.exCheckedListBox1 = new CustomControls.ExCheckedListBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -63,17 +65,35 @@
             this.exCheckedListBox1.TabIndex = 6;
             this.exCheckedListBox1.Value = 0;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(149, 7);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "其它文件";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "矢量文件|*.shp|栅格文件|*.tif";
+            this.openFileDialog1.Multiselect = true;
+            this.openFileDialog1.ShowHelp = true;
+            // 
             // LayerMangerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(348, 420);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.exCheckedListBox1);
             this.Controls.Add(this.ok);
             this.Controls.Add(this.label1);
             this.Name = "LayerMangerView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LayerMangerView";
+            this.Text = "数据添加";
             this.Load += new System.EventHandler(this.LayerMangerView_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -86,5 +106,7 @@
         //private CustomControls.ExCheckedListBox exCheckedListBox1;
         private System.Windows.Forms.Button ok;
         private CustomControls.ExCheckedListBox exCheckedListBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

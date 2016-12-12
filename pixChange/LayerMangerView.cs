@@ -13,6 +13,8 @@ using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using RoadRaskEvaltionSystem.HelperClass;
 using pixChange.HelperClass;
+using RoadRaskEvaltionSystem;
+using System.Diagnostics;
 namespace pixChange
 {
     public partial class LayerMangerView : Form
@@ -238,6 +240,43 @@ namespace pixChange
             int y = MainFrom.m_mapControl.LayerCount;
             judeLayer();
             exCheckedListBox1.SelectedIndexChanged += exCheckedListBox1_SelectedIndexChanged_1;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string[] fileNames = openFileDialog1.FileNames;
+                AddFileToMapControl(fileNames);
+            }
+        }
+        /// <summary>
+        /// 添加图层到mapcontrol当中
+        /// </summary>
+        /// <param name="fileNames"></param>
+        private void AddFileToMapControl(string []fileNames)
+        {
+            foreach(var fileName in fileNames)
+            {
+                try
+                {
+                    ILayer layer = null;
+                    string extension = System.IO.Path.GetExtension(fileName);
+                    if (extension == ".shp")
+                    {
+                        layer = ShapeSimpleHelper.OpenFile(fileName);
+                    }
+                    else if (extension == ".tif")
+                    {
+                        layer = RasterSimpleHelper.OpenRasterFile(fileName);
+                    }
+                    MainFrom.m_mapControl.AddLayer(layer);
+                }
+                catch(Exception e)
+                {
+                    Debug.Print(e.Message);
+                }
+            }
         }
     }
 }
