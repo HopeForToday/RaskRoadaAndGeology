@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrom));
-            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
+            DevExpress.Utils.Animation.PushTransition pushTransition2 = new DevExpress.Utils.Animation.PushTransition();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.axTOCControl1 = new ESRI.ArcGIS.Controls.AxTOCControl();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -46,7 +46,6 @@
             this.toolStripComboBox2 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.axMapControl1 = new ESRI.ArcGIS.Controls.AxMapControl();
             this.formAssistant1 = new DevExpress.XtraBars.FormAssistant();
             this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
@@ -86,6 +85,7 @@
             this.barButtonItem19 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem20 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem21 = new DevExpress.XtraBars.BarButtonItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -143,8 +143,7 @@
             this.toolStripLabel3,
             this.toolStripComboBox2,
             this.toolStripLabel4,
-            this.toolStripSeparator6,
-            this.toolStripButton1});
+            this.toolStripSeparator6});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(660, 25);
@@ -238,14 +237,6 @@
             this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
             this.toolStripSeparator6.Visible = false;
             // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            // 
             // axMapControl1
             // 
             this.axMapControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -312,7 +303,7 @@
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
-            this.workspaceManager1.TransitionType = pushTransition1;
+            this.workspaceManager1.TransitionType = pushTransition2;
             // 
             // barSubItem1
             // 
@@ -556,6 +547,10 @@
             this.barButtonItem21.ImageUri.Uri = "Customization";
             this.barButtonItem21.Name = "barButtonItem21";
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -632,7 +627,6 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem5;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
         private DevExpress.XtraBars.BarButtonItem barButtonItem14;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem15;
         private DevExpress.XtraBars.BarButtonItem barButtonItem16;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
@@ -643,6 +637,7 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem21;
         private DevExpress.XtraBars.BarButtonItem barButtonItem22;
         private DevExpress.XtraBars.BarButtonItem barButtonItem23;
+        private System.Windows.Forms.Timer timer1;
    
     }
 }

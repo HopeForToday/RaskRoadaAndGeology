@@ -37,8 +37,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="layerName"></param>
         /// <param name="gLayer"></param>
         /// <returns></returns>
-        public static ILayer QueryLayerInMap(AxMapControl mapControl, string layerName, ref IGroupLayer gLayer)
+        public static ILayer QueryLayerInMap(AxMapControl mapControl, string layerName, ref IGroupLayer gLayer,out int layerIndex,out int groupIndex)
         {
+            layerIndex = -1;
+            groupIndex = -1;
             ILayer queryLayer = null;
             for (int i = 0; i < mapControl.Map.LayerCount; i++)
             {
@@ -46,11 +48,12 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 if (tempLayer is IGroupLayer)
                 {
                     IGroupLayer tempGlayer = tempLayer as IGroupLayer;
-                    ILayer querylayer2 = QueryLayerInGroupLayer(layerName, tempGlayer);
+                    ILayer querylayer2 = QueryLayerInGroupLayer(layerName, tempGlayer, ref layerIndex);
                     if (querylayer2 != null)
                     {
                         queryLayer = querylayer2;
                         gLayer = tempGlayer;
+                        groupIndex=i;
                         break;
                     }
                 }
@@ -59,20 +62,23 @@ namespace RoadRaskEvaltionSystem.HelperClass
                     if (tempLayer.Name == layerName)
                     {
                         queryLayer = tempLayer;
+                        layerIndex=i;
                         break;
                     }
                 }
             }
             return queryLayer;
         }
-        /// <summary>
+      /// <summary>
         /// 在组合图层中查找对应图层
-        /// </summary>
-        /// <param name="layerName"></param>
-        /// <param name="groupLayer"></param>
-        /// <returns></returns>
-         public static ILayer QueryLayerInGroupLayer(string layerName, IGroupLayer groupLayer)
+      /// </summary>
+      /// <param name="layerName"></param>
+      /// <param name="groupLayer"></param>
+      /// <param name="index"></param>
+      /// <returns></returns>
+         public static ILayer QueryLayerInGroupLayer(string layerName, IGroupLayer groupLayer,ref int index)
         {
+             index=-1;
             ILayer queryLayer = null;
             ICompositeLayer compositeLayer=groupLayer as ICompositeLayer;
             for (int i = 0; i < compositeLayer.Count; i++)
@@ -81,6 +87,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 if (tempLayer.Name == layerName)
                 {
                     queryLayer = tempLayer;
+                    index=i;
                     break;
                 }
             }

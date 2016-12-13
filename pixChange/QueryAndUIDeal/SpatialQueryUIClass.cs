@@ -32,7 +32,9 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
             {
                 return;
             }
-            IFeatureLayer pFeatureLayer = LayerUtil.QueryLayerInMap(mapControl, layerName, ref gLayer) as IFeatureLayer;
+            int gIndex;
+            int layerIndex;
+            IFeatureLayer pFeatureLayer = LayerUtil.QueryLayerInMap(mapControl, layerName, ref gLayer,out layerIndex,out gIndex) as IFeatureLayer;
             if (pFeatureLayer == null)
             {
                 return;

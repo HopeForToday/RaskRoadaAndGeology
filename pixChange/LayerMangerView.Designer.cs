@@ -78,7 +78,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "矢量文件|*.shp|栅格文件|*.tif";
+            this.openFileDialog1.Filter = "shp|*.shp|tif|*.tif";
             this.openFileDialog1.Multiselect = true;
             this.openFileDialog1.ShowHelp = true;
             // 

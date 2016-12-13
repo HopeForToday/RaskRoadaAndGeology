@@ -1,5 +1,4 @@
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\bin\Release\CustomControls.dll
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\bin\Release\CustomControls.pdb
-E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Release\CustomControls.csprojResolveAssemblyReference.cache
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Release\CustomControls.dll
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Release\CustomControls.pdb

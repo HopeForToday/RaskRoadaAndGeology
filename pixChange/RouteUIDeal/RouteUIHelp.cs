@@ -115,7 +115,9 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         public ILayer DealRoutenetLayer(AxMapControl mapControl)
         {
             IGroupLayer myGroupLayer = null;
-            ILayer routeNetLayer = LayerUtil.QueryLayerInMap(mapControl, "公路网", ref myGroupLayer);
+            int gIndex;
+            int layerIndex;
+            ILayer routeNetLayer = LayerUtil.QueryLayerInMap(mapControl, "公路网", ref myGroupLayer,out layerIndex,out gIndex);
             //如果公路网的数据没有加载，则直接加载
             if (routeNetLayer == null)
             {
@@ -123,7 +125,11 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
                 RouteLayerUtil.SetRouteLayerStyle(routeNetLayer);
                 mapControl.AddLayer(routeNetLayer);
             }
-            //否则 先移除 再加载 保证在第一个位置 也就是图层最上面
+            //否则 保证在第一个位置 也就是图层最上面
+            if(gIndex<1&&layerIndex==0)
+            {
+                routeNetLayer.Visible=true;
+            }
             else
             {
                 if (myGroupLayer != null)
