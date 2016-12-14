@@ -62,7 +62,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
                 mapControl.Map.SelectFeature(pFeatureLayer,pFeature);
                 pFeature = pFeatureCursor.NextFeature();
             }
-            mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+       //     mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
             return featurers;
         }
         /// <summary>

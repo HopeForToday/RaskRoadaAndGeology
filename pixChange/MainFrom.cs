@@ -356,7 +356,7 @@ namespace pixChange
                 case CustomTool.RectSelect:
                     IEnvelope pRect = m_mapControl.TrackRectangle();
                     spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,this.toolStripComboBox2.Text);
-                  //  MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                    this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     break;
 
                 case CustomTool.Pan:
@@ -382,6 +382,8 @@ namespace pixChange
             {
                 this.toolStripButton9.Text = "矩形框查询";
                 m_cTool = CustomTool.None;
+                this.axMapControl1.Map.ClearSelection();
+                this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                 return;
             }
             if (string.IsNullOrEmpty(toolComboBox.Text))
@@ -527,7 +529,7 @@ namespace pixChange
         //最后可以考虑使用async进行异步查询
         private  void barButtonItem16_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            #region 注释
+            #region 注释 之前方案
             /*
             this.isInserting = false;
             if (breakPoint == null)
@@ -566,14 +568,53 @@ namespace pixChange
                 MessageBox.Show("未找到公路网图层");
                 return;
             }
+            #region 临时同步方案
             //Thread thread = new Thread(() =>
             //{
             //  //  toolStrip2.Invoke((MethodInvoker)(() => toolStripButton1.Text = "正在查询"));
             //});
             //thread.Start();
-             infoWindow = new ProInfoWindow();
+            infoWindow = new ProInfoWindow();
             infoWindow.Show();
             timer1.Enabled = true;
+            #endregion
+      
+            #region .net1.0方案
+            //try
+            //{
+            //    ILayer routeLayer = null;
+            //    List<IPoint> newStopPoints = new List<IPoint>();
+            //    List<IPoint> newBarryPoints = new List<IPoint>();
+            //    Debug.Print("当前运行线程：" + Thread.CurrentThread.ManagedThreadId);
+            //    Func<bool> routdelegate = new Func<bool>(() => routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, routeNetLayer as IFeatureLayer, ref routeLayer, ref newStopPoints, ref newBarryPoints));
+            //    IAsyncResult asyncResult = routdelegate.BeginInvoke(null, null);
+            //     ProInfoWindow proWindow = new ProInfoWindow();
+            //      proWindow.Show();
+            //    bool result = routdelegate.EndInvoke(asyncResult);
+            //    //       bool result = routeUI.FindTheShortRoute(this.axMapControl1, stopPoints, barryPoints, layer as IFeatureLayer, ref routeLayer, ref newStopPoints, ref newBarryPoints);
+            //    Thread.Sleep(1000);
+            //    proWindow.Close();
+            //    Debug.Print("当前运行线程：" + Thread.CurrentThread.ManagedThreadId);
+            //    //更新点位标志
+            //    routeUI.UpdateSymbol(this.axMapControl1, newStopPoints, newBarryPoints);
+            //    if (!result)
+            //    {
+            //        MessageBox.Show("查询失败");
+            //        return;
+            //    }
+            //    //显示路线
+            //    routeUI.showRouteShape(routeLayer as IFeatureLayer, this.axMapControl1);
+            //    this.axMapControl1.Refresh();
+            //}
+            //catch (PointIsFarException e1)
+            //{
+            //    MessageBox.Show(e1.Message);
+            //}
+            //catch (NetworkDbException e2)
+            //{
+            //    MessageBox.Show(e2.Message);
+            //}
+            #endregion
         }
      
         //指针按钮事件  去除其它操作鼠标命令

@@ -39,10 +39,10 @@
             this.DataGrdView.AllowUserToDeleteRows = false;
             this.DataGrdView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DataGrdView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGrdView.Location = new System.Drawing.Point(0, 28);
+            this.DataGrdView.Location = new System.Drawing.Point(0, 10);
             this.DataGrdView.Name = "DataGrdView";
             this.DataGrdView.RowTemplate.Height = 23;
-            this.DataGrdView.Size = new System.Drawing.Size(770, 339);
+            this.DataGrdView.Size = new System.Drawing.Size(770, 357);
             this.DataGrdView.TabIndex = 0;
             // 
             // panel1
@@ -50,7 +50,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(770, 28);
+            this.panel1.Size = new System.Drawing.Size(770, 10);
             this.panel1.TabIndex = 1;
             // 
             // ProListView
@@ -62,7 +62,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "ProListView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ProListView";
+            this.Text = "属性表";
             ((System.ComponentModel.ISupportInitialize)(this.DataGrdView)).EndInit();
             this.ResumeLayout(false);
 
