@@ -1,5 +1,6 @@
 ﻿using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.Geodatabase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,14 @@ namespace RoadRaskEvaltionSystem.HelperClass
             }
             return queryLayer;
         }
-
+         public static List<IField> GetLayerFields(IFeatureLayer layer)
+         {
+             List<IField> fields = new List<IField>();
+             for (int i = 0; i < layer.FeatureClass.Fields.FieldCount; i++)
+             {
+                 fields.Add(layer.FeatureClass.Fields.get_Field(i));
+             }
+             return fields;
+         }
     }
 }

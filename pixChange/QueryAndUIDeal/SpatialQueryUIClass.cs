@@ -25,7 +25,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
        /// <param name="mapControl"></param>
        /// <param name="pGeometry"></param>
        /// <param name="layerName"></param>
-        public void DealFeatureQuery(AxMapControl mapControl ,IGeometry pGeometry, string layerName)
+        public void DealFeatureQuery(AxMapControl mapControl, IGeometry pGeometry, string queryStr, string layerName)
         {
             IGroupLayer gLayer = null;
             if (string.IsNullOrEmpty(layerName))
@@ -40,8 +40,16 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
                 return;
             }
             IQueryFilter queryFilter=null;
-            IFeatureCursor pFeatureCursor = FeatureQueryUtil.QueryFeatureInLayer(pFeatureLayer, pGeometry, ref queryFilter);
-            IList<IFeature> features=FlashFeatureShape(mapControl, pFeatureLayer, pFeatureCursor);
+            IFeatureCursor pFeatureCursor = null;
+            if (string.IsNullOrEmpty(queryStr))
+            {
+                 pFeatureCursor = FeatureQueryUtil.QueryFeatureInLayer(pFeatureLayer, pGeometry, ref queryFilter);
+            } 
+            else
+            {
+                pFeatureCursor = FeatureQueryUtil.QueryFeatureInLayer(pFeatureLayer,queryStr, ref queryFilter);
+            }
+            IList<IFeature> features = FlashFeatureShape(mapControl, pFeatureLayer, pFeatureCursor);
             ShowFeatureDetail(pFeatureLayer, features);
         }
         /// <summary>

@@ -20,6 +20,6 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
         /// <param name="mapControl"></param>
         /// <param name="pGeometry"></param>
         /// <param name="layerName"></param>
-         void DealFeatureQuery(AxMapControl mapControl, IGeometry pGeometry, string layerName);
+         void DealFeatureQuery(AxMapControl mapControl, IGeometry pGeometry, string queryStr,string layerName);
     }
 }

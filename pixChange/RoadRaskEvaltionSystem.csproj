@@ -238,6 +238,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PropertyQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyQueryForm.Designer.cs">
+      <DependentUpon>PropertyQueryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="QueryAndUIDeal\ISpatialQueryUI.cs" />
     <Compile Include="QueryAndUIDeal\SpatialQueryUIClass.cs" />
     <Compile Include="RasterAnalysis\IRoadRaskCaculate.cs" />
@@ -330,6 +336,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyQueryForm.resx">
+      <DependentUpon>PropertyQueryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RoadRangeControl.resx">
       <DependentUpon>RoadRangeControl.cs</DependentUpon>

@@ -176,7 +176,8 @@ namespace pixChange
             object other = null;
             object index = null;
             m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);
-            if (e.button == 2)//右键
+            //右键命令
+            if (e.button == 2)
             {
                 m_mapControl.CustomProperty = layer;
                 if (item == esriTOCControlItem.esriTOCControlItemMap)//点击的是地图
@@ -191,6 +192,33 @@ namespace pixChange
                     //setSecAndEdit(layer.Name);
                     layerMenu.PopupMenu(e.x, e.y, m_pTocControl.hWnd);
                 }
+            }
+            //左键移动
+            if(e.button==1)
+            {
+                if(item==esriTOCControlItem.esriTOCControlItemLayer)
+                {
+                    removeLayer = layer;
+                }
+            }
+        }
+        private ILayer removeLayer = null;
+        private void axTOCControl1_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
+        {
+           
+        }
+
+        private void axMapControl1_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
+        {
+            esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
+            IBasicMap map = null;
+            ILayer layer = null;
+            object other = null;
+            object index = null;
+            m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);
+            if (item == esriTOCControlItem.esriTOCControlItemLayer)
+            {
+
             }
         }
         //放大
@@ -355,7 +383,7 @@ namespace pixChange
                     break;
                 case CustomTool.RectSelect:
                     IEnvelope pRect = m_mapControl.TrackRectangle();
-                    spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,this.toolStripComboBox2.Text);
+                    spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,null,this.toolStripComboBox2.Text);
                     this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     break;
 
@@ -770,5 +798,12 @@ namespace pixChange
             //   }
             #endregion
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            new PropertyQueryForm(this.toolStripComboBox2.Text,this.axMapControl1).ShowDialog();
+        }
+
+
     }
 }
