@@ -198,27 +198,41 @@ namespace pixChange
             {
                 if(item==esriTOCControlItem.esriTOCControlItemLayer)
                 {
-                    removeLayer = layer;
+                   if (layer is IAnnotationSublayer)
+                   {
+                       return;
+                   }//如果是注记图层则返回
+                    else
+                         removeLayer = layer;
                 }
             }
         }
         private ILayer removeLayer = null;
-        private void axTOCControl1_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
+        private void axTOCControl1_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
         {
-           
-        }
-
-        private void axMapControl1_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
-        {
-            esriTOCControlItem item = esriTOCControlItem.esriTOCControlItemNone;
-            IBasicMap map = null;
-            ILayer layer = null;
-            object other = null;
-            object index = null;
-            m_pTocControl.HitTest(e.x, e.y, ref item, ref map, ref layer, ref other, ref index);
-            if (item == esriTOCControlItem.esriTOCControlItemLayer)
+            if (e.button == 1)
             {
-
+                int toIndex = -1;
+                esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone;
+                IBasicMap pBasMap = null;
+                ILayer pLayer = null;
+                object pOther = null;
+                object pIndex = null;
+                this.axTOCControl1.HitTest(e.x, e.y, ref pItem, ref pBasMap, ref pLayer, ref pOther, ref pIndex);
+                if (removeLayer != pLayer)//如果是原图层则不用操作
+                {
+                    IMap pMap = axMapControl1.Map;
+                    ILayer pTempLayer;
+                    for (int i = 0; i < pMap.LayerCount; i++)
+                    {
+                        pTempLayer = pMap.get_Layer(i);
+                        if (pTempLayer == pLayer)//获取移动后的图层索引
+                            toIndex = i;
+                    }
+                    pMap.MoveLayer(removeLayer, toIndex);
+                    axMapControl1.ActiveView.Refresh();
+                    this.axTOCControl1.Update();
+                }
             }
         }
         //放大
@@ -551,6 +565,7 @@ namespace pixChange
                 SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
                 this.barryPoints.Add(point);
             }
+         //   this.axMapControl1.Refresh();
         }
  
         //计算最优路线
@@ -803,7 +818,6 @@ namespace pixChange
         {
             new PropertyQueryForm(this.toolStripComboBox2.Text,this.axMapControl1).ShowDialog();
         }
-
 
     }
 }

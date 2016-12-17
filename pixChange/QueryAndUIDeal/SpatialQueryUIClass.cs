@@ -43,11 +43,11 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
             IFeatureCursor pFeatureCursor = null;
             if (string.IsNullOrEmpty(queryStr))
             {
-                 pFeatureCursor = FeatureQueryUtil.QueryFeatureInLayer(pFeatureLayer, pGeometry, ref queryFilter);
+                 pFeatureCursor = FeatureDealUtil.QueryFeatureInLayer(pFeatureLayer, pGeometry, ref queryFilter);
             } 
             else
             {
-                pFeatureCursor = FeatureQueryUtil.QueryFeatureInLayer(pFeatureLayer,queryStr, ref queryFilter);
+                pFeatureCursor = FeatureDealUtil.QueryFeatureInLayer(pFeatureLayer,queryStr, ref queryFilter);
             }
             IList<IFeature> features = FlashFeatureShape(mapControl, pFeatureLayer, pFeatureCursor);
             ShowFeatureDetail(pFeatureLayer, features);
@@ -104,7 +104,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
         {
             if (featurers.Count != 0)
             {
-                new ProListView(pFeatureLayer, featurers).Show();
+                new ProListView(pFeatureLayer, featurers).ShowDialog();
             }
         }
         private void SetPointMarkerSymbol(ISymbol symbol)
@@ -125,7 +125,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
         private void SetPolygonMarkerSymbol(ISymbol symbol)
         {
             SimpleFillSymbolClass simpleFillSymbol = symbol as SimpleFillSymbolClass;
-            SimpleLineSymbolClass simpleLineSymbol = symbol as SimpleLineSymbolClass;
+            SimpleLineSymbolClass simpleLineSymbol = new SimpleLineSymbolClass();
             SetPolylineMarkerSymbol(simpleLineSymbol as ISymbol);
             simpleFillSymbol.Outline = simpleLineSymbol;
             simpleFillSymbol.Color = SymbolUtil.GetColor(222, 222, 222);

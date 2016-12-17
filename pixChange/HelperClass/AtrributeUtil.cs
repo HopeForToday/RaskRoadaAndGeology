@@ -107,10 +107,54 @@ namespace RoadRaskEvaltionSystem.HelperClass
             ITable table = featureLayer.FeatureClass as ITable;
             for (int i = 0; i < table.Fields.FieldCount; i++)
             {
-                DataColumn column = new DataColumn(table.Fields.get_Field(i).Name);
+                IField pField = table.Fields.get_Field(i);
+                DataColumn column = new DataColumn(pField.Name);
+                //设置字段值是否予许为空
+                column.AllowDBNull = pField.IsNullable;
+                //字段别名
+                column.Caption = pField.AliasName;
+                column.DataType = System.Type.GetType(ParseFieldType(pField.Type));
+                //字段默认值
+                column.DefaultValue = pField.DefaultValue;
+                if (pField.Type == esriFieldType.esriFieldTypeBlob || pField.Type == esriFieldType.esriFieldTypeRaster || pField.Type == esriFieldType.esriFieldTypeGeometry)
+                {
+                    column.ReadOnly = true;
+                }
                 dataTable.Columns.Add(column);
             }
             return dataTable;
+        }
+        private static string ParseFieldType(esriFieldType fieldType)
+        {
+            switch (fieldType)
+            {
+                case esriFieldType.esriFieldTypeBlob:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeDate:
+                    return "System.DateTime";
+                case esriFieldType.esriFieldTypeDouble:
+                    return "System.Double";
+                case esriFieldType.esriFieldTypeGeometry:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeGlobalID:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeGUID:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeInteger:
+                    return "System.Int32";
+                case esriFieldType.esriFieldTypeOID:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeRaster:
+                    return "System.String";
+                case esriFieldType.esriFieldTypeSingle:
+                    return "System.Single";
+                case esriFieldType.esriFieldTypeSmallInteger:
+                    return "System.Int32";
+                case esriFieldType.esriFieldTypeString:
+                    return "System.String";
+                default:
+                    return "System.String";
+            }
         }
         /// <summary>
         /// 根据要素设置Datable样式

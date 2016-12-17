@@ -3,6 +3,7 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,46 @@ using System.Threading.Tasks;
 namespace RoadRaskEvaltionSystem.HelperClass
 {
     /// <summary>
-    /// 空间查询帮助类
+    /// 空间查询与操作帮助类
     /// 2015/12/11 fhr
     /// </summary>
-    class FeatureQueryUtil
+    class FeatureDealUtil
     {
+        public static bool UpdateFeature(IList<IFeature> pfeatuers, DataTable dataTable)
+        {
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                IFeature pFeature = pfeatuers[i];
+                DataRow dRow = dataTable.Rows[i];
+                bool isUpdate = false;
+                for (int j = 0; j < dRow.ItemArray.Count(); j++)
+                {
+                    IField pField = pFeature.Fields.get_Field(j);
+                    if (pField.Editable == false)
+                    {
+                        continue;
+                    }
+                    if (pField.Type == esriFieldType.esriFieldTypeBlob || pField.Type == esriFieldType.esriFieldTypeRaster || pField.Type == esriFieldType.esriFieldTypeGeometry)
+                    {
+                        continue;
+                    }
+                    if (pFeature.get_Value(j) != dRow[j])
+                    {
+                        isUpdate = true;
+                        object value=dRow[j];
+                        if (pFeature.Fields.get_Field(j).CheckValue(value))
+                        {
+                            pFeature.set_Value(j, value);
+                        }
+                    }
+                }
+                if (isUpdate)
+                {
+                    pFeature.Store();
+                }
+            }
+            return true;
+        }
          /// <summary>
         /// 利用语句进行查询 返回游标和查询过滤类
          /// </summary>

@@ -28,50 +28,145 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DataGrdView = new System.Windows.Forms.DataGridView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGrdView)).BeginInit();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.countLabel = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
+            this.cancelBtt = new DevExpress.XtraEditors.SimpleButton();
+            this.oKbtt = new DevExpress.XtraEditors.SimpleButton();
+            this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
+            this.panelControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
+            this.panelControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
+            this.panelControl3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // DataGrdView
+            // panelControl1
             // 
-            this.DataGrdView.AllowUserToAddRows = false;
-            this.DataGrdView.AllowUserToDeleteRows = false;
-            this.DataGrdView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGrdView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGrdView.Location = new System.Drawing.Point(0, 10);
-            this.DataGrdView.Name = "DataGrdView";
-            this.DataGrdView.RowTemplate.Height = 23;
-            this.DataGrdView.Size = new System.Drawing.Size(770, 357);
-            this.DataGrdView.TabIndex = 0;
+            this.panelControl1.Controls.Add(this.countLabel);
+            this.panelControl1.Controls.Add(this.labelControl1);
+            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl1.Location = new System.Drawing.Point(0, 0);
+            this.panelControl1.Name = "panelControl1";
+            this.panelControl1.Size = new System.Drawing.Size(770, 39);
+            this.panelControl1.TabIndex = 0;
             // 
-            // panel1
+            // countLabel
             // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(770, 10);
-            this.panel1.TabIndex = 1;
+            this.countLabel.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.countLabel.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.countLabel.Location = new System.Drawing.Point(78, 12);
+            this.countLabel.Name = "countLabel";
+            this.countLabel.Size = new System.Drawing.Size(0, 14);
+            this.countLabel.TabIndex = 1;
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelControl1.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.labelControl1.Location = new System.Drawing.Point(12, 12);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(60, 14);
+            this.labelControl1.TabIndex = 0;
+            this.labelControl1.Text = "要素个数：";
+            // 
+            // panelControl2
+            // 
+            this.panelControl2.Controls.Add(this.cancelBtt);
+            this.panelControl2.Controls.Add(this.oKbtt);
+            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelControl2.Location = new System.Drawing.Point(0, 321);
+            this.panelControl2.Name = "panelControl2";
+            this.panelControl2.Size = new System.Drawing.Size(770, 46);
+            this.panelControl2.TabIndex = 1;
+            // 
+            // cancelBtt
+            // 
+            this.cancelBtt.Location = new System.Drawing.Point(479, 11);
+            this.cancelBtt.Name = "cancelBtt";
+            this.cancelBtt.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtt.TabIndex = 1;
+            this.cancelBtt.Text = "取消";
+            this.cancelBtt.Click += new System.EventHandler(this.cancelBtt_Click);
+            // 
+            // oKbtt
+            // 
+            this.oKbtt.Location = new System.Drawing.Point(90, 11);
+            this.oKbtt.Name = "oKbtt";
+            this.oKbtt.Size = new System.Drawing.Size(75, 23);
+            this.oKbtt.TabIndex = 0;
+            this.oKbtt.Text = "确定";
+            this.oKbtt.Click += new System.EventHandler(this.oKbtt_Click);
+            // 
+            // panelControl3
+            // 
+            this.panelControl3.Controls.Add(this.dataGridView);
+            this.panelControl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelControl3.Location = new System.Drawing.Point(0, 39);
+            this.panelControl3.Name = "panelControl3";
+            this.panelControl3.Size = new System.Drawing.Size(770, 282);
+            this.panelControl3.TabIndex = 2;
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(2, 2);
+            this.dataGridView.Name = "dataGridView";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.LightGray;
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView.RowTemplate.Height = 23;
+            this.dataGridView.Size = new System.Drawing.Size(766, 278);
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellMouseEnter);
+            this.dataGridView.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellMouseLeave);
             // 
             // ProListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(770, 367);
-            this.Controls.Add(this.DataGrdView);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelControl3);
+            this.Controls.Add(this.panelControl2);
+            this.Controls.Add(this.panelControl1);
             this.Name = "ProListView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "属性表";
-            ((System.ComponentModel.ISupportInitialize)(this.DataGrdView)).EndInit();
+            this.Load += new System.EventHandler(this.ProListView_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
+            this.panelControl1.ResumeLayout(false);
+            this.panelControl1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
+            this.panelControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
+            this.panelControl3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView DataGrdView;
-        private System.Windows.Forms.Panel panel1;
+        private DevExpress.XtraEditors.PanelControl panelControl1;
+        private DevExpress.XtraEditors.LabelControl countLabel;
+        private DevExpress.XtraEditors.LabelControl labelControl1;
+        private DevExpress.XtraEditors.PanelControl panelControl2;
+        private DevExpress.XtraEditors.SimpleButton cancelBtt;
+        private DevExpress.XtraEditors.SimpleButton oKbtt;
+        private DevExpress.XtraEditors.PanelControl panelControl3;
+        private System.Windows.Forms.DataGridView dataGridView;
+
 
     }
 }
