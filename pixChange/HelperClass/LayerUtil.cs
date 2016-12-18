@@ -94,6 +94,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
             }
             return queryLayer;
         }
+       /// <summary>
+       /// 获取图层所有字段
+       /// </summary>
+       /// <param name="layer"></param>
+       /// <returns></returns>
          public static List<IField> GetLayerFields(IFeatureLayer layer)
          {
              List<IField> fields = new List<IField>();

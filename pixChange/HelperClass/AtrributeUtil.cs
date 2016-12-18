@@ -116,6 +116,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 column.DataType = System.Type.GetType(ParseFieldType(pField.Type));
                 //字段默认值
                 column.DefaultValue = pField.DefaultValue;
+                if (!pField.Editable)
+                {
+                    column.ReadOnly = true;
+                }
                 if (pField.Type == esriFieldType.esriFieldTypeBlob || pField.Type == esriFieldType.esriFieldTypeRaster || pField.Type == esriFieldType.esriFieldTypeGeometry)
                 {
                     column.ReadOnly = true;
@@ -166,7 +170,23 @@ namespace RoadRaskEvaltionSystem.HelperClass
             DataTable dataTable = new DataTable("属性表");
             for (int i = 0; i < feature.Fields.FieldCount; i++)
             {
-                DataColumn column = new DataColumn(feature.Fields.get_Field(i).Name);
+                IField pField = feature.Fields.get_Field(i);
+                DataColumn column = new DataColumn(pField.Name);
+                //设置字段值是否予许为空
+                column.AllowDBNull = pField.IsNullable;
+                //字段别名
+                column.Caption = pField.AliasName;
+                column.DataType = System.Type.GetType(ParseFieldType(pField.Type));
+                //字段默认值
+                column.DefaultValue = pField.DefaultValue;
+                if (!pField.Editable)
+                {
+                    column.ReadOnly = true;
+                }
+                if (pField.Type == esriFieldType.esriFieldTypeBlob || pField.Type == esriFieldType.esriFieldTypeRaster || pField.Type == esriFieldType.esriFieldTypeGeometry)
+                {
+                    column.ReadOnly = true;
+                }
                 dataTable.Columns.Add(column);
             }
             return dataTable;

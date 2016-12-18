@@ -26,7 +26,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 for (int j = 0; j < dRow.ItemArray.Count(); j++)
                 {
                     IField pField = pFeature.Fields.get_Field(j);
-                    if (pField.Editable == false)
+                    if (!pField.Editable)
                     {
                         continue;
                     }

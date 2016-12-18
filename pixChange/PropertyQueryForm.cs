@@ -74,7 +74,7 @@ namespace RoadRaskEvaltionSystem
             }
             catch (Exception er)
             {
-                MessageBox.Show("请检查查询字符串");
+                MessageBox.Show("请检查查询语句");
                 this.queryTxtBox.Focus();
             }
         }

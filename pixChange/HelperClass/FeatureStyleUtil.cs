@@ -28,7 +28,14 @@ namespace RoadRaskEvaltionSystem.HelperClass
             mapControl.ActiveView.ContentsChanged();
             mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
         }
-        //设置线要素的样式
+        /// <summary>
+        /// 设置线要素的样式
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        /// <param name="width"></param>
+        /// <param name="featureLayer"></param>
         public static void SetFetureLineStyle(int red, int green, int blue, int width, IFeatureLayer featureLayer)
         {
             IRgbColor pRgbColor = new RgbColor(); ;
