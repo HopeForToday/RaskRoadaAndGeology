@@ -10,11 +10,160 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
 using ESRI.ArcGIS.Display;
+using System.Drawing;
 
 namespace pixChange.HelperClass
 {
     public class LayerManager
     {
+        /// <summary>
+        /// 专题图渲染（多级颜色）。参数为需要渲染的字段（数值类型）,分级数目
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="strField"></param>
+        /// <param name="numDesiredClasses"></param>
+        public static void ClassBreaksMap(IFeatureLayer layer,string strField, int numDesiredClasses)
+        {
+            double[] classes = { 147.744196, 213.149274, 506.677245, 742.234523, 1096.249126, 4864.483353 };//断点值，两端分别是渲染字段的最小值和最大值
+            IEnumColors pEnumColors;//颜色带
+            Color startColor = Color.FromArgb(100,100,190, 150);//低值颜色
+            Color endColor = Color.FromArgb(30, 0, 200, 0);//高值颜色  
+            IGeoFeatureLayer pGeoFeatureLayer;
+            ITable pTable;
+            IClassifyGEN pClassify;
+            ITableHistogram pTableHistogram;
+            IBasicHistogram pBasicHistogram;
+            object dataFrequency;
+            object dataValues;
+            int classesCount;
+            IClassBreaksRenderer pClassBreaksRenderer;
+            IColor pColor;
+            ISimpleFillSymbol pSimpleFillSymbol;
+            int breakIndex;
+            pGeoFeatureLayer = (IGeoFeatureLayer)layer;
+            pTable = (ITable)pGeoFeatureLayer.FeatureClass;
+            pTableHistogram = new BasicTableHistogramClass();
+            pBasicHistogram = (IBasicHistogram)pTableHistogram;
+            pTableHistogram.Field = strField;
+            pTableHistogram.Table = pTable;
+            pBasicHistogram.GetHistogram(out dataValues, out dataFrequency);
+            pClassify = new EqualIntervalClass();
+            try
+            {
+                pClassify.Classify(dataValues, dataFrequency, ref numDesiredClasses);
+            }
+            catch (Exception ee)
+            {
+                //MessageBox.Show(ee.Message);
+            }
+            //classes = (double[])pClassify.ClassBreaks;
+            //classes[0] = 147.744196;
+            //classes[1]=213.149274;
+            //classes[2]=506.677245;
+            //classes[3]=742.234523;
+            //classes[4]=1096.249126;
+            //classes[5] = 4864.483353;
+            classesCount = classes.GetUpperBound(0);
+            pClassBreaksRenderer = new ClassBreaksRendererClass();
+            pClassBreaksRenderer.Field = strField;
+            pClassBreaksRenderer.BreakCount = classesCount;
+            pClassBreaksRenderer.SortClassesAscending = true;
+            pEnumColors = ProduceEnumColors(startColor, endColor, classesCount);//产生色带  
+            for (breakIndex = 0; breakIndex < classesCount; breakIndex++)
+            {
+                pColor = pEnumColors.Next();
+                pSimpleFillSymbol = new SimpleFillSymbolClass();
+                pSimpleFillSymbol.Color = pColor;
+                pSimpleFillSymbol.Style = esriSimpleFillStyle.esriSFSSolid;
+                pClassBreaksRenderer.set_Symbol(breakIndex, pSimpleFillSymbol as ISymbol);
+                pClassBreaksRenderer.set_Break(breakIndex, classes[breakIndex + 1]);
+            }
+            pGeoFeatureLayer.Renderer = (IFeatureRenderer)pClassBreaksRenderer;
+            MainFrom.m_mapControl.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+        }
+        /// <summary>
+        /// 根据起点颜色、终点颜色和级别数目，产生色带
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="gradecount"></param>
+        /// <returns></returns>
+        private static IEnumColors ProduceEnumColors(Color start, Color end, int gradecount)
+        {
+            //创建一个新AlgorithmicColorRampClass对象  
+            IAlgorithmicColorRamp algColorRamp = new AlgorithmicColorRampClass();
+            algColorRamp.ToColor = ConvertColorToIColor(end);//从.net的颜色转换  
+            algColorRamp.FromColor =ConvertColorToIColor(start);
+            //设置梯度类型  
+            algColorRamp.Algorithm = esriColorRampAlgorithm.esriCIELabAlgorithm;
+            //设置颜色带颜色数量  
+            algColorRamp.Size = gradecount;
+            //创建颜色带  
+            bool bture = true;
+            algColorRamp.CreateRamp(out bture);
+            //使用IEnumColors获取颜色带  
+            return algColorRamp.Colors;
+        }
+        
+        /// <summary>
+        /// 将.net颜色转变为ESRI的颜色
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static IColor ConvertColorToIColor(Color color)
+        {
+            IColor pColor = new RgbColorClass();
+            pColor.RGB = color.B * 65536 + color.G * 256 + color.R;
+            return pColor;
+        }  
+        /// <summary>
+        /// 根据图层唯一值渲染图层
+        /// </summary>
+        /// <param name="R_pFeatureLayer"></param>
+        /// <param name="sFieldName"></param>
+        public static void UniqueValueRenderer(IFeatureLayer R_pFeatureLayer, string sFieldName)
+        {
+            IFeatureSelection R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            IFeature R_pFeature;
+            IFeatureCursor R_FeatureCursor;
+            R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            R_pFeatureSelection.Clear();
+            ISelectionSet R_pSelectionSet = R_pFeatureSelection.SelectionSet;
+            IFeatureClass R_pFeatureClass = R_pFeatureLayer.FeatureClass;
+            IQueryFilter R_pQueryFilter = new QueryFilterClass();
+            R_pQueryFilter.WhereClause = null;
+            R_FeatureCursor = R_pFeatureClass.Search(R_pQueryFilter, true);
+            R_pFeature = R_FeatureCursor.NextFeature();
+            IUniqueValueRenderer renderer = new UniqueValueRendererClass();
+            renderer.FieldCount = 1;
+            renderer.set_Field(0, sFieldName);
+            int index = R_pFeatureLayer.FeatureClass.Fields.FindField(sFieldName);
+            IRandomColorRamp rx = new RandomColorRampClass();
+            rx.MinSaturation = 15;
+            rx.MaxSaturation = 30;
+            rx.MinValue = 85;
+            rx.MaxValue = 100;
+            rx.StartHue = 0;
+            rx.EndHue = 360;
+            rx.Size = 100;
+            bool ok=true;
+            rx.CreateRamp(out ok);
+            IEnumColors RColors = rx.Colors;
+            RColors.Reset();
+            while (R_pFeature != null)
+            {
+                ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+                symd.Style = esriSimpleFillStyle.esriSFSSolid;
+                symd.Outline.Width = 1;
+                symd.Color = RColors.Next();
+                string valuestr = R_pFeature.get_Value(index).ToString();
+                renderer.AddValue(valuestr,"", symd as ISymbol);
+                R_pFeature = R_FeatureCursor.NextFeature();
+            }
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+            geoLayer.Renderer = renderer as IFeatureRenderer;
+            MainFrom.m_mapControl.Refresh();  
+        }
         /// <summary>
         /// 设置要素图片显示样式
         /// </summary>
@@ -26,7 +175,7 @@ namespace pixChange.HelperClass
             IGeoFeatureLayer geoLayer = featureLayer as IGeoFeatureLayer;
             IPictureMarkerSymbol pPicturemksb = new PictureMarkerSymbolClass();
             pPicturemksb.Size = 20;
-            pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureJPG, pictureName);
+            pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPicturePNG, pictureName);
             ISimpleRenderer simpleRender = geoLayer.Renderer as ISimpleRenderer;
             if (simpleRender == null)
             {

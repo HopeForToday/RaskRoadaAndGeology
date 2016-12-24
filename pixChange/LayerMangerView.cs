@@ -186,6 +186,18 @@ namespace pixChange
                         RouteLayerUtil.SetRouteLayerStyle(pFLayer);
                     }
                     IsEqual = Common.InsertShapeLayer(IsEqual,(ILayer)pFLayer);
+                    if (pFLayer.Name == "聚落")
+                    {
+                        LayerManager.ClassBreaksMap(pFLayer, "rkmidu", 5);
+                    }
+                    if (pFLayer.Name == "行政区")
+                    {
+                        LayerManager.UniqueValueRenderer(pFLayer, "name");
+                    }
+                    if (pFLayer.Name == "乡村点")
+                    {
+                        LayerManager.SetFeaturePictureSymbol(pFLayer, Application.StartupPath + @"\LayerImages\乡村点.png", 1);
+                    }
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
                     MainFrom.m_pTocControl.Update();
