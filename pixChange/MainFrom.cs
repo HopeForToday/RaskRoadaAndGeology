@@ -196,45 +196,81 @@ namespace pixChange
             //左键移动
             if(e.button==1)
             {
-                if(item==esriTOCControlItem.esriTOCControlItemLayer)
+                if (item == esriTOCControlItem.esriTOCControlItemLayer)
                 {
-                   if (layer is IAnnotationSublayer)
-                   {
-                       return;
-                   }//如果是注记图层则返回
-                    else
-                         removeLayer = layer;
+                    //如果是注记图层则返回
+                    if (layer is IAnnotationSublayer)
+                    {
+                        return;
+                    }
+                    //如何是组合图层的子图层
+                    if (index == null)
+                    {
+                        int removedIndex = -1;
+                        removedGroupLayer = QueryGroupLayer(layer, ref removedIndex);
+                    }
+                    removedLayer = layer;
                 }
             }
         }
-        private ILayer removeLayer = null;
+        private IGroupLayer QueryGroupLayer(ILayer layer,ref int index)
+        {
+            IGroupLayer gLayer = null;
+            int layerIndex;
+            int groupIndex;
+            if (LayerUtil.QueryLayerInMap(this.axMapControl1, layer, ref gLayer, out layerIndex, out groupIndex))
+            {
+                index = layerIndex;
+            }
+            return gLayer;
+        }
+
+        private ILayer removedLayer = null;
+        private IGroupLayer removedGroupLayer = null;
         private void axTOCControl1_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
         {
             if (e.button == 1)
             {
-                int toIndex = -1;
+            //   int toIndex = -1;
                 esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone;
                 IBasicMap pBasMap = null;
                 ILayer pLayer = null;
                 object pOther = null;
                 object pIndex = null;
                 this.axTOCControl1.HitTest(e.x, e.y, ref pItem, ref pBasMap, ref pLayer, ref pOther, ref pIndex);
-                if (removeLayer != pLayer)//如果是原图层则不用操作
+                if (pItem == esriTOCControlItem.esriTOCControlItemLayer)
                 {
-                    IMap pMap = axMapControl1.Map;
-                    ILayer pTempLayer;
-                    for (int i = 0; i < pMap.LayerCount; i++)
+                    if (removedLayer != pLayer)//如果是原图层则不用操作
                     {
-                        pTempLayer = pMap.get_Layer(i);
-                        if (pTempLayer == pLayer)//获取移动后的图层索引
-                            toIndex = i;
+                        //IMap pMap = axMapControl1.Map;
+                        //ILayer pTempLayer;
+                        //for (int i = 0; i < pMap.LayerCount; i++)
+                        //{
+                        //    pTempLayer = pMap.get_Layer(i);
+                        //    if (pTempLayer == pLayer)//获取移动后的图层索引
+                        //        toIndex = i;
+                        //}
+                        //pMap.MoveLayer(removedLayer, toIndex);
+                        IGroupLayer gLayer = null;
+                        int toIndex2 = -1;
+                        //如何是组合图层的子图层
+                        if (pIndex == null)
+                        {
+                            gLayer = QueryGroupLayer(pLayer, ref toIndex2);
+                        }
+                        object toObj = null;
+                        if (toIndex2 != -1)
+                        {
+                            toObj = (object)toIndex2;
+                        }
+                        TOCControlUtil.RemoveLayer(this.axMapControl1, removedLayer, removedGroupLayer, gLayer, toObj);
+                        axMapControl1.ActiveView.Refresh();
+                        this.axTOCControl1.Update();
                     }
-                    pMap.MoveLayer(removeLayer, toIndex);
-                    axMapControl1.ActiveView.Refresh();
-                    this.axTOCControl1.Update();
                 }
             }
         }
+
         //放大
         private void ToolButtonZoomIn_Click(object sender, EventArgs e)
         {
@@ -731,7 +767,10 @@ namespace pixChange
             List<ILayer> layers = MapUtil.GetAllLayers(this.axMapControl1);
             layers.ForEach(p =>
             {
-                toolStripComboBox2.Items.Add(p.Name);
+                if (p is FeatureLayer)
+                {
+                    toolStripComboBox2.Items.Add(p.Name);
+                }
             });
         }
 

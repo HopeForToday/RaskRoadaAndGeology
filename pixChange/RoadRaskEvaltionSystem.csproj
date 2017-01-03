@@ -202,12 +202,6 @@
     <Compile Include="ForecastDisplay.designer.cs">
       <DependentUpon>ForecastDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="HelperClass\AccessDataBase.cs" />
     <Compile Include="HelperClass\AtrributeUtil.cs" />
     <Compile Include="HelperClass\ColorHelper.cs" />
@@ -227,6 +221,7 @@
     <Compile Include="HelperClass\MegerTable.cs" />
     <Compile Include="HelperClass\NetworkDbException.cs" />
     <Compile Include="HelperClass\RouteLayerUtil.cs" />
+    <Compile Include="HelperClass\TOCControlUtil.cs" />
     <Compile Include="HelperClass\UtilityNetWorkUtil.cs" />
     <Compile Include="HelperClass\NormalNetworkUtil.cs" />
     <Compile Include="HelperClass\RainMessage.cs" />
@@ -326,9 +321,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ForecastDisplay.resx">
       <DependentUpon>ForecastDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LayerMangerView.resx">
       <DependentUpon>LayerMangerView.cs</DependentUpon>
@@ -486,6 +478,131 @@
     <None Include="bin\Debug\Rources\ConditionData\ConditionRasterData\易损性评价.tif.ovr" />
     <None Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tfw" />
     <None Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif.ovr" />
+    <None Include="bin\Release\Resource\公路\公路网.dbf" />
+    <None Include="bin\Release\Resource\公路\公路网.prj" />
+    <None Include="bin\Release\Resource\公路\公路网.sbn" />
+    <None Include="bin\Release\Resource\公路\公路网.sbx" />
+    <None Include="bin\Release\Resource\公路\公路网.shp" />
+    <None Include="bin\Release\Resource\公路\公路网.shx" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.dbf" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.prj" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.sbn" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.sbx" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.shp" />
+    <None Include="bin\Release\Resource\公路\公路网点编号.shx" />
+    <None Include="bin\Release\Resource\地图文档\ourMap.mxd" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\12绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\23绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\34绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\45绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\56绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\67绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\78绕行.shx" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.dbf" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.prj" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.sbn" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.sbx" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.shp" />
+    <None Include="bin\Release\Resource\绕行线路\89绕行.shx" />
+    <None Include="bin\Release\Resource\风险评价\dblbnd.adf" />
+    <None Include="bin\Release\Resource\风险评价\hdr.adf" />
+    <None Include="bin\Release\Resource\风险评价\prj.adf" />
+    <None Include="bin\Release\Resource\风险评价\sta.adf" />
+    <None Include="bin\Release\Resource\风险评价\w001001.adf" />
+    <None Include="bin\Release\Resource\风险评价\w001001x.adf" />
+    <None Include="bin\Release\RoadRaskEvaltionSystem.EXE.Config" />
+    <None Include="bin\Release\RoadRaskEvaltionSystem.vshost.exe.config" />
+    <None Include="bin\Release\RoadRaskEvaltionSystem.vshost.exe.manifest" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.mxd" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.mxd" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\水系.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.mxd" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.mxd" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.shx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.dbf" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.mxd" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.prj" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.sbn" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.sbx" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.shp" />
+    <None Include="bin\Release\Rources\BaseData\BaseShapeData\道路.shx" />
+    <None Include="bin\Release\Rources\ConditionAllData\ConditionAllRasterData\风险评价1.tfw" />
+    <None Include="bin\Release\Rources\ConditionAllData\ConditionAllRasterData\风险评价1.tif.ovr" />
+    <None Include="bin\Release\Rources\ConditionData\ConditionRasterData\危险性评价.tfw" />
+    <None Include="bin\Release\Rources\ConditionData\ConditionRasterData\危险性评价.tif.ovr" />
+    <None Include="bin\Release\Rources\ConditionData\ConditionRasterData\易损性评价.tfw" />
+    <None Include="bin\Release\Rources\ConditionData\ConditionRasterData\易损性评价.tif.ovr" />
+    <None Include="bin\Release\Rources\RoadData\CheckedRoad\风险评价1.tfw" />
+    <None Include="bin\Release\Rources\RoadData\CheckedRoad\风险评价1.tif.ovr" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -518,7 +635,6 @@
     <Content Include="app.ico" />
     <Content Include="bin\Debug\CustomControls.dll" />
     <Content Include="bin\Debug\HtmlAgilityPack.dll" />
-    <Content Include="bin\Debug\Images\1.jpg" />
     <Content Include="bin\Debug\Images\routebreak.jpg" />
     <Content Include="bin\Debug\Resource\公路\公路网.shp.xml" />
     <Content Include="bin\Debug\Resource\公路\公路网点编号.shp.xml" />
@@ -530,6 +646,7 @@
     <Content Include="bin\Debug\Resource\绕行线路\67绕行.shp.xml" />
     <Content Include="bin\Debug\Resource\绕行线路\78绕行.shp.xml" />
     <Content Include="bin\Debug\Resource\绕行线路\89绕行.shp.xml" />
+    <Content Include="bin\Debug\Resource\网络数据集\roadnetworks.mdb" />
     <Content Include="bin\Debug\Resource\风险评价\metadata.xml" />
     <Content Include="bin\Debug\RoadRaskEvaltionSystem.exe" />
     <Content Include="bin\Debug\RoadRaskEvaltionSystem.pdb" />
@@ -555,9 +672,56 @@
     <Content Include="bin\Debug\Rources\Images\图层.png" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif" />
     <Content Include="bin\Debug\Rources\RoadData\CheckedRoad\风险评价1.tif.aux.xml" />
-    <Content Include="bin\Debug\Rources\雨量信息.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="bin\Debug\Rources\雨量信息.mdb" />
+    <Content Include="bin\Release\app.ico" />
+    <Content Include="bin\Release\CustomControls.dll" />
+    <Content Include="bin\Release\HtmlAgilityPack.dll" />
+    <Content Include="bin\Release\Images\routebreak.jpg" />
+    <Content Include="bin\Release\Images\routebreak2.jpg" />
+    <Content Include="bin\Release\Images\stop.jpg" />
+    <Content Include="bin\Release\Images\stop2.jpg" />
+    <Content Include="bin\Release\Resource\公路\公路网.shp.xml" />
+    <Content Include="bin\Release\Resource\公路\公路网点编号.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\12绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\23绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\34绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\45绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\56绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\67绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\78绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\绕行线路\89绕行.shp.xml" />
+    <Content Include="bin\Release\Resource\网络数据集\roadnetworks.mdb" />
+    <Content Include="bin\Release\Resource\风险评价\metadata.xml" />
+    <Content Include="bin\Release\RoadRaskEvaltionSystem.exe" />
+    <Content Include="bin\Release\RoadRaskEvaltionSystem.pdb" />
+    <Content Include="bin\Release\RoadRaskEvaltionSystem.vshost.exe" />
+    <Content Include="bin\Release\Rources\BaseData\BaseRasterData\新建文本文档.txt" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.jpg" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\乡村点.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\乡镇.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\公路网.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\水系.jpg" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\水系.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.jpg" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\聚落.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.jpg" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\行政区.shp.xml" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\道路.jpg" />
+    <Content Include="bin\Release\Rources\BaseData\BaseShapeData\道路.shp.xml" />
+    <Content Include="bin\Release\Rources\ConditionAllData\ConditionAllRasterData\风险评价1.tif" />
+    <Content Include="bin\Release\Rources\ConditionAllData\ConditionAllRasterData\风险评价1.tif.aux.xml" />
+    <Content Include="bin\Release\Rources\ConditionAllData\ConditionAllShapeData\新建文本文档.txt" />
+    <Content Include="bin\Release\Rources\ConditionData\ConditionRasterData\危险性评价.tif" />
+    <Content Include="bin\Release\Rources\ConditionData\ConditionRasterData\危险性评价.tif.aux.xml" />
+    <Content Include="bin\Release\Rources\ConditionData\ConditionRasterData\易损性评价.tif" />
+    <Content Include="bin\Release\Rources\ConditionData\ConditionRasterData\易损性评价.tif.aux.xml" />
+    <Content Include="bin\Release\Rources\ConditionData\ConditionShapeData\新建文本文档.txt" />
+    <Content Include="bin\Release\Rources\Images\图层.png" />
+    <Content Include="bin\Release\Rources\RoadData\CheckedRoad\风险评价1.tif" />
+    <Content Include="bin\Release\Rources\RoadData\CheckedRoad\风险评价1.tif.aux.xml" />
+    <Content Include="bin\Release\Rources\RoadData\RoadRasterData\新建文本文档.txt" />
+    <Content Include="bin\Release\Rources\RoadData\RoadShapeData\新建文本文档.txt" />
+    <Content Include="bin\Release\Rources\雨量信息.mdb" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Rources\BaseData\BaseRasterData\" />

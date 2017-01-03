@@ -2,6 +2,7 @@
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -16,6 +17,44 @@ namespace RoadRaskEvaltionSystem.HelperClass
     /// </summary>
     class FeatureDealUtil
     {
+        public static IList<object> GetUniqueValues(IFeatureLayer layer, string fieldName)
+        {
+            IList<object> values = new List<object>();
+            IFeatureCursor pFeatureCursor = QueryFeatureInLayer(layer, "");
+            IDataStatistics dataStatistics = new DataStatisticsClass();
+            dataStatistics.Cursor = pFeatureCursor as ICursor;
+            dataStatistics.Field = fieldName;
+            //  IStatisticsResults result = dataStatistics.Statistics;
+            try
+            {
+                IEnumerator myEnumerator = dataStatistics.UniqueValues;
+                List<string> myValueList = new List<string>();
+                myEnumerator.Reset();
+                while (myEnumerator.MoveNext())
+                {
+                    if (myEnumerator.Current != null)
+                    {
+                        values.Add(myEnumerator.Current.ToString());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            //     IStatisticsResults  result= dataStatistics.Statistics;
+            return values;
+        }
+
+        private static IFeatureCursor QueryFeatureInLayer(IFeatureLayer layer, string whereClause)
+        {
+            IFeatureCursor featureCursor = null;
+            IQueryFilter2 queryFilter = new QueryFilterClass();
+            queryFilter.WhereClause = whereClause;
+            IFeatureClass featureClass = layer.FeatureClass;
+            featureCursor = featureClass.Search(queryFilter, false);
+            return featureCursor;
+        }
         public static bool UpdateFeature(IList<IFeature> pfeatuers, DataTable dataTable)
         {
             for (int i = 0; i < dataTable.Rows.Count; i++)

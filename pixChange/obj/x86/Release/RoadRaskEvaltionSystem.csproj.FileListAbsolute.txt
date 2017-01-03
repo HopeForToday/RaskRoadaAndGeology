@@ -21,7 +21,6 @@ J:\西科大\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSyste
 J:\西科大\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.XtraUserControl1.resources
 J:\西科大\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.csproj.GenerateResource.Cache
 J:\西科大\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.exe.licenses
-E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\bin\Debug\Rources\雨量信息.mdb
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.exe.config
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\CustomControls.dll
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.ConditionForm.resources
@@ -39,3 +38,4 @@ E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSy
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.pdb
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.ProInfoWindow.resources
 E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.csprojResolveAssemblyReference.cache
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.PropertyQueryForm.resources

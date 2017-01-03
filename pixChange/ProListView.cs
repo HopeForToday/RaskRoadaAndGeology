@@ -59,7 +59,7 @@ namespace pixChange
         {
             this.Close();
         }
-
+        /*
         private void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1)
@@ -82,6 +82,6 @@ namespace pixChange
                 dataGridView.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.FromArgb(0, 64, 64);
             }
         }
-
+        */
     }
 }

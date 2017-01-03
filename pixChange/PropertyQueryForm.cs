@@ -1,4 +1,5 @@
-﻿using ESRI.ArcGIS.Carto;
+﻿using DevExpress.XtraEditors;
+using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geodatabase;
 using RoadRaskEvaltionSystem.HelperClass;
@@ -26,18 +27,27 @@ namespace RoadRaskEvaltionSystem
         private ILayer selectLayer;
         private AxMapControl mapControl;
         List<ILayer> layers;
+        private List<IField> fields { get; set; }
+        private EventHandler ListBox2ItemHandler = null;
+        #region 基本事件
         public PropertyQueryForm(string selectLayerName, AxMapControl mapControl)
         {
             InitializeComponent();
+            EventDeal();
             this.mapControl = mapControl;
            layers = MapUtil.GetAllLayers(mapControl);
            this.selectLayerName = selectLayerName;
+          // ListBox2ItemHandler = new EventHandler(listBoxControl2_SelectedIndexChanged);
         }
+
         private void PropertyQueryForm_Load(object sender, EventArgs e)
         {
             layers.ForEach(p =>
             {
-                layerCombobox.Properties.Items.Add(p.Name);
+                if (p is FeatureLayer)
+                {
+                    layerCombobox.Properties.Items.Add(p.Name);
+                }
             });
             if (!string.IsNullOrEmpty(selectLayerName))
             {
@@ -53,12 +63,10 @@ namespace RoadRaskEvaltionSystem
                 int gIndex;
                 selectLayer = LayerUtil.QueryLayerInMap(mapControl, layerCombobox.Text, ref gLayer, out layerIndex, out gIndex);
                 this.labelControl2.Text = "select * from " + selectLayer.Name + " where ";
-                UpdateListBox(selectLayer);
+                UpdateFieldBox(selectLayer);
                 this.queryTxtBox .Text= "";
             }
         }
-
-    
 
         private void okBtt_Click(object sender, EventArgs e)
         {
@@ -88,154 +96,126 @@ namespace RoadRaskEvaltionSystem
         {
             this.Close();
         }
-        #region 操作符事件
-        private void simpleButton1_Click(object sender, EventArgs e)
-        {
-            DealOpreate("=");
-        }
-        private void simpleButton2_Click(object sender, EventArgs e)
-        {
-            DealOpreate("<>");
-        }
-
-        private void simpleButton3_Click(object sender, EventArgs e)
-        {
-            DealOpreate("like");
-        }
-
-        private void simpleButton4_Click(object sender, EventArgs e)
-        {
-            DealOpreate(">");
-        }
-
-        private void simpleButton5_Click(object sender, EventArgs e)
-        {
-            DealOpreate(">=");
-        }
-
-        private void simpleButton6_Click(object sender, EventArgs e)
-        {
-            DealOpreate("and");
-        }
-
-        private void simpleButton8_Click(object sender, EventArgs e)
-        {
-            DealOpreate("<");
-        }
-
-        private void simpleButton7_Click(object sender, EventArgs e)
-        {
-            DealOpreate("<=");
-        }
-
-        private void simpleButton9_Click(object sender, EventArgs e)
-        {
-            DealOpreate("or");
-        }
-
-        private void simpleButton12_Click(object sender, EventArgs e)
-        {
-            DealOpreate("%");
-        }
-
-        private void simpleButton10_Click(object sender, EventArgs e)
-        {
-            DealOpreate("()");
-        }
-
-        private void simpleButton11_Click(object sender, EventArgs e)
-        {
-            DealOpreate("not");
-        }
-
-        private void simpleButton13_Click(object sender, EventArgs e)
-        {
-            DealOpreate("is");
-        }
 
         #endregion
-        private void UpdateListBox(ILayer layer)
-        {
-            this.listBoxControl1.Items.Clear();
-            List<IField> fields = LayerUtil.GetLayerFields(selectLayer as IFeatureLayer);
-            fields.ForEach(p => this.listBoxControl1.Items.Add(p.Name));
-        }
-        private void DealOpreate(string opreate)
-        {
-
-            this.queryTxtBox.Text = string.Format("{0} {1} ",this.queryTxtBox.Text,opreate);
-        }
-        private void DealField(string fieldName)
-        {
-            this.queryTxtBox.Text = string.Format("{0} {1} ", this.queryTxtBox.Text, fieldName);
-        }
-        private void DealNumber(string number)
-        {
-            this.queryTxtBox.Text = string.Format("{0}{1} ", this.queryTxtBox.Text, number);
-        }
         private void listBoxControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.listBoxControl1.SelectedIndex > -1)
             {
                 string fieldName = this.listBoxControl1.SelectedItem as string;
                 DealField(fieldName);
-                this.listBoxControl1.SelectedIndex=-1;
+                //this.listBoxControl2.SelectedIndexChanged -= this.ListBox2ItemHandler;
+                //UpdateFieldUniqueValueListbox(this.fields[this.listBoxControl1.SelectedIndex]);
+                //this.listBoxControl2.SelectedIndexChanged += this.ListBox2ItemHandler;
+                this.listBoxControl1.SelectedIndex = -1;
             }
         }
-
-        private void simpleButton14_Click(object sender, EventArgs e)
+        //private void listBoxControl2_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (this.listBoxControl2.SelectedIndex > -1)
+        //    {
+        //        string value = this.listBoxControl2.SelectedItem as string;
+        //        DealFieldValue(value);
+        //        this.listBoxControl2.SelectedIndex = -1;
+        //    }
+        //}
+        //更新唯一值 只考虑对字符字段进行提示
+        //void UpdateFieldUniqueValueListbox(IField field)
+        //{
+        //    this.listBoxControl2.Items.Clear();
+        //    if (field.Type == esriFieldType.esriFieldTypeString)
+        //    {
+        //        IList<object> values = FeatureDealUtil.GetUniqueValues(selectLayer as IFeatureLayer, field.Name);
+        //        this.listBoxControl1.SelectedIndex = -1;
+        //        foreach (var value in values)
+        //        {
+        //            this.listBoxControl2.Items.Add(value);
+        //        }
+        //        this.listBoxControl1.SelectedIndex = -1;
+        //    }
+        //}
+      
+        private void EventDeal()
         {
-            DealNumber("1");
+            var numberClickHandler = new EventHandler((p, q) =>
+            {
+                SimpleButton button = p as SimpleButton;
+                DealNumber(button.Text);
+            });
+
+            var opreateClickHandler = new EventHandler((p, q) =>
+            {
+                SimpleButton button = p as SimpleButton;
+                DealOpreate(button.Text);
+            });
+
+            var fuhaoClickHandler = new EventHandler((p, q) =>
+            {
+                SimpleButton button = p as SimpleButton;
+                DealFuhao(button.Text);
+            });
+            foreach (var control in opreateGroupControl.Controls)
+            {
+                if (control is SimpleButton)
+                {
+                    SimpleButton button = control as SimpleButton;
+                    button .Click+= opreateClickHandler;
+                }
+            }
+            foreach (var control in groupControl3.Controls)
+            {
+                if (control is SimpleButton)
+                {
+                    SimpleButton button = control as SimpleButton;
+                    button.Click += numberClickHandler;
+                }
+            }
+            foreach (var control in panel1.Controls)
+            {
+                if (control is SimpleButton)
+                {
+                    SimpleButton button = control as SimpleButton;
+                    button.Click += fuhaoClickHandler;
+                }
+            }
+        }
+        private void UpdateFieldBox(ILayer layer)
+        {
+            this.listBoxControl1.Items.Clear();
+            fields = LayerUtil.GetLayerFields(selectLayer as IFeatureLayer);
+            fields.ForEach(p => this.listBoxControl1.Items.Add(p.Name));
+        }
+        private void AddQueryText(string str)
+        {
+            int index = this.queryTxtBox.SelectionStart;
+            string text = string.Empty;
+            if (index >0)
+            {
+                text = this.queryTxtBox.Text.Insert(index, str);
+            }
+            else
+            {
+                text =this.queryTxtBox.Text+ str;
+            }
+            this.queryTxtBox.Text = text;
+        }
+        private void DealOpreate(string opreate)
+        {
+            AddQueryText(" "+opreate+" ");
+        }
+        
+        private void DealField(string fieldName)
+        {
+            AddQueryText(" " + fieldName + " ");
+        }
+        private void DealNumber(string number)
+        {
+            AddQueryText(number);
         }
 
-        private void simpleButton15_Click(object sender, EventArgs e)
+        private void DealFuhao(string value)
         {
-            DealNumber("2");
-        }
-
-        private void simpleButton16_Click(object sender, EventArgs e)
-        {
-            DealNumber("3");
-        }
-
-        private void simpleButton19_Click(object sender, EventArgs e)
-        {
-            DealNumber("4");
-        }
-
-        private void simpleButton18_Click(object sender, EventArgs e)
-        {
-            DealNumber("5");
-        }
-
-        private void simpleButton17_Click(object sender, EventArgs e)
-        {
-            DealNumber("6");
-        }
-
-        private void simpleButton22_Click(object sender, EventArgs e)
-        {
-            DealNumber("7");
-        }
-
-        private void simpleButton21_Click(object sender, EventArgs e)
-        {
-            DealNumber("8");
-        }
-
-        private void simpleButton20_Click(object sender, EventArgs e)
-        {
-            DealNumber("9");
-        }
-
-        private void simpleButton23_Click(object sender, EventArgs e)
-        {
-            DealNumber(".");
-        }
-
-        private void simpleButton24_Click(object sender, EventArgs e)
-        {
-            DealNumber("0");
+            AddQueryText(value);
         }
     }
 }
