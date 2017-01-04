@@ -10,80 +10,80 @@ using System.Text;
 namespace RoadRaskEvaltionSystem
 {
 
-    public sealed class LayerVisibility :BaseCommand, ICommandSubType
-    {
-        private IHookHelper hookHelper;
-        private long subType;
-        public LayerVisibility()
+        public sealed class LayerVisibility :BaseCommand, ICommandSubType
         {
-        }
-        public override void OnCreate(object hook)
-        {
-            hookHelper = new HookHelperClass();
-            hookHelper.Hook = hook;
-        }
-        public override void OnClick()
-        {
-            for (int i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
+            private IHookHelper hookHelper;
+            private long subType;
+            public LayerVisibility()
             {
-                if (((hookHelper.FocusMap.get_Layer(i) as IFeatureLayer) as IFeatureSelection) != null)
-                {
-                    string t = hookHelper.FocusMap.get_Layer(i).Name;
-                    //((hookHelper.FocusMap.get_Layer(i) as IFeatureLayer) as IFeatureSelection).Clear();
-                }
-                if (subType == 1) hookHelper.FocusMap.get_Layer(i).Visible = true;
-                if (subType == 2) hookHelper.FocusMap.get_Layer(i).Visible = false;
             }
-            hookHelper.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
-            hookHelper.ActiveView.Refresh();
-        }
-        public override string Caption
-        {
-            get
+            public override void OnCreate(object hook)
             {
-                if (subType == 1) return "显示所有图层";
-                else return "隐藏所有图层";
+                hookHelper = new HookHelperClass();
+                hookHelper.Hook = hook;
             }
-        }
-        public override bool Enabled
-        {
-            get
+            public override void OnClick()
             {
-                bool enabled = false; int i;
-                if (subType == 1)
+                for (int i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
                 {
-                    for (i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
+                    if (((hookHelper.FocusMap.get_Layer(i) as IFeatureLayer) as IFeatureSelection) != null)
                     {
-                        if (hookHelper.ActiveView.FocusMap.get_Layer(i).Visible == false)
+                        string t = hookHelper.FocusMap.get_Layer(i).Name;
+                        //((hookHelper.FocusMap.get_Layer(i) as IFeatureLayer) as IFeatureSelection).Clear();
+                    }
+                    if (subType == 1) hookHelper.FocusMap.get_Layer(i).Visible = true;
+                    if (subType == 2) hookHelper.FocusMap.get_Layer(i).Visible = false;
+                }
+                hookHelper.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                hookHelper.ActiveView.Refresh();
+            }
+            public override string Caption
+            {
+                get
+                {
+                    if (subType == 1) return "显示所有图层";
+                    else return "隐藏所有图层";
+                }
+            }
+            public override bool Enabled
+            {
+                get
+                {
+                    bool enabled = false; int i;
+                    if (subType == 1)
+                    {
+                        for (i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
                         {
-                            enabled = true;
-                            break;
+                            if (hookHelper.ActiveView.FocusMap.get_Layer(i).Visible == false)
+                            {
+                                enabled = true;
+                                break;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    for (i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
+                    else
                     {
-                        if (hookHelper.ActiveView.FocusMap.get_Layer(i).Visible == true)
+                        for (i = 0; i <= hookHelper.FocusMap.LayerCount - 1; i++)
                         {
-                            enabled = true;
-                            break;
+                            if (hookHelper.ActiveView.FocusMap.get_Layer(i).Visible == true)
+                            {
+                                enabled = true;
+                                break;
+                            }
                         }
                     }
+                    return enabled;
                 }
-                return enabled;
             }
+            #region ICommandSubType 成员
+            public int GetCount()
+            {
+                return 2;
+            }
+            public void SetSubType(int SubType)
+            {
+                subType = SubType;
+            }
+            #endregion
         }
-        #region ICommandSubType 成员
-        public int GetCount()
-        {
-            return 2;
-        }
-        public void SetSubType(int SubType)
-        {
-            subType = SubType;
-        }
-        #endregion
-    }
 }

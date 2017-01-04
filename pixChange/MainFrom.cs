@@ -193,6 +193,7 @@ namespace pixChange
                     layerMenu.PopupMenu(e.x, e.y, m_pTocControl.hWnd);
                 }
             }
+            /*
             //左键移动
             if(e.button==1)
             {
@@ -212,6 +213,7 @@ namespace pixChange
                     removedLayer = layer;
                 }
             }
+             * */
         }
         private IGroupLayer QueryGroupLayer(ILayer layer,ref int index)
         {
@@ -229,6 +231,7 @@ namespace pixChange
         private IGroupLayer removedGroupLayer = null;
         private void axTOCControl1_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
         {
+            /*
             if (e.button == 1)
             {
             //   int toIndex = -1;
@@ -269,6 +272,7 @@ namespace pixChange
                     }
                 }
             }
+             * */
         }
 
         //放大

@@ -19,6 +19,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="toIndexObj"></param>
         public static void RemoveLayer(AxMapControl mapControl, ILayer removedLayer, IGroupLayer fromGroupLayer, IGroupLayer toGroupLayer, object toIndexObj)
         {
+            if (removedLayer == null)
+            {
+                return;
+            }
             IMap pMap = mapControl.Map;
             //如果是在一个组合图层中进行移动的情况
             if (fromGroupLayer == toGroupLayer && fromGroupLayer != null)

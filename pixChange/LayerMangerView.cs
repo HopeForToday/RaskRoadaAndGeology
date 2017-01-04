@@ -196,7 +196,7 @@ namespace pixChange
                     }
                     if (pFLayer.Name == "乡村点")
                     {
-                        LayerManager.SetFeaturePictureSymbol(pFLayer, Application.StartupPath + @"\LayerImages\乡村点.png", 1);
+                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.CountryPointImagePath, 15);
                     }
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);

@@ -173,9 +173,7 @@ namespace pixChange.HelperClass
         public static void SetFeaturePictureSymbol(IFeatureLayer featureLayer, string pictureName, int size)
         {
             IGeoFeatureLayer geoLayer = featureLayer as IGeoFeatureLayer;
-            IPictureMarkerSymbol pPicturemksb = new PictureMarkerSymbolClass();
-            pPicturemksb.Size = 20;
-            pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPicturePNG, pictureName);
+            IPictureMarkerSymbol pPicturemksb = CreatePictureSymbol(pictureName, size);
             ISimpleRenderer simpleRender = geoLayer.Renderer as ISimpleRenderer;
             if (simpleRender == null)
             {
@@ -183,6 +181,29 @@ namespace pixChange.HelperClass
             }
             simpleRender.Symbol = pPicturemksb as ISymbol;
             geoLayer.Renderer = simpleRender as IFeatureRenderer;
+        }
+
+        private static IPictureMarkerSymbol CreatePictureSymbol(string pictureName, int size)
+        {
+            IPictureMarkerSymbol pPicturemksb = new PictureMarkerSymbolClass();
+            pPicturemksb.Size = size;
+            string extension = System.IO.Path.GetExtension(pictureName);
+            switch (extension)
+            {
+                case ".png":
+                    pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPicturePNG, pictureName);
+                    break;
+                case ".jpg":
+                    pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureJPG, pictureName);
+                    break;
+                case ".gif":
+                    pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureGIF, pictureName);
+                    break;
+                case ".emf":
+                    pPicturemksb.CreateMarkerSymbolFromFile(esriIPictureType.esriIPictureEMF, pictureName);
+                    break;
+            }
+            return pPicturemksb;
         }
         /// <summary>
         /// 设置图层根据某字段的值进行显示
