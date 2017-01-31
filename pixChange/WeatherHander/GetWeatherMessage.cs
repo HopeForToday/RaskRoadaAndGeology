@@ -103,9 +103,18 @@ namespace HtmlAgilityPackDemo1
                         {
                             if (oritime.Contains("日"))
                             {
-                                alltime = Convert.ToDateTime(forWeMsgList[j - 2].timedate7).ToString("yyyy-MM-") + oritime.Replace("日", " ");
-                                forWeMsgList[j - 1].timedate7 = alltime.Split(' ')[0].ToString();
-                                forWeMsgList[j - 1].timehour7 = alltime.Split(' ')[1].ToString();
+                                if (forWeMsgList[j - 2].timedate7.Split('-')[1].Split('-')[0].Equals(Convert.ToDateTime(forWeMsgList[j - 2].timedate7).AddDays(1).ToString("yyyy-MM-dd").Split('-')[1].Split('-')[0]))
+                                {
+                                    alltime = Convert.ToDateTime(forWeMsgList[j - 2].timedate7).ToString("yyyy-MM-") + oritime.Replace("日", " ");
+                                    forWeMsgList[j - 1].timedate7 = alltime.Split(' ')[0].ToString();
+                                    forWeMsgList[j - 1].timehour7 = alltime.Split(' ')[1].ToString(); 
+                                }
+                                else
+                                {
+                                    alltime = Convert.ToDateTime(forWeMsgList[j - 2].timedate7).AddDays(1).ToString("yyyy-MM-") + oritime.Replace("日", " ");
+                                    forWeMsgList[j - 1].timedate7 = alltime.Split(' ')[0].ToString();
+                                    forWeMsgList[j - 1].timehour7 = alltime.Split(' ')[1].ToString(); 
+                                }
                             }
                             else
                             {
