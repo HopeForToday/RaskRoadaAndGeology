@@ -23,7 +23,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="shapeFiledName"></param>
         /// <param name="className"></param>
         /// <returns></returns>
-        public static IFeatureClass CreateMemoryFeatureClass(IFields fields,string shapeFiledName,string className)
+        public static IFeatureClass CreateMemoryFeatureClass(IFields fields, string shapeFiledName, string className)
         {
             // 创建内存工作空间
             IWorkspaceFactory pWSF = new InMemoryWorkspaceFactoryClass();
@@ -43,7 +43,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="spatialReference"></param>
         /// <param name="className"></param>
         /// <returns></returns>
-        public static IFeatureClass CreateMemorySimpleFeatureClass(esriGeometryType geometryType,ISpatialReference spatialReference, string className)
+        public static IFeatureClass CreateMemorySimpleFeatureClass(esriGeometryType geometryType, ISpatialReference spatialReference, string className)
         {
             // 创建内存工作空间
             IWorkspaceFactory pWSF = new InMemoryWorkspaceFactoryClass();
@@ -78,11 +78,11 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 className, fields, null, null, esriFeatureType.esriFTSimple, "SHAPE", "");
             return featureClass;
         }
-      /// <summary>
-      /// 复制字段
-      /// </summary>
-      /// <param name="originField"></param>
-      /// <returns></returns>
+        /// <summary>
+        /// 复制字段
+        /// </summary>
+        /// <param name="originField"></param>
+        /// <returns></returns>
         public static IField CloneField(IField originField)
         {
             IField field = new FieldClass();
@@ -96,7 +96,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             fieldEdit.Type_2 = originField.Type;
             fieldEdit.Scale_2 = originField.Scale;
             fieldEdit.Name_2 = originField.Name;
-          //  fieldEdit.
+            //  fieldEdit.
             return field;
         }
         /// <summary>
@@ -105,33 +105,54 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// </summary>
         /// <param name="pFeature"></param>
         /// <param name="pFeatureClass"></param>
-        public static void InsertSimpleFeature(IGeometry shape,IFeatureClass pFeatureClass)
+        public static void InsertSimpleFeature(IGeometry shape, IFeatureClass pFeatureClass)
         {
             IFeature newLineFeature = pFeatureClass.CreateFeature();
             newLineFeature.Shape = shape;
             newLineFeature.Store();
         }
+     
         /// <summary>
-        /// 删除要素类中符合条件的元素
+        /// 添加字段 
         /// </summary>
         /// <param name="pFeatureClass"></param>
-        /// <param name="whereClause"></param>
-        /// <param name="pGeometry"></param>
-        public static void DeleteAllFeature(IFeatureClass pFeatureClass,string whereClause,IGeometry pGeometry)
+        /// <param name="name"></param>
+        /// <param name="aliasName"></param>
+        /// <param name="FieldType"></param>
+        /// <returns></returns>
+        public static bool AddField(IFeatureClass pFeatureClass, string name, string aliasName, esriFieldType FieldType)
         {
-            ISpatialFilter pSpatialFilter = new SpatialFilterClass();
-            pSpatialFilter.WhereClause = whereClause;
-            if(pGeometry!=null)
+            //若存在，则不需添加 
+            if (pFeatureClass.Fields.FindField(name) > -1)
             {
-                pSpatialFilter.Geometry = pGeometry;
+                return false;
             }
-            IFeatureCursor pCursor = pFeatureClass.Update(pSpatialFilter as IQueryFilter, false);
-            IFeature pFeature = pCursor.NextFeature();
-            while (pFeature != null)
+            IField pField = new FieldClass();
+            IFieldEdit pFieldEdit = pField as IFieldEdit;
+            pFieldEdit.AliasName_2 = aliasName;
+            pFieldEdit.Name_2 = name;
+            pFieldEdit.Type_2 = FieldType;
+            IClass pClass = pFeatureClass as IClass;
+            pClass.AddField(pField);
+            return true;
+        }
+        /// <summary>
+        /// 删除字段
+        /// </summary>
+        /// <param name="pFeatureClass"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool DeleteField(IFeatureClass pFeatureClass, string name)
+        {
+            int index =pFeatureClass.Fields.FindField(name);
+            if (index<0)
             {
-                pCursor.DeleteFeature();
-                pFeature = pCursor.NextFeature();
+                return false;
             }
+            IField pField = pFeatureClass.Fields.get_Field(index);
+            IClass pClass = pFeatureClass as IClass;
+            pClass.DeleteField(pField);
+            return true;
         }
     }
 }

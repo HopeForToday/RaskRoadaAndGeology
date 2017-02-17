@@ -55,6 +55,12 @@ namespace RoadRaskEvaltionSystem.HelperClass
             featureCursor = featureClass.Search(queryFilter, false);
             return featureCursor;
         }
+        /// <summary>
+        /// 更新要素
+        /// </summary>
+        /// <param name="pfeatuers"></param>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
         public static bool UpdateFeature(IList<IFeature> pfeatuers, DataTable dataTable)
         {
             for (int i = 0; i < dataTable.Rows.Count; i++)
@@ -89,6 +95,39 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 }
             }
             return true;
+        }
+        /// <summary>
+        /// 删除要素
+        /// </summary>
+        /// <param name="features"></param>
+        /// <returns></returns>
+        public static bool DeleteFeatures(List<IFeature> features)
+        {
+            features.ForEach(p =>
+                p.Delete());
+            return true;
+        }
+        /// <summary>
+        /// 删除要素类中符合条件的元素
+        /// </summary>
+        /// <param name="pFeatureClass"></param>
+        /// <param name="whereClause"></param>
+        /// <param name="pGeometry"></param>
+        public static void DeleteAllFeature(IFeatureClass pFeatureClass, string whereClause, IGeometry pGeometry)
+        {
+            ISpatialFilter pSpatialFilter = new SpatialFilterClass();
+            pSpatialFilter.WhereClause = whereClause;
+            if (pGeometry != null)
+            {
+                pSpatialFilter.Geometry = pGeometry;
+            }
+            IFeatureCursor pCursor = pFeatureClass.Update(pSpatialFilter as IQueryFilter, false);
+            IFeature pFeature = pCursor.NextFeature();
+            while (pFeature != null)
+            {
+                pCursor.DeleteFeature();
+                pFeature = pCursor.NextFeature();
+            }
         }
          /// <summary>
         /// 利用语句进行查询 返回游标和查询过滤类
