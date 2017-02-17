@@ -22,6 +22,7 @@ namespace pixChange
         //private IList<IFeature> features;
         private DataTable dataTable = null;
         private IList<IFeature> pfeatuers = null;
+        private IFeatureLayer layer = null;
         public ProListView()
         {
             InitializeComponent();
@@ -29,6 +30,7 @@ namespace pixChange
         public ProListView(IFeatureLayer layer, IList<IFeature> features)
         {
             InitializeComponent();
+            this.layer = layer;
             dataTable = AtrributeUtil.GetDataTable(layer, features);
             this.pfeatuers = features;
             this.dataGridView.DataSource = dataTable;
@@ -36,10 +38,11 @@ namespace pixChange
         }
         private void SetDataGridViewStyle()
         {
-            for(int i=0;i<dataTable.Columns.Count;i++)
+            for(int i=1;i<dataTable.Columns.Count;i++)
             {
                DataColumn column = dataTable.Columns[i];
-                this.dataGridView.Columns[i].ReadOnly = column.ReadOnly;
+               // this.dataGridView.Columns[i].ReadOnly = column.ReadOnly;
+                BindContextMenu(this.dataGridView.Columns[i]);
             }
         }
         private void ProListView_Load(object sender, EventArgs e)
@@ -59,6 +62,29 @@ namespace pixChange
         {
             this.Close();
         }
+        private void BindContextMenu(DataGridViewColumn column)
+        {
+            column.HeaderCell.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        private void removeColumnMenuItem_Click(object sender, EventArgs e)
+        {
+         //  string columnName= dataGridView..Value.ToString();
+            string columnName = "RTEG";
+           RemoveColumn(columnName);
+        }
+
+        private void RemoveColumn(string columnName)
+        {
+            FeatureClassUtil.DeleteField(layer.FeatureClass, columnName);
+            dataTable.Columns.Remove(columnName);
+        }
+
+        private void AddColumnMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         /*
         private void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {

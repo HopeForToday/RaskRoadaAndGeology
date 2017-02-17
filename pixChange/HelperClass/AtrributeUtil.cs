@@ -238,6 +238,24 @@ namespace RoadRaskEvaltionSystem.HelperClass
                     return "System.String";
             }
         }
+        public static esriFieldType ConvertToEsriFiled(string type)
+        {
+            switch (type)
+            {
+                case "string":
+                    return esriFieldType.esriFieldTypeString;
+                case "int":
+                    return esriFieldType.esriFieldTypeInteger;
+                case "float":
+                    return esriFieldType.esriFieldTypeSingle;
+                case "double":
+                    return esriFieldType.esriFieldTypeDouble;
+                case "Date":
+                    return esriFieldType.esriFieldTypeDate;
+                default:
+                    return esriFieldType.esriFieldTypeString;
+            }
+        }
     }
 }
 

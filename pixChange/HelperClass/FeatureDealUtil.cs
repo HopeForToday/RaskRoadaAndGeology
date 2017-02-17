@@ -68,7 +68,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 IFeature pFeature = pfeatuers[i];
                 DataRow dRow = dataTable.Rows[i];
                 bool isUpdate = false;
-                for (int j = 0; j < dRow.ItemArray.Count(); j++)
+                for (int j = 0; i < pFeature.Fields.FieldCount; j++)
                 {
                     IField pField = pFeature.Fields.get_Field(j);
                     if (!pField.Editable)
@@ -79,10 +79,10 @@ namespace RoadRaskEvaltionSystem.HelperClass
                     {
                         continue;
                     }
-                    if (pFeature.get_Value(j) != dRow[j])
+                    object value = dRow[pField.Name];
+                    if (pFeature.get_Value(j) != value)
                     {
                         isUpdate = true;
-                        object value=dRow[j];
                         if (pFeature.Fields.get_Field(j).CheckValue(value))
                         {
                             pFeature.set_Value(j, value);
