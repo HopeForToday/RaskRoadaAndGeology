@@ -329,8 +329,71 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            }
            return true;
        }
-     
-
+       /// <summary>
+       /// 风险因素等级划分
+       /// </summary>
+       /// <param name="RasterWorkspace"></param>
+       /// <param name="roadEvalName"></param>
+       /// <returns></returns>
+       public static bool RaskCaulte(string RasterWorkspace, string roadEvalName)
+       {
+           IWorkspaceFactory rWorkspaceFactory = new RasterWorkspaceFactory();
+           IWorkspace SWorkspace = rWorkspaceFactory.OpenFromFile(RasterWorkspace, 0);
+           IRasterWorkspace rasterWorkspace = SWorkspace as IRasterWorkspace;
+           //栅格计算器 计算风险级数  先不要签你的三方协议 然后存储  表达式必须隔开
+           IMapAlgebraOp mapAlgebra = new RasterMapAlgebraOpClass();
+           IRasterDataset roadEvalRaster = rasterWorkspace.OpenRasterDataset(roadEvalName);
+           IGeoDataset geo1 = roadEvalRaster as IGeoDataset;
+           mapAlgebra.BindRaster(geo1, "EvalRaster");
+           IGeoDataset raskDataset = mapAlgebra.Execute("[EvalRaster]");//然后存储  表达式必须间隔开
+           //将生成的风险栅格重分类
+           //<0.2	一级：可能性小
+           //0.2-0.4	二级：可
+           //能性较小
+           //0.4-0.6	三级：可能性较大
+           //0.6-0.8	四级：可能性大
+           //>0.8	五级：可能性很大
+           // 输入：raskDataset
+           //   输出：geoDataset_result
+           IRasterBandCollection pRsBandCol = raskDataset as IRasterBandCollection;
+           IRasterBand pRasterBand = pRsBandCol.Item(0);
+           pRasterBand.ComputeStatsAndHist();
+           IRasterStatistics pRasterStatistic = pRasterBand.Statistics;
+           double dMaxValue = pRasterStatistic.Maximum;
+           double dMinValue = pRasterStatistic.Minimum;
+           IReclassOp pReclassOp = new RasterReclassOpClass();
+           INumberRemap pNumRemap = new NumberRemapClass();
+           //等级参数
+           List<double> raskRanges = new List<double>();
+           for (int n = 0; n <5;n++ )
+           {
+               raskRanges.Add(dMinValue+(dMaxValue - dMinValue) * n / 4);
+           }
+           for (int m = 0; m < 4;m++ )
+           {
+               pNumRemap.MapRange(raskRanges[m], raskRanges[m+1],m+1);
+           }
+           IRemap pRemap = pNumRemap as IRemap;
+           IRaster pOutRaster = pReclassOp.ReclassByRemap(raskDataset, pRemap, false) as IRaster;
+           IRasterLayer rasterLayer = new RasterLayerClass();
+           rasterLayer.CreateFromRaster(pOutRaster);
+           if (rasterLayer != null)
+           {
+               rasterLayer.Name = roadEvalName;
+               for (int i = 0; i < MainFrom.m_mapControl.LayerCount; i++)
+               {
+                   ILayer ComLayer = MainFrom.m_mapControl.get_Layer(i);
+                   if (rasterLayer.Name == ComLayer.Name)
+                   {
+                       MainFrom.m_mapControl.Map.DeleteLayer(ComLayer);
+                   }
+               }
+               Common.funColorForRaster_Classify(rasterLayer, 4);
+               IEnvelope envelope = rasterLayer.AreaOfInterest;
+               MainFrom.m_mapControl.ActiveView.Extent = envelope;//缩放至图层 
+           }
+           return true;
+       }
        //打开栅格数据集
        public  IRasterDataset OpenRasterDataSet(IRasterWorkspace rasterWorkspace, string name)
        {

@@ -15,6 +15,7 @@ using RoadRaskEvaltionSystem.HelperClass;
 using pixChange.HelperClass;
 using RoadRaskEvaltionSystem;
 using System.Diagnostics;
+using RoadRaskEvaltionSystem.RasterAnalysis;
 namespace pixChange
 {
     public partial class LayerMangerView : Form
@@ -204,13 +205,14 @@ namespace pixChange
                 }
                 else
                 {
-                    fullPath = rasterPath + fullPath;
-                    //这里将RasterLayerClass改为RasterLayer  即可以嵌入互操作类型  下同
-                    IRasterLayer rasterLayer = new RasterLayer();
-                    rasterLayer.CreateFromFilePath(fullPath);
-                    // IRaster ir = (IRaster) rasterLayer;
-                    IsEqual = Common.InsertLayer(IsEqual, rasterLayer);
-                    MainFrom.m_pTocControl.Update();
+                    //fullPath = rasterPath + fullPath;
+                    ToRasterControl.RaskCaulte(rasterPath, fullPath);
+                    ////这里将RasterLayerClass改为RasterLayer  即可以嵌入互操作类型  下同
+                    //IRasterLayer rasterLayer = new RasterLayer();
+                    //rasterLayer.CreateFromFilePath(fullPath);
+                    //// IRaster ir = (IRaster) rasterLayer;
+                    //IsEqual = Common.InsertLayer(IsEqual, rasterLayer);
+                    //MainFrom.m_pTocControl.Update();
                 }
             }
             else
