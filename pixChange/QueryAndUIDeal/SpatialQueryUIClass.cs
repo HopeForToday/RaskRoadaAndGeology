@@ -104,7 +104,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
         {
             if (featurers.Count != 0)
             {
-                new ProListView(pFeatureLayer, featurers).ShowDialog();
+                new ProListView(pFeatureLayer,(List<IFeature>)featurers).ShowDialog();
             }
         }
         private void SetPointMarkerSymbol(ISymbol symbol)

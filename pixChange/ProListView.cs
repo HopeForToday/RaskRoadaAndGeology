@@ -14,6 +14,7 @@ using System.IO;
 using ESRI.ArcGIS.DataSourcesGDB;
 using RoadRaskEvaltionSystem.HelperClass;
 using System.Diagnostics;
+using RoadRaskEvaltionSystem;
 
 namespace pixChange
 {
@@ -21,13 +22,13 @@ namespace pixChange
     {
         //private IList<IFeature> features;
         private DataTable dataTable = null;
-        private IList<IFeature> pfeatuers = null;
+        private List<IFeature> pfeatuers = null;
         private IFeatureLayer layer = null;
         public ProListView()
         {
             InitializeComponent();
         }
-        public ProListView(IFeatureLayer layer, IList<IFeature> features)
+        public ProListView(IFeatureLayer layer, List<IFeature> features)
         {
             InitializeComponent();
             this.layer = layer;
@@ -73,18 +74,65 @@ namespace pixChange
             string columnName = "RTEG";
            RemoveColumn(columnName);
         }
-
+        //删除字段
         private void RemoveColumn(string columnName)
         {
             FeatureClassUtil.DeleteField(layer.FeatureClass, columnName);
             dataTable.Columns.Remove(columnName);
         }
-
+        //添加字段
         private void AddColumnMenuItem_Click(object sender, EventArgs e)
         {
-
+           var addForm=new AddFieldForm(this.layer.FeatureClass);
+           if (addForm.DialogResult == DialogResult.OK)
+           {
+               var dataColumn = addForm.AddDataColumn;
+               dataTable.Columns.Add(dataColumn);
+           }
+        }
+        private List<IFeature> GetIsGoingDeletedRows(out  List<DataRow> rows)
+        {
+            var deFeatures = new List<IFeature>();
+            rows = new List<DataRow>();
+            var count = this.dataGridView.Rows.Count;
+            for (int i = 0; i < count; i++)
+            {
+                //如果DataGridView是可编辑的，将数据提交，否则处于编辑状态的行无法取到  
+                this.dataGridView.EndEdit();
+                var checkCell = (DataGridViewCheckBoxCell)dataGridView.Rows[i].Cells[0];
+                var flag = Convert.ToBoolean(checkCell.Value);
+                if (flag == true)     //查找被选择的数据行  
+                {
+                    rows.Add(this.dataTable.Rows[i]);
+                    deFeatures.Add(this.pfeatuers[i]);
+                }
+            }
+            return deFeatures;
         }
 
+        private void simpleButton1_Click(object sender, EventArgs e)
+        {
+            List<DataRow> rows;
+            var deFeatures = GetIsGoingDeletedRows(out rows);
+            if (rows.Count == 0)
+            {
+                MessageBox.Show("尚未选择任何行，无法删除");
+                return;
+            }
+            if (FeatureDealUtil.DeleteFeatures(deFeatures))
+            {
+                rows.ForEach(row =>
+                {
+                    this.dataTable.Rows.Remove(row);
+                });
+                deFeatures.ForEach(feature =>
+                   this.pfeatuers.Remove(feature));
+                this.countLabel.Text = dataTable.Rows.Count.ToString();
+            }
+            else{
+                MessageBox.Show("删除错误");
+            }
+        }
         /*
         private void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {

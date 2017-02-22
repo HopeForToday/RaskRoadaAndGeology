@@ -192,7 +192,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             return dataTable;
         }
         /// <summary>
-        /// 获取要素类的几何
+        /// 获取要素类的几何信息
         /// </summary>
         /// <param name="featureClass"></param>
         /// <returns></returns>
@@ -242,15 +242,15 @@ namespace RoadRaskEvaltionSystem.HelperClass
         {
             switch (type)
             {
-                case "string":
+                case "System.String":
                     return esriFieldType.esriFieldTypeString;
-                case "int":
+                case "System.Int32":
                     return esriFieldType.esriFieldTypeInteger;
-                case "float":
+                case "System.Single":
                     return esriFieldType.esriFieldTypeSingle;
-                case "double":
+                case "System.Double":
                     return esriFieldType.esriFieldTypeDouble;
-                case "Date":
+                case "System.DateTime":
                     return esriFieldType.esriFieldTypeDate;
                 default:
                     return esriFieldType.esriFieldTypeString;

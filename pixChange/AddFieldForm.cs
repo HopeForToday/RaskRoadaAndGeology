@@ -14,14 +14,19 @@ namespace RoadRaskEvaltionSystem
 {
     public partial class AddFieldForm : Form
     {
+        public DataColumn AddDataColumn { get; set; }
         private IFeatureClass pFeatureClass = null;
+        public AddFieldForm(IFeatureClass pFeatureClass)
+        {
+            this.pFeatureClass = pFeatureClass;
+        }
         private static readonly Dictionary<string, string> TYPES = new Dictionary<string, string>()
         {
-            {"整型","int"},
-            {"浮点型","float"},
-            {"双精度浮点型","double"},
-            {"字符串","string"},
-            {"日期","Date"}
+            {"整型","System.Int32"},
+            {"浮点型","System.Single"},
+            {"双精度浮点型","System.Double"},
+            {"字符串","System.String"},
+            {"日期","System.DateTime"}
         };
         private void InitialUI()
         {
@@ -57,8 +62,10 @@ namespace RoadRaskEvaltionSystem
                 return;
             }
             var type = AtrributeUtil.ConvertToEsriFiled(this.typeComboBox.SelectedItem.ToString());
-            if(FeatureClassUtil.AddField(pFeatureClass, nameTbb.Text,aliasTbb.Text,type))
+            if (FeatureClassUtil.AddField(pFeatureClass, nameTbb.Text, aliasTbb.Text, type))
             {
+                this.DialogResult = DialogResult.OK;
+                CreateDataColumn();
                 MessageBox.Show("添加成功");
                 this.Close();
             }
@@ -68,10 +75,15 @@ namespace RoadRaskEvaltionSystem
             }
         }
 
+        private void CreateDataColumn()
+        {
+            var columnType = Type.GetType(this.typeComboBox.SelectedItem.ToString());
+            AddDataColumn = new DataColumn(nameTbb.Text, columnType);
+        }
+
         private void Cancelbutton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
     }
 }
