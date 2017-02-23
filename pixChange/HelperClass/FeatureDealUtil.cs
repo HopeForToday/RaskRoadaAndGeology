@@ -17,6 +17,26 @@ namespace RoadRaskEvaltionSystem.HelperClass
     /// </summary>
     class FeatureDealUtil
     {
+
+        public static List<IFeature> FindFeatures(IFeatureLayer layer, List<int> fIds)
+        {
+            var newFeatures = new List<IFeature>();
+            fIds.ForEach(p =>
+                {
+                    IFeature pFeature = GetFeatureByFID(layer, p);
+                    newFeatures.Add(pFeature);
+                });
+            return newFeatures;
+        }
+        public static IFeature GetFeatureByFID(IFeatureLayer layer, int id)
+        {
+            IFeatureCursor featureCursor = null;
+            IQueryFilter2 queryFilter = new QueryFilterClass();
+            queryFilter.WhereClause = string.Format("FID = {0}", id);
+            featureCursor = layer.Search(queryFilter, false);
+            IFeature pFeature = featureCursor.NextFeature();
+            return pFeature;
+        }
         public static IList<object> GetUniqueValues(IFeatureLayer layer, string fieldName)
         {
             IList<object> values = new List<object>();
@@ -61,6 +81,42 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// <param name="pfeatuers"></param>
         /// <param name="dataTable"></param>
         /// <returns></returns>
+        public static bool UpdateFeature(IFeature pFeature, DataRow dRow)
+        {
+            bool isUpdate = false;
+            for (int j = 0; j < pFeature.Fields.FieldCount; j++)
+            {
+                IField pField = pFeature.Fields.get_Field(j);
+                if (!pField.Editable)
+                {
+                    continue;
+                }
+                if (pField.Type == esriFieldType.esriFieldTypeBlob || pField.Type == esriFieldType.esriFieldTypeRaster || pField.Type == esriFieldType.esriFieldTypeGeometry)
+                {
+                    continue;
+                }
+                object value = dRow[pField.Name];
+                if (pFeature.get_Value(j) != value)
+                {
+                    isUpdate = true;
+                    if (pFeature.Fields.get_Field(j).CheckValue(value))
+                    {
+                        pFeature.set_Value(j, value);
+                    }
+                }
+            }
+            if (isUpdate)
+            {
+                pFeature.Store();
+            }
+            return true;
+        }
+        /// <summary>
+        /// 更新要素
+        /// </summary>
+        /// <param name="pfeatuers"></param>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
         public static bool UpdateFeature(IList<IFeature> pfeatuers, DataTable dataTable)
         {
             for (int i = 0; i < dataTable.Rows.Count; i++)
@@ -68,7 +124,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 IFeature pFeature = pfeatuers[i];
                 DataRow dRow = dataTable.Rows[i];
                 bool isUpdate = false;
-                for (int j = 0; i < pFeature.Fields.FieldCount; j++)
+                for (int j = 0; j < pFeature.Fields.FieldCount; j++)
                 {
                     IField pField = pFeature.Fields.get_Field(j);
                     if (!pField.Editable)

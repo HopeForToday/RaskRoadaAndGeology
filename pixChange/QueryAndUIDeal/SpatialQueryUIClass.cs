@@ -50,7 +50,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
                 pFeatureCursor = FeatureDealUtil.QueryFeatureInLayer(pFeatureLayer,queryStr, ref queryFilter);
             }
             IList<IFeature> features = FlashFeatureShape(mapControl, pFeatureLayer, pFeatureCursor);
-            ShowFeatureDetail(pFeatureLayer, features);
+            ShowFeatureDetail(pFeatureLayer, features, queryFilter);
         }
         /// <summary>
         /// 高亮显示要素并且返回一个list
@@ -100,7 +100,7 @@ namespace RoadRaskEvaltionSystem.QueryAndUIDeal
             }
             return symbol;
         }
-        private void ShowFeatureDetail(IFeatureLayer pFeatureLayer, IList<IFeature> featurers)
+        private void ShowFeatureDetail(IFeatureLayer pFeatureLayer, IList<IFeature> featurers,IQueryFilter pQueryFilter)
         {
             if (featurers.Count != 0)
             {

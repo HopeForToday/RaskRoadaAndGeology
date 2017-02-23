@@ -18,6 +18,8 @@ namespace RoadRaskEvaltionSystem
         private IFeatureClass pFeatureClass = null;
         public AddFieldForm(IFeatureClass pFeatureClass)
         {
+            InitializeComponent();
+            InitialUI();
             this.pFeatureClass = pFeatureClass;
         }
         private static readonly Dictionary<string, string> TYPES = new Dictionary<string, string>()
@@ -77,7 +79,7 @@ namespace RoadRaskEvaltionSystem
 
         private void CreateDataColumn()
         {
-            var columnType = Type.GetType(this.typeComboBox.SelectedItem.ToString());
+            var columnType = Type.GetType(TYPES[this.typeComboBox.SelectedItem.ToString()].ToString());
             AddDataColumn = new DataColumn(nameTbb.Text, columnType);
         }
 

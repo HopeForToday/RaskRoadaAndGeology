@@ -20,7 +20,6 @@ namespace pixChange
 {
     public partial class ProListView : Form
     {
-        //private IList<IFeature> features;
         private DataTable dataTable = null;
         private List<IFeature> pfeatuers = null;
         private IFeatureLayer layer = null;
@@ -32,64 +31,73 @@ namespace pixChange
         {
             InitializeComponent();
             this.layer = layer;
-            dataTable = AtrributeUtil.GetDataTable(layer, features);
             this.pfeatuers = features;
+            dataTable = AtrributeUtil.GetDataTable(layer, features);
             this.dataGridView.DataSource = dataTable;
-            SetDataGridViewStyle();
         }
-        private void SetDataGridViewStyle()
+        //刷新要素 在增加、删除字段后必须进行调用
+        public void RefreshFeaturesByFids()
         {
-            for(int i=1;i<dataTable.Columns.Count;i++)
+           var fids = new List<int>();
+            pfeatuers.ForEach(p => {
+                var value = p.get_Value(p.Fields.FindField("FID"));
+                fids.Add((int)value);
+            });
+            pfeatuers = FeatureDealUtil.FindFeatures(layer, fids);
+        }
+        #region 删除字段
+        private int toDeleteColumnIndex = -1;
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
             {
-               DataColumn column = dataTable.Columns[i];
-               // this.dataGridView.Columns[i].ReadOnly = column.ReadOnly;
-                BindContextMenu(this.dataGridView.Columns[i]);
+                toDeleteColumnIndex = e.ColumnIndex;
+                System.Drawing.Point point = dataGridView.PointToScreen(new System.Drawing.Point(0, 0));
+                int x = 0;
+                DataGridViewColumnCollection columns = dataGridView.Columns;
+                for (int i = 0; i < e.ColumnIndex; i++)
+                {
+                    if (columns[i].Visible)
+                    {
+                        x += columns[i].Width;
+                    }
+                }
+                contextMenuStrip1.Show(dataGridView.PointToScreen(new System.Drawing.Point(x + e.X, e.Y+5)));
             }
         }
-        private void ProListView_Load(object sender, EventArgs e)
-        {
-            this.countLabel.Text = dataTable.Rows.Count.ToString();
-        }
-
-        private void oKbtt_Click(object sender, EventArgs e)
-        {
-            if (FeatureDealUtil.UpdateFeature(pfeatuers, dataTable))
-            {
-                this.Close();
-            }
-        }
-
-        private void cancelBtt_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-        private void BindContextMenu(DataGridViewColumn column)
-        {
-            column.HeaderCell.ContextMenuStrip = contextMenuStrip1;
-        }
-
         private void removeColumnMenuItem_Click(object sender, EventArgs e)
         {
-         //  string columnName= dataGridView..Value.ToString();
-            string columnName = "RTEG";
-           RemoveColumn(columnName);
+            if (toDeleteColumnIndex < 1)
+            {
+                return;
+            }
+            string columnName = this.dataGridView.Columns[toDeleteColumnIndex].Name;
+            RemoveColumn(columnName);
+            toDeleteColumnIndex = -1;
         }
         //删除字段
         private void RemoveColumn(string columnName)
         {
             FeatureClassUtil.DeleteField(layer.FeatureClass, columnName);
             dataTable.Columns.Remove(columnName);
+            RefreshFeaturesByFids();
         }
+        #endregion
+        #region 添加字段
         //添加字段
-        private void AddColumnMenuItem_Click(object sender, EventArgs e)
+        private void simpleButton2_Click(object sender, EventArgs e)
         {
-           var addForm=new AddFieldForm(this.layer.FeatureClass);
-           if (addForm.DialogResult == DialogResult.OK)
-           {
-               var dataColumn = addForm.AddDataColumn;
-               dataTable.Columns.Add(dataColumn);
-           }
+            var addForm = new AddFieldForm(this.layer.FeatureClass);
+
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                var dataColumn = addForm.AddDataColumn;
+                dataTable.Columns.Add(dataColumn);
+                RefreshFeaturesByFids();
+            }
         }
+        #endregion
+        #region 删除选中行
         private List<IFeature> GetIsGoingDeletedRows(out  List<DataRow> rows)
         {
             var deFeatures = new List<IFeature>();
@@ -125,37 +133,37 @@ namespace pixChange
                 {
                     this.dataTable.Rows.Remove(row);
                 });
-                deFeatures.ForEach(feature =>
-                   this.pfeatuers.Remove(feature));
+                deFeatures.ForEach(feature =>this.pfeatuers.Remove(feature));
                 this.countLabel.Text = dataTable.Rows.Count.ToString();
             }
             else{
                 MessageBox.Show("删除错误");
             }
         }
-        /*
-        private void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        #endregion
+        #region 更新数据行
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex != -1)
+            if (e.RowIndex > -1)
             {
-                object prevIndex =  this.dataGridView.Tag;
-                if (prevIndex == null || !prevIndex.Equals(e.RowIndex))
-                {
-                    dataGridView.Tag = e.RowIndex;
-                    dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                    dataGridView.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Blue;
-                }
+                this.dataGridView.EndEdit();
+                var dRow = dataTable.Rows[e.RowIndex];
+                var pFeature = this.pfeatuers[e.RowIndex];
+                FeatureDealUtil.UpdateFeature(pFeature, dRow);
             }
         }
-
-        private void DataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            if (e.RowIndex != -1)
-            {
-                dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-                dataGridView.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.FromArgb(0, 64, 64);
-            }
+            MessageBox.Show("输入数据不合法", "错误");
         }
-        */
+        #endregion
+        private void cancelBtt_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void ProListView_Load(object sender, EventArgs e)
+        {
+            this.countLabel.Text = dataTable.Rows.Count.ToString();
+        }
     }
 }
