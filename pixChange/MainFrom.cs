@@ -33,6 +33,8 @@ namespace pixChange
     {
         private List<IPoint> barryPoints = new List<IPoint>();
         private List<IPoint> stopPoints = new List<IPoint>();
+        private List<IElement> barryElements = new List<IElement>();
+        private List<IElement> stopElements = new List<IElement>();
         //0为不插入 1为插入经过点 2为插入断点
         private int insertFlag = 0;
         //路线操作接口字段
@@ -503,93 +505,54 @@ namespace pixChange
             //roadRaskCaculate.RoadRaskCaulte(@"w001001.adf", 20, @"..\..\Rources\RoadData\RoadRasterData");
         }
 
-
-        private static void IsCheck(ILayer layer)//判断IGroupLayer中所有图层的visible状态
-        {
-            for (int count = 0; count < MainFrom.m_mapControl.LayerCount; count++)
-            {
-                bool IsEqual = false;
-                bool IsEmpty = false;
-                ILayer pGL = MainFrom.m_mapControl.get_Layer(count);
-                if (pGL is IGroupLayer)
-                {
-                    ICompositeLayer pGroupLayer = pGL as ICompositeLayer;
-                    for (int j = 0; j < pGroupLayer.Count; j++)
-                    {
-                        ILayer pCompositeLayer;
-                        pCompositeLayer = pGroupLayer.get_Layer(j);
-                        if (layer == pCompositeLayer)
-                        {
-                            IsEqual = true;
-                        }
-                        if (pCompositeLayer.Visible == true)
-                        {
-                            IsEmpty = true;
-                        }
-                    }
-                }
-                if (IsEqual)
-                {
-                    if (IsEmpty)
-                    {
-                        pGL.Visible = true;
-                    }
-                    else
-                    {
-                        pGL.Visible = false;
-                    }
-                }
-            }
-        }
-
         private void barButtonItem14_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new ConfigForm().ShowDialog();
         }
-        //开启编辑公路断点模式
-        private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            #region 注释
-            ////如果处于正在编辑状态 则清除断路点和标识
-            //if (isInserting)
-            //{
-            //    SymbolUtil.ClearElement(this.axMapControl1);
-            //    this.breakPoint = null;
-            //    this.pixtureElement = null;
-            //    isInserting = false;
-            //    this.barButtonItem15.Caption = "设置断点";
-            //}
-            //else
-            //{
-            //    isInserting = true;
-            //  //  this.barButtonItem15.Caption = "取消断点";
-            //}
-            //if(this.pixtureElement!=null)
-            //{
-            //    SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
-            //}
-            //MainFrom.m_mapControl.Refresh();
-            #endregion
-            if (this.insertFlag == 2)
-            {
-                this.insertFlag = 0;
-                return;
-            }
-            this.insertFlag = 2;
-            routeUI.DealRoutenetLayer(this.axMapControl1);
-        }
-        private void barButtonItem22_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (this.insertFlag == 1)
-            {
-                this.insertFlag = 0;
-                return;
-            }
-            this.insertFlag = 1;
-            //处理公路网图层
-            routeUI.DealRoutenetLayer(this.axMapControl1);
-        }
-        //插入公路断点
+        ////开启编辑公路断点模式
+        //private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        //{
+        //    #region 注释
+        //    ////如果处于正在编辑状态 则清除断路点和标识
+        //    //if (isInserting)
+        //    //{
+        //    //    SymbolUtil.ClearElement(this.axMapControl1);
+        //    //    this.breakPoint = null;
+        //    //    this.pixtureElement = null;
+        //    //    isInserting = false;
+        //    //    this.barButtonItem15.Caption = "设置断点";
+        //    //}
+        //    //else
+        //    //{
+        //    //    isInserting = true;
+        //    //  //  this.barButtonItem15.Caption = "取消断点";
+        //    //}
+        //    //if(this.pixtureElement!=null)
+        //    //{
+        //    //    SymbolUtil.ClearElement(this.axMapControl1,this.pixtureElement as IElement);
+        //    //}
+        //    //MainFrom.m_mapControl.Refresh();
+        //    #endregion
+        //    if (this.insertFlag == 2)
+        //    {
+        //        this.insertFlag = 0;
+        //        return;
+        //    }
+        //    this.insertFlag = 2;
+        //    routeUI.DealRoutenetLayer(this.axMapControl1);
+        //}
+        //private void barButtonItem22_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        //{
+        //    if (this.insertFlag == 1)
+        //    {
+        //        this.insertFlag = 0;
+        //        return;
+        //    }
+        //    this.insertFlag = 1;
+        //    //处理公路网图层
+        //    routeUI.DealRoutenetLayer(this.axMapControl1);
+        //}
+        //插入公路点
         private void InsertPoint(IMapControlEvents2_OnMouseDownEvent e)
         {
             IPoint point = new PointClass();
@@ -597,12 +560,12 @@ namespace pixChange
             point.Y = e.mapY;
             if (this.insertFlag == 1)
             {
-               SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath);
+               this.stopElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.StopImagePath));
                this.stopPoints.Add(point);
             }
             else if(this.insertFlag==2)
             {
-                SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath);
+                this.barryElements.Add(SymbolUtil.DrawSymbolWithPicture(point, this.axMapControl1, Common.RouteBeakImggePath));
                 this.barryPoints.Add(point);
             }
          //   this.axMapControl1.Refresh();
@@ -748,6 +711,8 @@ namespace pixChange
         private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             routeUI.ClearRouteAnalyst(this.axMapControl1, ref this.insertFlag, stopPoints, barryPoints);
+            this.stopElements.Clear();
+            this.barryElements.Clear();
         }
         /// <summary>
         /// 地图视图刷新事件
@@ -862,5 +827,71 @@ namespace pixChange
             new PropertyQueryForm(this.toolStripComboBox2.Text,this.axMapControl1).ShowDialog();
         }
 
+        #region 公路经过点相关命令事件
+        //开启公路经过点编辑
+        private void barButtonItem26_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.insertFlag == 1)
+            {
+                this.insertFlag = 0;
+                return;
+            }
+            this.insertFlag = 1;
+            //处理公路网图层
+            routeUI.DealRoutenetLayer(this.axMapControl1);
+        }
+        //撤销上一个公路经过点
+        private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.stopPoints.Count > 0)
+            {
+                this.stopPoints.RemoveAt(this.stopPoints.Count - 1);
+                SymbolUtil.ClearElement(this.axMapControl1, this.stopElements[this.stopElements.Count - 1]);
+                this.stopElements.RemoveAt(this.stopElements.Count - 1);
+            }
+        }
+        //清空公路经过点
+        private void barButtonItem29_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            this.stopPoints.Clear();
+            this.stopElements.ForEach(element => SymbolUtil.ClearElement(this.axMapControl1, element));
+            this.stopPoints.Clear();
+        }
+
+        #endregion
+        #region 公路断点相关命令事件
+        //开启断点编辑
+        private void barButtonItem27_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.insertFlag == 2)
+            {
+                this.insertFlag = 0;
+                return;
+            }
+            this.insertFlag = 2;
+            routeUI.DealRoutenetLayer(this.axMapControl1);
+        }
+        //撤销上一个断点
+        private void barButtonItem28_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (this.barryPoints.Count > 0)
+            {
+                this.barryPoints.RemoveAt(this.barryPoints.Count - 1);
+                SymbolUtil.ClearElement(this.axMapControl1, this.barryElements[this.barryElements.Count - 1]);
+                this.barryElements.RemoveAt(this.barryElements.Count - 1);
+            }
+        }
+        //清空断点
+        private void barButtonItem30_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            this.barryPoints.Clear();
+            this.barryElements.ForEach(element => SymbolUtil.ClearElement(this.axMapControl1, element));
+            this.barryElements.Clear();
+        }
+        #endregion
+        //void ResetStopPointSymbols();
+        //void ResetBarryPointSymbols();
+        //void UndoStopPointSymbols();
+        //void UndoBarryPointSymbols();
     }
 }

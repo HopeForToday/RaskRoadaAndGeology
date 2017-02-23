@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrom));
-            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
+            DevExpress.Utils.Animation.PushTransition pushTransition2 = new DevExpress.Utils.Animation.PushTransition();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.axTOCControl1 = new ESRI.ArcGIS.Controls.AxTOCControl();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -71,11 +71,18 @@
             this.barButtonItem13 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem14 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem15 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem16 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem17 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem22 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem23 = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem26 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem25 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem29 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem24 = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem3 = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem27 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem28 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem30 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -284,13 +291,20 @@
             this.barButtonItem13,
             this.barButtonItem5,
             this.barButtonItem14,
-            this.barButtonItem15,
             this.barButtonItem16,
             this.barButtonItem17,
-            this.barButtonItem22,
-            this.barButtonItem23});
+            this.barButtonItem23,
+            this.barSubItem2,
+            this.barButtonItem24,
+            this.barButtonItem26,
+            this.barButtonItem25,
+            this.barSubItem3,
+            this.barButtonItem27,
+            this.barButtonItem28,
+            this.barButtonItem29,
+            this.barButtonItem30});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 26;
+            this.ribbonControl1.MaxItemId = 36;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -307,7 +321,7 @@
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
-            this.workspaceManager1.TransitionType = pushTransition1;
+            this.workspaceManager1.TransitionType = pushTransition2;
             // 
             // barSubItem1
             // 
@@ -443,14 +457,6 @@
             this.barButtonItem14.Name = "barButtonItem14";
             this.barButtonItem14.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem14_ItemClick);
             // 
-            // barButtonItem15
-            // 
-            this.barButtonItem15.Caption = "设置断点";
-            this.barButtonItem15.Id = 21;
-            this.barButtonItem15.ImageUri.Uri = "Delete";
-            this.barButtonItem15.Name = "barButtonItem15";
-            this.barButtonItem15.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem15_ItemClick);
-            // 
             // barButtonItem16
             // 
             this.barButtonItem16.Caption = "绕行方案";
@@ -467,14 +473,6 @@
             this.barButtonItem17.Name = "barButtonItem17";
             this.barButtonItem17.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem17_ItemClick);
             // 
-            // barButtonItem22
-            // 
-            this.barButtonItem22.Caption = "设置经过点";
-            this.barButtonItem22.Id = 24;
-            this.barButtonItem22.ImageUri.Uri = "AlignVerticalRight";
-            this.barButtonItem22.Name = "barButtonItem22";
-            this.barButtonItem22.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem22_ItemClick);
-            // 
             // barButtonItem23
             // 
             this.barButtonItem23.Caption = "取消绕行编辑";
@@ -482,6 +480,82 @@
             this.barButtonItem23.ImageUri.Uri = "Reset";
             this.barButtonItem23.Name = "barButtonItem23";
             this.barButtonItem23.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem23_ItemClick);
+            // 
+            // barSubItem2
+            // 
+            this.barSubItem2.Caption = "经过点操作";
+            this.barSubItem2.Id = 26;
+            this.barSubItem2.ImageUri.Uri = "AlignHorizontalBottom";
+            this.barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem26),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem25),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem29)});
+            this.barSubItem2.Name = "barSubItem2";
+            // 
+            // barButtonItem26
+            // 
+            this.barButtonItem26.Caption = "编辑经过点";
+            this.barButtonItem26.Id = 29;
+            this.barButtonItem26.ImageUri.Uri = "AlignHorizontalTop";
+            this.barButtonItem26.Name = "barButtonItem26";
+            this.barButtonItem26.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem26_ItemClick);
+            // 
+            // barButtonItem25
+            // 
+            this.barButtonItem25.Caption = "撤销经过点";
+            this.barButtonItem25.Id = 30;
+            this.barButtonItem25.ImageUri.Uri = "Undo";
+            this.barButtonItem25.Name = "barButtonItem25";
+            this.barButtonItem25.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem25_ItemClick);
+            // 
+            // barButtonItem29
+            // 
+            this.barButtonItem29.Caption = "清空经过点";
+            this.barButtonItem29.Id = 34;
+            this.barButtonItem29.ImageUri.Uri = "Reset";
+            this.barButtonItem29.Name = "barButtonItem29";
+            this.barButtonItem29.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem29_ItemClick);
+            // 
+            // barButtonItem24
+            // 
+            this.barButtonItem24.Caption = "barButtonItem24";
+            this.barButtonItem24.Id = 27;
+            this.barButtonItem24.Name = "barButtonItem24";
+            // 
+            // barSubItem3
+            // 
+            this.barSubItem3.Caption = "断点操作";
+            this.barSubItem3.Id = 31;
+            this.barSubItem3.ImageUri.Uri = "Delete";
+            this.barSubItem3.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem27),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem28),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem30)});
+            this.barSubItem3.Name = "barSubItem3";
+            // 
+            // barButtonItem27
+            // 
+            this.barButtonItem27.Caption = "编辑断点";
+            this.barButtonItem27.Id = 32;
+            this.barButtonItem27.ImageUri.Uri = "Delete";
+            this.barButtonItem27.Name = "barButtonItem27";
+            this.barButtonItem27.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem27_ItemClick);
+            // 
+            // barButtonItem28
+            // 
+            this.barButtonItem28.Caption = "撤销断点";
+            this.barButtonItem28.Id = 33;
+            this.barButtonItem28.ImageUri.Uri = "Undo";
+            this.barButtonItem28.Name = "barButtonItem28";
+            this.barButtonItem28.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem28_ItemClick);
+            // 
+            // barButtonItem30
+            // 
+            this.barButtonItem30.Caption = "清空断点";
+            this.barButtonItem30.Id = 35;
+            this.barButtonItem30.ImageUri.Uri = "Reset";
+            this.barButtonItem30.Name = "barButtonItem30";
+            this.barButtonItem30.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem30_ItemClick);
             // 
             // ribbonPage1
             // 
@@ -502,8 +576,8 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem9, true);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem10);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem11);
-            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem22);
-            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem15);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barSubItem2);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barSubItem3);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem16);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem23);
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem17);
@@ -630,7 +704,6 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem5;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
         private DevExpress.XtraBars.BarButtonItem barButtonItem14;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem15;
         private DevExpress.XtraBars.BarButtonItem barButtonItem16;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private DevExpress.XtraBars.BarButtonItem barButtonItem17;
@@ -638,10 +711,18 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem19;
         private DevExpress.XtraBars.BarButtonItem barButtonItem20;
         private DevExpress.XtraBars.BarButtonItem barButtonItem21;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem22;
         private DevExpress.XtraBars.BarButtonItem barButtonItem23;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private DevExpress.XtraBars.BarSubItem barSubItem2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem26;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem25;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem24;
+        private DevExpress.XtraBars.BarSubItem barSubItem3;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem27;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem28;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem29;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem30;
    
     }
 }
