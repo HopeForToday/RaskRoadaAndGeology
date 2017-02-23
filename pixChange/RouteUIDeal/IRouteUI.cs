@@ -15,10 +15,17 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
     /// </summary>
     public interface IRouteUI
     {
-        bool FindTheShortRoute(AxMapControl mapControl, List<IPoint> stopPoints, List<IPoint> barryPoints, IFeatureLayer routeNetLayer, ref ILayer layer, ref List<IPoint> newStopPoints, ref List<IPoint> newBarryPoints);
         void showRouteShape(IFeatureLayer featureLayer, AxMapControl mapControl);
         ILayer DealRoutenetLayer(AxMapControl mapControl);
-        void UpdateSymbol(AxMapControl mapControl, List<IPoint> newStopPoints, List<IPoint> newBarryPoints);
-        void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag, List<IPoint> stopPoints, List<IPoint> barryPoints);
+        bool FindTheShortRoute(AxMapControl mapControl, IFeatureLayer routeNetLayer, ref ILayer layer);
+        void UpdateSymbol(AxMapControl mapControl);
+        void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag);
+        void ResetStopPointSymbols(AxMapControl mapControl);
+        void ResetBarryPointSymbols(AxMapControl mapControl);
+        void UndoStopPointSymbols(AxMapControl mapControl);
+        void UndoBarryPointSymbols(AxMapControl mapControl);
+        void InsertPoint(int insertFlag, AxMapControl mapControl, IPoint point);
+        List<IPoint> BarryPoints { get; }
+        List<IPoint> StopPoints { get; }
     }
 }
