@@ -519,6 +519,7 @@ namespace pixChange
            // SymbolUtil.ClearElement(this.axMapControl1);
          //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
             MapUtil.SaveMxd(this.axMapControl1);
+            Application.Exit();
         }
 
         private void barButtonItem9_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
