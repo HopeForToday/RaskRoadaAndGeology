@@ -15,7 +15,7 @@ namespace RoadRaskEvaltionSystem
     public partial class ConditionForm : Form
     {
         DataTable st = new DataTable();
-        String day1, day2;
+        String day1,NowDate;
         double _24hAgoRain = -1, todayRain = -1, tomorrowRain = -1;
         DateTime NowTime;
         int areaID = 1;//记录地区id 1为芦山县，2为宝兴县
@@ -28,8 +28,8 @@ namespace RoadRaskEvaltionSystem
             getDays();
             this.comboBoxEdit3.SelectedIndex = 0;
             this.comboBoxEdit4.Enabled = false;
+            NowDate = String.Format("{0}", DateTime.Now.ToString("yyyy/MM/dd"));
             day1 = String.Format("{0}", DateTime.Now.AddDays(1).ToString("yyyy/MM/dd"));
-            day2 = String.Format("{0}", DateTime.Now.AddDays(2).ToString("yyyy/MM/dd"));
         }
 
         private void comboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
@@ -43,8 +43,7 @@ namespace RoadRaskEvaltionSystem
                 {
                     if (st.Rows.Count == 0)
                     {
-                        sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
-                        //sql = String.Format("SELECT dtime3hour,timedate7 FROM ForecastWeather WHERE AreaID = {0} AND ID<(SELECT ID FROM ForecastWeather WHERE ForecastWeather.dtime3hour LIKE '{1}%' AND ForecastWeather.AreaID={0} ORDER BY ID)", areaID, day1);
+                        sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, NowDate);
                         try
                         {
                             st = RainData(sql);
@@ -59,7 +58,8 @@ namespace RoadRaskEvaltionSystem
                                 {
                                     if (v["timehour7"].ToString() != "")
                                     {
-                                        this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString()); 
+                                        DateTime time = DateTime.Parse(v["timehour7"].ToString());
+                                        this.comboBoxEdit4.Properties.Items.Add(time.ToString("HH:mm")); 
                                     }
                                 }
                             }
@@ -82,7 +82,8 @@ namespace RoadRaskEvaltionSystem
                             {
                                 if (v["timehour7"].ToString() != "")
                                 {
-                                    this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
+                                    DateTime time = DateTime.Parse(v["timehour7"].ToString());
+                                    this.comboBoxEdit4.Properties.Items.Add(time.ToString("HH:mm")); 
                                 }
                             }
                         }
@@ -136,13 +137,14 @@ namespace RoadRaskEvaltionSystem
                         {
                             if (v["timehour7"].ToString() != "")
                             {
-                                this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
+                                DateTime time = DateTime.Parse(v["timehour7"].ToString());
+                                this.comboBoxEdit4.Properties.Items.Add(time.ToString("HH:mm")); 
                             }
                         }
                     }
                     else
                     {
-                        string sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
+                        string sql = String.Format("SELECT timehour7 FROM ForecastWeather WHERE AreaID={0} AND ForecastWeather.timedate7 =#{1}#", areaID, NowDate);
                         try
                         {
                             st = RainData(sql);
@@ -157,7 +159,8 @@ namespace RoadRaskEvaltionSystem
                                 {
                                     if (v["timehour7"].ToString() != "")
                                     {
-                                        this.comboBoxEdit4.Properties.Items.Add(v["timehour7"].ToString());
+                                        DateTime time = DateTime.Parse(v["timehour7"].ToString());
+                                        this.comboBoxEdit4.Properties.Items.Add(time.ToString("HH:mm")); 
                                     }
                                 }
                             }
@@ -200,7 +203,7 @@ namespace RoadRaskEvaltionSystem
             string hour = null;
             string sqlString = null;
             string _24hAgoStr = null;//24小时前降雨量
-            string NowDate = String.Format("{0}", DateTime.Now.ToString("yyyy/MM/dd"));
+            
             if (_24hAgoRain < 0)
             {
                 _24hAgoStr = String.Format("SELECT TOP 1 rain24h FROM OneHourWeather WHERE AreaID = {0} AND OneHourWeather.timedate24 = #{1}# order by ID", areaID, NowDate);
@@ -208,7 +211,7 @@ namespace RoadRaskEvaltionSystem
             }
             if (todayRain < 0)
             {
-                sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
+                sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, NowDate);
                 todayRain = AddRain(sqlString, "rains");
             }
             if (this.comboBoxEdit2.SelectedItem.ToString() == "时刻")
@@ -220,7 +223,7 @@ namespace RoadRaskEvaltionSystem
                 }
                 else
                 {
-                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day2);
+                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
                     tomorrowRain = AddRain(sqlString, "rains");
                     rain = _24hAgoRain * 0.64 + todayRain * 0.8 + tomorrowRain;
                 }
@@ -233,7 +236,7 @@ namespace RoadRaskEvaltionSystem
                 }
                 else
                 {
-                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day2);
+                    sqlString = String.Format("SELECT rains FROM ForecastWeather WHERE AreaID = {0} AND ForecastWeather.timedate7 =#{1}#", areaID, day1);
                     tomorrowRain = AddRain(sqlString, "rains");
                     rain = _24hAgoRain * 0.64 + todayRain * 0.8 + tomorrowRain;
                 }
