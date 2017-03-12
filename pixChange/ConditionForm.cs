@@ -206,7 +206,7 @@ namespace RoadRaskEvaltionSystem
             
             if (_24hAgoRain < 0)
             {
-                _24hAgoStr = String.Format("SELECT TOP 1 rain24h FROM OneHourWeather WHERE AreaID = {0} AND OneHourWeather.timedate24 = #{1}# order by ID", areaID, NowDate);
+                _24hAgoStr = String.Format("SELECT TOP 1 rain24h FROM OneHourWeather WHERE AreaID = {0} AND OneHourWeather.timedate24 = #{1}# order by OneHourWeather.timehour24 desc", areaID, NowDate);
                 _24hAgoRain = AddRain(_24hAgoStr, "rain24h");
             }
             if (todayRain < 0)
