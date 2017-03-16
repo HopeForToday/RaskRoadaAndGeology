@@ -28,6 +28,67 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 });
             return newFeatures;
         }
+        /// <summary>
+        /// 查询图层某一字段的所有唯一值
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public static IList<object> GetUnikeValues(IFeatureLayer layer, string fieldName)
+        {
+            IList<object> values = new List<object>();
+            IFeatureCursor pFeatureCursor = QueryFeatureInLayer(layer, "");
+            IDataStatistics dataStatistics = new DataStatisticsClass();
+            dataStatistics.Cursor = pFeatureCursor as ICursor;
+            dataStatistics.Field = fieldName;
+            //  IStatisticsResults result = dataStatistics.Statistics;
+            IEnumerator myEnumerator = dataStatistics.UniqueValues;
+            List<string> myValueList = new List<string>();
+            myEnumerator.Reset();
+            while (myEnumerator.MoveNext())
+            {
+                if (myEnumerator.Current != null)
+                {
+                    values.Add(myEnumerator.Current.ToString());
+                }
+            }
+            //     IStatisticsResults  result= dataStatistics.Statistics;
+            return values;
+        }
+      /// <summary>
+        ///  查询图层某一字段的所有唯一值 带最多个数限制
+      /// </summary>
+      /// <param name="layer"></param>
+      /// <param name="fieldName"></param>
+      /// <param name="maxCount"></param>
+      /// <returns></returns>
+        public static IList<object> GetUnikeValues(IFeatureLayer layer, string fieldName,int maxCount)
+        {
+            IList<object> values = new List<object>();
+            IFeatureCursor pFeatureCursor = QueryFeatureInLayer(layer, "");
+            IDataStatistics dataStatistics = new DataStatisticsClass();
+            dataStatistics.Cursor = pFeatureCursor as ICursor;
+            dataStatistics.Field = fieldName;
+            //  IStatisticsResults result = dataStatistics.Statistics;
+            IEnumerator myEnumerator = dataStatistics.UniqueValues;
+            List<string> myValueList = new List<string>();
+            int count = 1;
+            myEnumerator.Reset();
+            while (myEnumerator.MoveNext())
+            {
+                count++;
+                if (count > maxCount)
+                {
+                    break;
+                }
+                if (myEnumerator.Current != null)
+                {
+                    values.Add(myEnumerator.Current.ToString());
+                }
+            }
+            //     IStatisticsResults  result= dataStatistics.Statistics;
+            return values;
+        }
         public static IFeature GetFeatureByFID(IFeatureLayer layer, int id)
         {
             IFeatureCursor featureCursor = null;
