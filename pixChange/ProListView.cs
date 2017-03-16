@@ -52,6 +52,11 @@ namespace pixChange
             if (e.Button == MouseButtons.Right)
             {
                 toDeleteColumnIndex = e.ColumnIndex;
+                //如果是无法删除的字段则根本就不弹出菜单
+                if(!couldDeleteFiled(e.ColumnIndex))
+                {
+                    return;
+                }
                 System.Drawing.Point point = dataGridView.PointToScreen(new System.Drawing.Point(0, 0));
                 int x = 0;
                 DataGridViewColumnCollection columns = dataGridView.Columns;
@@ -65,13 +70,35 @@ namespace pixChange
                 contextMenuStrip1.Show(dataGridView.PointToScreen(new System.Drawing.Point(x + e.X, e.Y+5)));
             }
         }
+        /// <summary>
+        /// 检查字段是否可以修改
+        /// 一般FID字段和Shape字段不可以修改
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        private bool couldDeleteFiled(int columnIndex)
+        {
+             if (columnIndex < 1)
+            {
+                return false;
+            }
+            var columnName = this.dataGridView.Columns[columnIndex].Name;
+            for(int i=0;i<this.layer.FeatureClass.Fields.FieldCount;i++){
+                IField tempFiled=this.layer.FeatureClass.Fields.get_Field(i);
+                if (tempFiled.Name == columnName)
+                {
+                    return !tempFiled.Required;
+                }
+            }
+           return false;
+        }
         private void removeColumnMenuItem_Click(object sender, EventArgs e)
         {
             if (toDeleteColumnIndex < 1)
             {
                 return;
             }
-            string columnName = this.dataGridView.Columns[toDeleteColumnIndex].Name;
+            var columnName = this.dataGridView.Columns[toDeleteColumnIndex].Name;
             RemoveColumn(columnName);
             toDeleteColumnIndex = -1;
         }

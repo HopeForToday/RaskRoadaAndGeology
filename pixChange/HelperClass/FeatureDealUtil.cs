@@ -45,12 +45,19 @@ namespace RoadRaskEvaltionSystem.HelperClass
             IEnumerator myEnumerator = dataStatistics.UniqueValues;
             List<string> myValueList = new List<string>();
             myEnumerator.Reset();
-            while (myEnumerator.MoveNext())
+            try
             {
-                if (myEnumerator.Current != null)
+                while (myEnumerator.MoveNext())
                 {
-                    values.Add(myEnumerator.Current.ToString());
+                    if (myEnumerator.Current != null)
+                    {
+                        values.Add(myEnumerator.Current.ToString());
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+
             }
             //     IStatisticsResults  result= dataStatistics.Statistics;
             return values;
@@ -74,45 +81,15 @@ namespace RoadRaskEvaltionSystem.HelperClass
             List<string> myValueList = new List<string>();
             int count = 1;
             myEnumerator.Reset();
-            while (myEnumerator.MoveNext())
-            {
-                count++;
-                if (count > maxCount)
-                {
-                    break;
-                }
-                if (myEnumerator.Current != null)
-                {
-                    values.Add(myEnumerator.Current.ToString());
-                }
-            }
-            //     IStatisticsResults  result= dataStatistics.Statistics;
-            return values;
-        }
-        public static IFeature GetFeatureByFID(IFeatureLayer layer, int id)
-        {
-            IFeatureCursor featureCursor = null;
-            IQueryFilter2 queryFilter = new QueryFilterClass();
-            queryFilter.WhereClause = string.Format("FID = {0}", id);
-            featureCursor = layer.Search(queryFilter, false);
-            IFeature pFeature = featureCursor.NextFeature();
-            return pFeature;
-        }
-        public static IList<object> GetUniqueValues(IFeatureLayer layer, string fieldName)
-        {
-            IList<object> values = new List<object>();
-            IFeatureCursor pFeatureCursor = QueryFeatureInLayer(layer, "");
-            IDataStatistics dataStatistics = new DataStatisticsClass();
-            dataStatistics.Cursor = pFeatureCursor as ICursor;
-            dataStatistics.Field = fieldName;
-            //  IStatisticsResults result = dataStatistics.Statistics;
             try
             {
-                IEnumerator myEnumerator = dataStatistics.UniqueValues;
-                List<string> myValueList = new List<string>();
-                myEnumerator.Reset();
                 while (myEnumerator.MoveNext())
                 {
+                    count++;
+                    if (count > maxCount)
+                    {
+                        break;
+                    }
                     if (myEnumerator.Current != null)
                     {
                         values.Add(myEnumerator.Current.ToString());
@@ -126,6 +103,16 @@ namespace RoadRaskEvaltionSystem.HelperClass
             //     IStatisticsResults  result= dataStatistics.Statistics;
             return values;
         }
+        public static IFeature GetFeatureByFID(IFeatureLayer layer, int id)
+        {
+            IFeatureCursor featureCursor = null;
+            IQueryFilter2 queryFilter = new QueryFilterClass();
+            queryFilter.WhereClause = string.Format("FID = {0}", id);
+            featureCursor = layer.Search(queryFilter, false);
+            IFeature pFeature = featureCursor.NextFeature();
+            return pFeature;
+        }
+     
 
         private static IFeatureCursor QueryFeatureInLayer(IFeatureLayer layer, string whereClause)
         {

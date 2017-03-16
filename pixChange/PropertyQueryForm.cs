@@ -96,45 +96,41 @@ namespace RoadRaskEvaltionSystem
         {
             this.Close();
         }
-
-        #endregion
-        private void listBoxControl1_SelectedIndexChanged(object sender, EventArgs e)
+        //获取唯一值事件
+        private void getValueBtt_Click(object sender, EventArgs e)
         {
-            if (this.listBoxControl1.SelectedIndex > -1)
+            int selectIndex = this.listBoxControl1.SelectedIndex;
+            if (selectIndex < 0)
+            {
+                return;
+            }
+            this.valueslistBoxControl.SelectedIndexChanged -= this.ListBox2ItemHandler;
+            UpdateFieldUniqueValueListbox(this.fields[this.listBoxControl1.SelectedIndex]);
+            this.valueslistBoxControl.SelectedIndexChanged += this.ListBox2ItemHandler;
+        }
+        private void listBoxControl1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = listBoxControl1.IndexFromPoint(new Point(e.X, e.Y));
+            listBoxControl1.SelectedIndex = index;
+            if (listBoxControl1.SelectedIndex > -1)
             {
                 string fieldName = this.listBoxControl1.SelectedItem as string;
                 DealField(fieldName);
-                //this.listBoxControl2.SelectedIndexChanged -= this.ListBox2ItemHandler;
-                //UpdateFieldUniqueValueListbox(this.fields[this.listBoxControl1.SelectedIndex]);
-                //this.listBoxControl2.SelectedIndexChanged += this.ListBox2ItemHandler;
-                this.listBoxControl1.SelectedIndex = -1;
             }
         }
-        //private void listBoxControl2_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (this.listBoxControl2.SelectedIndex > -1)
-        //    {
-        //        string value = this.listBoxControl2.SelectedItem as string;
-        //        DealFieldValue(value);
-        //        this.listBoxControl2.SelectedIndex = -1;
-        //    }
-        //}
-        //更新唯一值 只考虑对字符字段进行提示
-        //void UpdateFieldUniqueValueListbox(IField field)
-        //{
-        //    this.listBoxControl2.Items.Clear();
-        //    if (field.Type == esriFieldType.esriFieldTypeString)
-        //    {
-        //        IList<object> values = FeatureDealUtil.GetUniqueValues(selectLayer as IFeatureLayer, field.Name);
-        //        this.listBoxControl1.SelectedIndex = -1;
-        //        foreach (var value in values)
-        //        {
-        //            this.listBoxControl2.Items.Add(value);
-        //        }
-        //        this.listBoxControl1.SelectedIndex = -1;
-        //    }
-        //}
-      
+
+        private void valueslistBoxControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            int index = valueslistBoxControl.IndexFromPoint(new Point(e.X, e.Y));
+            valueslistBoxControl.SelectedIndex = index;
+            if (this.valueslistBoxControl.SelectedIndex > -1)
+            {
+                string value = this.valueslistBoxControl.SelectedItem as string;
+                DealFieldValue(value);
+                this.valueslistBoxControl.SelectedIndex = -1;
+            }
+        }
+        #endregion  
         private void EventDeal()
         {
             var numberClickHandler = new EventHandler((p, q) =>
@@ -183,7 +179,7 @@ namespace RoadRaskEvaltionSystem
         {
             this.listBoxControl1.Items.Clear();
             fields = LayerUtil.GetLayerFields(selectLayer as IFeatureLayer);
-            fields.ForEach(p => this.listBoxControl1.Items.Add(p.Name));
+            fields.ForEach(p => this.listBoxControl1.Items.Add(String.Format("\"{0}\"", p.Name)));
         }
         private void AddQueryText(string str)
         {
@@ -217,5 +213,35 @@ namespace RoadRaskEvaltionSystem
         {
             AddQueryText(value);
         }
+        private void DealFieldValue(string value)
+        {
+            AddQueryText(value);
+        }
+       
+        /// <summary>
+        /// 更新valueslistBoxControl元素
+        /// </summary>
+        /// <param name="field"></param>
+        void UpdateFieldUniqueValueListbox(IField field)
+        {
+            this.valueslistBoxControl.Items.Clear();
+            IList<object> values = FeatureDealUtil.GetUnikeValues(selectLayer as IFeatureLayer, field.Name, 200);
+            if (field.Type == esriFieldType.esriFieldTypeString)
+            {
+                foreach (var value in values)
+                {
+                    this.valueslistBoxControl.Items.Add(String.Format("'{0}'",value));
+                }
+            }
+            else
+            {
+                foreach (var value in values)
+                {
+                    this.valueslistBoxControl.Items.Add(value);
+                }
+            }
+            this.valueslistBoxControl.SelectedIndex = -1;
+        }
+       
     }
 }

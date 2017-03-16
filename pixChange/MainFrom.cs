@@ -224,9 +224,6 @@ namespace pixChange
             }
             return gLayer;
         }
-
-        private ILayer removedLayer = null;
-        private IGroupLayer removedGroupLayer = null;
         private void axTOCControl1_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
         {
             /*
@@ -434,6 +431,12 @@ namespace pixChange
                     m_isMouseDown = true;
                     break;
                 case CustomTool.RectSelect:
+                 //  toolStripComboBox2.ComboBox.
+                    if (this.toolStripComboBox2.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("尚未选择任何查询图层");
+                        return;
+                    }
                     IEnvelope pRect = m_mapControl.TrackRectangle();
                     spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,null,this.toolStripComboBox2.Text);
                     this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
@@ -466,11 +469,11 @@ namespace pixChange
                 this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                 return;
             }
-            if (string.IsNullOrEmpty(toolComboBox.Text))
-            {
-                MessageBox.Show("请先选择操作图层");
-                return;
-            }
+            //if (string.IsNullOrEmpty(toolComboBox.Text))
+            //{
+            //    MessageBox.Show("请先选择操作图层");
+            //    return;
+            //}
             //改变鼠标形状
             m_mapControl.MousePointer = esriControlsMousePointer.esriPointerArrow;
             this.toolStripButton9.Text = "停止查询";
@@ -544,6 +547,7 @@ namespace pixChange
         {
             new ConfigForm().ShowDialog();
         }
+        /*
         /// <summary>
         /// 地图视图刷新事件
         /// 往图层下拉框中添加数据
@@ -554,7 +558,7 @@ namespace pixChange
         {
             UpdateLayerCombox();
         }
-
+        */
         private void toolStripComboBox2_Enter(object sender, EventArgs e)
         {
             toolStripComboBox2.SelectedText = "";

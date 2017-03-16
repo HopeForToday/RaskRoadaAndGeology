@@ -33,12 +33,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.cancelBtt = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.countLabel = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
-            this.cancelBtt = new DevExpress.XtraEditors.SimpleButton();
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.ChoseColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -65,6 +65,15 @@
             this.panelControl1.Name = "panelControl1";
             this.panelControl1.Size = new System.Drawing.Size(770, 33);
             this.panelControl1.TabIndex = 0;
+            // 
+            // cancelBtt
+            // 
+            this.cancelBtt.Location = new System.Drawing.Point(327, 5);
+            this.cancelBtt.Name = "cancelBtt";
+            this.cancelBtt.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtt.TabIndex = 1;
+            this.cancelBtt.Text = "退出";
+            this.cancelBtt.Click += new System.EventHandler(this.cancelBtt_Click);
             // 
             // simpleButton2
             // 
@@ -110,15 +119,6 @@
             this.panelControl2.Name = "panelControl2";
             this.panelControl2.Size = new System.Drawing.Size(770, 13);
             this.panelControl2.TabIndex = 1;
-            // 
-            // cancelBtt
-            // 
-            this.cancelBtt.Location = new System.Drawing.Point(327, 5);
-            this.cancelBtt.Name = "cancelBtt";
-            this.cancelBtt.Size = new System.Drawing.Size(75, 23);
-            this.cancelBtt.TabIndex = 1;
-            this.cancelBtt.Text = "退出";
-            this.cancelBtt.Click += new System.EventHandler(this.cancelBtt_Click);
             // 
             // panelControl3
             // 
@@ -170,12 +170,13 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeColumnMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 48);
+            //this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // removeColumnMenuItem
             // 
             this.removeColumnMenuItem.Name = "removeColumnMenuItem";
-            this.removeColumnMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.removeColumnMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeColumnMenuItem.Text = "删除字段";
             this.removeColumnMenuItem.Click += new System.EventHandler(this.removeColumnMenuItem_Click);
             // 

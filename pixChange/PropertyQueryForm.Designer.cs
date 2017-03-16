@@ -67,6 +67,12 @@
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.valueslistBoxControl = new DevExpress.XtraEditors.ListBoxControl();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.getValueBtt = new DevExpress.XtraEditors.SimpleButton();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.listBoxControl1 = new DevExpress.XtraEditors.ListBoxControl();
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
             this.cancelBtt = new DevExpress.XtraEditors.SimpleButton();
@@ -88,6 +94,11 @@
             this.opreateGroupControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.valueslistBoxControl)).BeginInit();
+            this.panel4.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listBoxControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
             this.panelControl3.SuspendLayout();
@@ -130,7 +141,7 @@
             this.panelControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl2.Location = new System.Drawing.Point(0, 32);
             this.panelControl2.Name = "panelControl2";
-            this.panelControl2.Size = new System.Drawing.Size(353, 382);
+            this.panelControl2.Size = new System.Drawing.Size(353, 392);
             this.panelControl2.TabIndex = 1;
             // 
             // panelControl5
@@ -138,17 +149,17 @@
             this.panelControl5.Controls.Add(this.queryTxtBox);
             this.panelControl5.Controls.Add(this.labelControl2);
             this.panelControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelControl5.Location = new System.Drawing.Point(2, 302);
+            this.panelControl5.Location = new System.Drawing.Point(2, 320);
             this.panelControl5.Name = "panelControl5";
-            this.panelControl5.Size = new System.Drawing.Size(349, 78);
+            this.panelControl5.Size = new System.Drawing.Size(349, 70);
             this.panelControl5.TabIndex = 2;
             // 
             // queryTxtBox
             // 
             this.queryTxtBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.queryTxtBox.Location = new System.Drawing.Point(2, 25);
+            this.queryTxtBox.Location = new System.Drawing.Point(2, 24);
             this.queryTxtBox.Name = "queryTxtBox";
-            this.queryTxtBox.Size = new System.Drawing.Size(345, 51);
+            this.queryTxtBox.Size = new System.Drawing.Size(345, 44);
             this.queryTxtBox.TabIndex = 1;
             this.queryTxtBox.Text = "";
             // 
@@ -164,9 +175,9 @@
             this.panelControl4.Controls.Add(this.groupControl3);
             this.panelControl4.Controls.Add(this.opreateGroupControl);
             this.panelControl4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelControl4.Location = new System.Drawing.Point(2, 120);
+            this.panelControl4.Location = new System.Drawing.Point(2, 142);
             this.panelControl4.Name = "panelControl4";
-            this.panelControl4.Size = new System.Drawing.Size(349, 182);
+            this.panelControl4.Size = new System.Drawing.Size(349, 178);
             this.panelControl4.TabIndex = 1;
             // 
             // groupControl3
@@ -186,7 +197,7 @@
             this.groupControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupControl3.Location = new System.Drawing.Point(179, 2);
             this.groupControl3.Name = "groupControl3";
-            this.groupControl3.Size = new System.Drawing.Size(168, 178);
+            this.groupControl3.Size = new System.Drawing.Size(168, 174);
             this.groupControl3.TabIndex = 1;
             // 
             // panel1
@@ -195,7 +206,7 @@
             this.panel1.Controls.Add(this.simpleButton27);
             this.panel1.Controls.Add(this.simpleButton26);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(2, 142);
+            this.panel1.Location = new System.Drawing.Point(2, 138);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(164, 34);
             this.panel1.TabIndex = 11;
@@ -330,13 +341,13 @@
             this.opreateGroupControl.Dock = System.Windows.Forms.DockStyle.Left;
             this.opreateGroupControl.Location = new System.Drawing.Point(2, 2);
             this.opreateGroupControl.Name = "opreateGroupControl";
-            this.opreateGroupControl.Size = new System.Drawing.Size(177, 178);
+            this.opreateGroupControl.Size = new System.Drawing.Size(177, 174);
             this.opreateGroupControl.TabIndex = 0;
             this.opreateGroupControl.Text = "运算符";
             // 
             // simpleButton13
             // 
-            this.simpleButton13.Location = new System.Drawing.Point(8, 142);
+            this.simpleButton13.Location = new System.Drawing.Point(8, 148);
             this.simpleButton13.Name = "simpleButton13";
             this.simpleButton13.Size = new System.Drawing.Size(39, 23);
             this.simpleButton13.TabIndex = 12;
@@ -344,7 +355,7 @@
             // 
             // simpleButton12
             // 
-            this.simpleButton12.Location = new System.Drawing.Point(8, 113);
+            this.simpleButton12.Location = new System.Drawing.Point(8, 120);
             this.simpleButton12.Name = "simpleButton12";
             this.simpleButton12.Size = new System.Drawing.Size(39, 23);
             this.simpleButton12.TabIndex = 11;
@@ -352,7 +363,7 @@
             // 
             // simpleButton11
             // 
-            this.simpleButton11.Location = new System.Drawing.Point(127, 113);
+            this.simpleButton11.Location = new System.Drawing.Point(127, 120);
             this.simpleButton11.Name = "simpleButton11";
             this.simpleButton11.Size = new System.Drawing.Size(39, 23);
             this.simpleButton11.TabIndex = 10;
@@ -360,7 +371,7 @@
             // 
             // simpleButton10
             // 
-            this.simpleButton10.Location = new System.Drawing.Point(65, 113);
+            this.simpleButton10.Location = new System.Drawing.Point(65, 120);
             this.simpleButton10.Name = "simpleButton10";
             this.simpleButton10.Size = new System.Drawing.Size(39, 23);
             this.simpleButton10.TabIndex = 9;
@@ -368,7 +379,7 @@
             // 
             // simpleButton9
             // 
-            this.simpleButton9.Location = new System.Drawing.Point(127, 84);
+            this.simpleButton9.Location = new System.Drawing.Point(127, 92);
             this.simpleButton9.Name = "simpleButton9";
             this.simpleButton9.Size = new System.Drawing.Size(39, 23);
             this.simpleButton9.TabIndex = 8;
@@ -376,7 +387,7 @@
             // 
             // simpleButton8
             // 
-            this.simpleButton8.Location = new System.Drawing.Point(8, 84);
+            this.simpleButton8.Location = new System.Drawing.Point(8, 92);
             this.simpleButton8.Name = "simpleButton8";
             this.simpleButton8.Size = new System.Drawing.Size(39, 23);
             this.simpleButton8.TabIndex = 7;
@@ -384,7 +395,7 @@
             // 
             // simpleButton7
             // 
-            this.simpleButton7.Location = new System.Drawing.Point(65, 84);
+            this.simpleButton7.Location = new System.Drawing.Point(65, 92);
             this.simpleButton7.Name = "simpleButton7";
             this.simpleButton7.Size = new System.Drawing.Size(39, 23);
             this.simpleButton7.TabIndex = 6;
@@ -392,7 +403,7 @@
             // 
             // simpleButton6
             // 
-            this.simpleButton6.Location = new System.Drawing.Point(127, 55);
+            this.simpleButton6.Location = new System.Drawing.Point(127, 64);
             this.simpleButton6.Name = "simpleButton6";
             this.simpleButton6.Size = new System.Drawing.Size(39, 23);
             this.simpleButton6.TabIndex = 5;
@@ -400,7 +411,7 @@
             // 
             // simpleButton5
             // 
-            this.simpleButton5.Location = new System.Drawing.Point(65, 55);
+            this.simpleButton5.Location = new System.Drawing.Point(65, 64);
             this.simpleButton5.Name = "simpleButton5";
             this.simpleButton5.Size = new System.Drawing.Size(39, 23);
             this.simpleButton5.TabIndex = 4;
@@ -408,7 +419,7 @@
             // 
             // simpleButton4
             // 
-            this.simpleButton4.Location = new System.Drawing.Point(8, 55);
+            this.simpleButton4.Location = new System.Drawing.Point(8, 64);
             this.simpleButton4.Name = "simpleButton4";
             this.simpleButton4.Size = new System.Drawing.Size(39, 23);
             this.simpleButton4.TabIndex = 3;
@@ -416,7 +427,7 @@
             // 
             // simpleButton3
             // 
-            this.simpleButton3.Location = new System.Drawing.Point(127, 26);
+            this.simpleButton3.Location = new System.Drawing.Point(127, 36);
             this.simpleButton3.Name = "simpleButton3";
             this.simpleButton3.Size = new System.Drawing.Size(39, 23);
             this.simpleButton3.TabIndex = 2;
@@ -424,7 +435,7 @@
             // 
             // simpleButton2
             // 
-            this.simpleButton2.Location = new System.Drawing.Point(65, 26);
+            this.simpleButton2.Location = new System.Drawing.Point(65, 36);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(39, 23);
             this.simpleButton2.TabIndex = 1;
@@ -432,7 +443,7 @@
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(8, 26);
+            this.simpleButton1.Location = new System.Drawing.Point(8, 36);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(39, 23);
             this.simpleButton1.TabIndex = 0;
@@ -440,22 +451,78 @@
             // 
             // groupControl1
             // 
-            this.groupControl1.Controls.Add(this.listBoxControl1);
+            this.groupControl1.Controls.Add(this.panel3);
+            this.groupControl1.Controls.Add(this.panel2);
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupControl1.Location = new System.Drawing.Point(2, 2);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(349, 118);
+            this.groupControl1.Size = new System.Drawing.Size(349, 140);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "字段";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.panel5);
+            this.panel3.Controls.Add(this.panel4);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(143, 21);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(204, 117);
+            this.panel3.TabIndex = 1;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.valueslistBoxControl);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(63, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(141, 117);
+            this.panel5.TabIndex = 1;
+            // 
+            // valueslistBoxControl
+            // 
+            this.valueslistBoxControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.valueslistBoxControl.Location = new System.Drawing.Point(0, 0);
+            this.valueslistBoxControl.Name = "valueslistBoxControl";
+            this.valueslistBoxControl.Size = new System.Drawing.Size(141, 117);
+            this.valueslistBoxControl.TabIndex = 0;
+            this.valueslistBoxControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.valueslistBoxControl_MouseClick);
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.getValueBtt);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(63, 117);
+            this.panel4.TabIndex = 0;
+            // 
+            // getValueBtt
+            // 
+            this.getValueBtt.Location = new System.Drawing.Point(7, 13);
+            this.getValueBtt.Name = "getValueBtt";
+            this.getValueBtt.Size = new System.Drawing.Size(50, 20);
+            this.getValueBtt.TabIndex = 0;
+            this.getValueBtt.Text = "获取值";
+            this.getValueBtt.Click += new System.EventHandler(this.getValueBtt_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.listBoxControl1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(2, 21);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(141, 117);
+            this.panel2.TabIndex = 0;
             // 
             // listBoxControl1
             // 
             this.listBoxControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxControl1.Location = new System.Drawing.Point(2, 23);
+            this.listBoxControl1.Location = new System.Drawing.Point(0, 0);
             this.listBoxControl1.Name = "listBoxControl1";
-            this.listBoxControl1.Size = new System.Drawing.Size(345, 93);
-            this.listBoxControl1.TabIndex = 0;
-            this.listBoxControl1.SelectedIndexChanged += new System.EventHandler(this.listBoxControl1_SelectedIndexChanged);
+            this.listBoxControl1.Size = new System.Drawing.Size(141, 117);
+            this.listBoxControl1.TabIndex = 1;
+            this.listBoxControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBoxControl1_MouseDoubleClick);
             // 
             // panelControl3
             // 
@@ -463,7 +530,7 @@
             this.panelControl3.Controls.Add(this.resetBtt);
             this.panelControl3.Controls.Add(this.okBtt);
             this.panelControl3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl3.Location = new System.Drawing.Point(0, 414);
+            this.panelControl3.Location = new System.Drawing.Point(0, 424);
             this.panelControl3.Name = "panelControl3";
             this.panelControl3.Size = new System.Drawing.Size(353, 41);
             this.panelControl3.TabIndex = 0;
@@ -499,7 +566,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 455);
+            this.ClientSize = new System.Drawing.Size(353, 465);
             this.Controls.Add(this.panelControl2);
             this.Controls.Add(this.panelControl3);
             this.Controls.Add(this.panelControl1);
@@ -526,6 +593,11 @@
             this.opreateGroupControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.valueslistBoxControl)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listBoxControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
             this.panelControl3.ResumeLayout(false);
@@ -544,7 +616,6 @@
         private DevExpress.XtraEditors.GroupControl groupControl3;
         private DevExpress.XtraEditors.GroupControl opreateGroupControl;
         private DevExpress.XtraEditors.GroupControl groupControl1;
-        private DevExpress.XtraEditors.ListBoxControl listBoxControl1;
         private DevExpress.XtraEditors.PanelControl panelControl3;
         private System.Windows.Forms.RichTextBox queryTxtBox;
         private DevExpress.XtraEditors.LabelControl labelControl2;
@@ -579,6 +650,13 @@
         private DevExpress.XtraEditors.SimpleButton simpleButton28;
         private DevExpress.XtraEditors.SimpleButton simpleButton27;
         private DevExpress.XtraEditors.SimpleButton simpleButton26;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel5;
+        private DevExpress.XtraEditors.ListBoxControl valueslistBoxControl;
+        private System.Windows.Forms.Panel panel4;
+        private DevExpress.XtraEditors.SimpleButton getValueBtt;
+        private System.Windows.Forms.Panel panel2;
+        private DevExpress.XtraEditors.ListBoxControl listBoxControl1;
 
     }
 }
