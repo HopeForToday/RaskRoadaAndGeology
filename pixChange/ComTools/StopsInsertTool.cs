@@ -5,17 +5,18 @@ using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.Controls;
 using System.Windows.Forms;
-using ESRI.ArcGIS.SystemUI;
-
+using ESRI.ArcGIS.Geometry;
+using RoadRaskEvaltionSystem.RouteUIDeal;
 namespace RoadRaskEvaltionSystem.ComTools
 {
     /// <summary>
-    /// Summary description for StopRemTool.
+    /// 公路经过点插入工具
+    /// fhr
     /// </summary>
-    [Guid("cc6e73a4-e877-423f-a0b6-6fc7c99af27b")]
+    [Guid("aab5ae06-8e93-493c-90b0-ce28462866da")]
     [ClassInterface(ClassInterfaceType.None)]
-    [ProgId("RoadRaskEvaltionSystem.ComTools.StopRemTool")]
-    public sealed class StopRemTool : BaseTool
+    [ProgId("RoadRaskEvaltionSystem.ComTools.StopsInsertTool")]
+    public sealed class StopsInsertTool : BaseTool
     {
         #region COM Registration Function(s)
         [ComRegisterFunction()]
@@ -69,7 +70,11 @@ namespace RoadRaskEvaltionSystem.ComTools
 
         private IHookHelper m_hookHelper = null;
 
-        public StopRemTool()
+        private IRouteUI routeUI = ServiceLocator.RouteUI;
+
+        private AxMapControl mapControl = null;
+
+        public StopsInsertTool()
         {
             //
             // TODO: Define values for the public properties
@@ -120,10 +125,9 @@ namespace RoadRaskEvaltionSystem.ComTools
                 base.m_enabled = false;
             else
                 base.m_enabled = true;
-            //ITool tool= new StopRemTool();
-            //IToolbarMenu toolBarMenu = null;
-            //toolBarMenu.
+
             // TODO:  Add other initialization code
+            mapControl = hook as AxMapControl;
         }
 
         /// <summary>
@@ -131,22 +135,27 @@ namespace RoadRaskEvaltionSystem.ComTools
         /// </summary>
         public override void OnClick()
         {
-            // TODO: Add StopRemTool.OnClick implementation
+            //处理公路网图层
+            routeUI.DealRoutenetLayer(this.mapControl);
         }
 
         public override void OnMouseDown(int Button, int Shift, int X, int Y)
         {
-            // TODO:  Add StopRemTool.OnMouseDown implementation
+            if (Button == 1)
+            {
+               IPoint point = this.mapControl.ToMapPoint(X, Y);
+                routeUI.InsertStopPoint(this.mapControl, point);
+            }
         }
 
         public override void OnMouseMove(int Button, int Shift, int X, int Y)
         {
-            // TODO:  Add StopRemTool.OnMouseMove implementation
+            // TODO:  Add StopsInsertTool.OnMouseMove implementation
         }
 
         public override void OnMouseUp(int Button, int Shift, int X, int Y)
         {
-            // TODO:  Add StopRemTool.OnMouseUp implementation
+            // TODO:  Add StopsInsertTool.OnMouseUp implementation
         }
         #endregion
     }

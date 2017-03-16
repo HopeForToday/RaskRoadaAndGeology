@@ -25,7 +25,11 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         void UndoStopPointSymbols(AxMapControl mapControl);
         void UndoBarryPointSymbols(AxMapControl mapControl);
         void InsertPoint(int insertFlag, AxMapControl mapControl, IPoint point);
+        void InsertBarryPoint(AxMapControl mapControl, IPoint point);
+        void InsertStopPoint(AxMapControl mapControl, IPoint point);
         List<IPoint> BarryPoints { get; }
         List<IPoint> StopPoints { get; }
+        List<IElement> BarryElements { get; }
+        List<IElement> StopElements { get; }
     }
 }

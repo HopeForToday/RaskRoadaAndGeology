@@ -26,6 +26,8 @@ using System.Diagnostics;
 using RoadRaskEvaltionSystem.RouteUIDeal;
 using RoadRaskEvaltionSystem.QueryAndUIDeal;
 using System.Threading;
+using ESRI.ArcGIS.ADF.BaseClasses;
+using RoadRaskEvaltionSystem.ComTools;
 
 namespace pixChange
 {
@@ -70,9 +72,18 @@ namespace pixChange
         public AxMapControl pCurrentSmallMap = null;
         //当前TOC控件实例
         public AxTOCControl pCurrentTOC = null;
-
+        #region ToolbarMenus
         private IToolbarMenu mapMenu;//toc控件右键地图菜单
         private IToolbarMenu layerMenu;//toc控件右键图层菜单
+        #endregion
+
+        #region Tools
+        private StopsInsertTool stopsInsertTool = new StopsInsertTool();
+        private BarrysInsertTool barrysInsertTool = new BarrysInsertTool();
+        private StopsRemoveTool stopRemTool = new StopsRemoveTool();
+        private BarrysRemoveTool barryRemTool = new BarrysRemoveTool();
+        #endregion
+
         private ProInfoWindow infoWindow;
         public enum CustomTool
         {
@@ -96,11 +107,6 @@ namespace pixChange
             EditDeleteFeature = 17,
             EditAttribute = 18
         };
-        //初始化障碍点图层和经过点图层
-        private void InitialAboutNetLayer()
-        {
-
-        }
         public MainFrom()
         {
             InitializeComponent();
@@ -110,7 +116,6 @@ namespace pixChange
             //List<string>LayerPathList=new List<string>();
             LayerMangerView lm = new LayerMangerView();
             lm.Show();
-
         }
 
         private void MainFrom_Load(object sender, EventArgs e)
@@ -658,17 +663,17 @@ namespace pixChange
 
         #endregion
         #region 公路经过点相关命令事件
-        //开启公路经过点编辑
+        //激活或者关闭公路经过点插入工具
         private void barButtonItem26_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (this.insertFlag == 1)
+            if (this.axMapControl1.CurrentTool == stopsInsertTool)
             {
-                this.insertFlag = 0;
+                this.axMapControl1.CurrentTool = null;
                 return;
             }
-            this.insertFlag = 1;
-            //处理公路网图层
-            routeUI.DealRoutenetLayer(this.axMapControl1);
+            stopsInsertTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
+            stopsInsertTool.OnClick();//执行itool的click事件
+            this.axMapControl1.CurrentTool = stopsInsertTool;//设置当前工具
         }
         //撤销上一个公路经过点
         private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -683,16 +688,17 @@ namespace pixChange
 
         #endregion
         #region 公路断点相关命令事件
-        //开启断点编辑
+        //激活或者关闭公路断点插入工具
         private void barButtonItem27_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (this.insertFlag == 2)
+            if (this.axMapControl1.CurrentTool == barrysInsertTool)
             {
-                this.insertFlag = 0;
+                this.axMapControl1.CurrentTool = null;
                 return;
             }
-            this.insertFlag = 2;
-            routeUI.DealRoutenetLayer(this.axMapControl1);
+            barrysInsertTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
+            barrysInsertTool.OnClick();//执行itool的click事件
+            this.axMapControl1.CurrentTool = barrysInsertTool;//设置当前工具
         }
         //撤销上一个断点
         private void barButtonItem28_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -705,5 +711,10 @@ namespace pixChange
             routeUI.ResetBarryPointSymbols(this.axMapControl1);
         }
         #endregion
+
+        private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            this.axMapControl1.CurrentTool = stopRemTool;
+        }
     }
 }

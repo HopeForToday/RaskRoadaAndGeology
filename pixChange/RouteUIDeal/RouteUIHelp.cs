@@ -248,8 +248,17 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
                 this.barryPoints.Add(point);
             }
         }
-
-
+        public void InsertBarryPoint(AxMapControl mapControl, IPoint point)
+        {
+            this.barryElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.RouteBeakImggePath));
+            this.barryPoints.Add(point);
+        }
+        public void InsertStopPoint(AxMapControl mapControl, IPoint point)
+        {
+            this.stopElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.StopImagePath));
+            this.stopPoints.Add(point);
+        }
+        #region getters
         public List<IPoint> BarryPoints
         {
             get { return this.barryPoints; }
@@ -259,5 +268,17 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         {
             get { return this.stopPoints; }
         }
+
+
+        public List<IElement> BarryElements
+        {
+            get { return this.barryElements; }
+        }
+
+        public List<IElement> StopElements
+        {
+            get { return this.stopElements; }
+        }
+        #endregion
     }
 }

@@ -191,7 +191,10 @@
     <Compile Include="AddFieldForm.Designer.cs">
       <DependentUpon>AddFieldForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComTools\StopRemTool.cs" />
+    <Compile Include="ComTools\BarrysInsertTool.cs" />
+    <Compile Include="ComTools\BarrysRemoveTool.cs" />
+    <Compile Include="ComTools\StopsInsertTool.cs" />
+    <Compile Include="ComTools\StopsRemoveTool.cs" />
     <Compile Include="ConditionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -733,8 +736,14 @@
     <Content Include="bin\Release\Rources\RoadData\RoadRasterData\新建文本文档.txt" />
     <Content Include="bin\Release\Rources\RoadData\RoadShapeData\新建文本文档.txt" />
     <Content Include="bin\Release\Rources\雨量信息.mdb" />
-    <EmbeddedResource Include="ComTools\StopRemTool.cur" />
-    <EmbeddedResource Include="ComTools\StopRemTool.bmp" />
+    <EmbeddedResource Include="ComTools\BarrysInsertTool.cur" />
+    <EmbeddedResource Include="ComTools\BarrysInsertTool.bmp" />
+    <EmbeddedResource Include="ComTools\StopsInsertTool.cur" />
+    <EmbeddedResource Include="ComTools\StopsInsertTool.bmp" />
+    <EmbeddedResource Include="ComTools\BarrysRemoveTool.cur" />
+    <EmbeddedResource Include="ComTools\BarrysRemoveTool.bmp" />
+    <EmbeddedResource Include="ComTools\StopsRemoveTool.cur" />
+    <EmbeddedResource Include="ComTools\StopsRemoveTool.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Rources\BaseData\BaseRasterData\" />
