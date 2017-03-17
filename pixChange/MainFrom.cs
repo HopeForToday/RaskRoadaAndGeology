@@ -525,7 +525,7 @@ namespace pixChange
             this.axMapControl1.Map.ClearSelection();
             routeUI.ClearRouteAnalyst(this.axMapControl1,ref this.insertFlag);
            // SymbolUtil.ClearElement(this.axMapControl1);
-         //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
+           //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
             MapUtil.SaveMxd(this.axMapControl1);
             Application.Exit();
         }
@@ -678,7 +678,14 @@ namespace pixChange
         //撤销上一个公路经过点
         private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            routeUI.UndoStopPointSymbols(this.axMapControl1);
+            if (this.axMapControl1.CurrentTool ==stopRemTool)
+            {
+                this.axMapControl1.CurrentTool = null;
+                return;
+            }
+            stopRemTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
+            stopRemTool.OnClick();//执行itool的click事件
+            this.axMapControl1.CurrentTool = stopRemTool;//设置当前工具
         }
         //清空公路经过点
         private void barButtonItem29_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -703,7 +710,14 @@ namespace pixChange
         //撤销上一个断点
         private void barButtonItem28_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            routeUI.UndoBarryPointSymbols(this.axMapControl1);
+            if (this.axMapControl1.CurrentTool ==barryRemTool)
+            {
+                this.axMapControl1.CurrentTool = null;
+                return;
+            }
+            barryRemTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
+            barryRemTool.OnClick();//执行itool的click事件
+            this.axMapControl1.CurrentTool = barryRemTool;//设置当前工具
         }
         //清空断点
         private void barButtonItem30_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

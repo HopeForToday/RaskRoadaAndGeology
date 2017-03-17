@@ -258,6 +258,66 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             this.stopElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.StopImagePath));
             this.stopPoints.Add(point);
         }
+        public void RemoveStopPoint(AxMapControl mapControl, IPoint point)
+        {
+            if (this.stopPoints.Count > 0)
+            {
+                int index = JudgePointIsInCircle(this.stopPoints, point);
+                if (index != -1)
+                {
+                    this.stopPoints.RemoveAt(index);
+                    SymbolUtil.ClearElement(mapControl, this.stopElements[index]);
+                    this.stopElements.RemoveAt(index);
+                }
+            }
+        }
+        public void RemoveBarryPoint(AxMapControl mapControl, IPoint point)
+        {
+            if (this.BarryPoints.Count > 0)
+            {
+                int index = JudgePointIsInCircle(this.barryPoints, point);
+                if (index != -1)
+                {
+                    this.barryPoints.RemoveAt(index);
+                    SymbolUtil.ClearElement(mapControl, this.barryElements[index]);
+                    this.barryElements.RemoveAt(index);
+                }
+            }
+        }
+        /// <summary>
+        /// 判断点是否在点集合中任意一点的半径之内
+        /// 返回求得点索引 -1则没有取到
+        /// </summary>
+        /// <param name="sourcePoints"></param>
+        /// <param name="targetPoint"></param>
+        /// <returns></returns>
+        private int  JudgePointIsInCircle(List<IPoint> sourcePoints,IPoint targetPoint)
+        {
+            int index=-1;
+            for (int i = 0; i < sourcePoints.Count; i++)
+            {
+                IPoint sourcePoint=sourcePoints[i];
+                if (isInPointCircle(sourcePoint, targetPoint, 0.02))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+        /// <summary>
+        /// 判断两点是否在指定距离之内
+        /// </summary>
+        /// <param name="sourcePoint"></param>
+        /// <param name="targetPoint"></param>
+        /// <param name="radii"></param>
+        /// <returns></returns>
+        private Boolean isInPointCircle(IPoint sourcePoint, IPoint targetPoint,double radii)
+        {
+            double xStance = Math.Abs(sourcePoint.X - targetPoint.X);
+            double yStance = Math.Abs(sourcePoint.Y - targetPoint.Y);
+            return Math.Pow(radii, 2) > (Math.Pow(xStance, 2) + Math.Pow(yStance, 2)) ? true : false;
+        }
         #region getters
         public List<IPoint> BarryPoints
         {

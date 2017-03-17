@@ -5,11 +5,14 @@ using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.Controls;
 using System.Windows.Forms;
+using RoadRaskEvaltionSystem.RouteUIDeal;
+using ESRI.ArcGIS.Geometry;
 
 namespace RoadRaskEvaltionSystem.ComTools
 {
     /// <summary>
-    /// Summary description for BarryRemoveTool.
+    /// 断点移除工具 
+    /// fhr
     /// </summary>
     [Guid("8617e01a-23b9-4419-8026-c7d1a5a90c87")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -66,7 +69,11 @@ namespace RoadRaskEvaltionSystem.ComTools
         #endregion
         #endregion
 
+        private IRouteUI routeUI = ServiceLocator.RouteUI;
+
         private IHookHelper m_hookHelper = null;
+
+        private AxMapControl mapControl = null;
 
         public BarrysRemoveTool()
         {
@@ -121,14 +128,16 @@ namespace RoadRaskEvaltionSystem.ComTools
                 base.m_enabled = true;
 
             // TODO:  Add other initialization code
-        }
+            mapControl = hook as AxMapControl;
+        }   
 
         /// <summary>
         /// Occurs when this tool is clicked
         /// </summary>
         public override void OnClick()
         {
-            // TODO: Add BarryRemoveTool.OnClick implementation
+            //处理公路网图层
+            routeUI.DealRoutenetLayer(this.mapControl);
         }
 
         public override void OnMouseDown(int Button, int Shift, int X, int Y)
@@ -140,10 +149,21 @@ namespace RoadRaskEvaltionSystem.ComTools
         {
             // TODO:  Add BarryRemoveTool.OnMouseMove implementation
         }
-
+        /// <summary>
+        /// 在MouseUp中写鼠标所在位置的逻辑
+        /// </summary>
+        /// <param name="Button"></param>
+        /// <param name="Shift"></param>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
         public override void OnMouseUp(int Button, int Shift, int X, int Y)
         {
-            // TODO:  Add BarryRemoveTool.OnMouseUp implementation
+            if (Button == 1)
+            {
+                IPoint point = this.mapControl.ToMapPoint(X, Y);
+                routeUI.RemoveBarryPoint(this.mapControl, point);
+                //routeUI.InsertBarryPoint(mapControl, point);
+            }
         }
         #endregion
     }

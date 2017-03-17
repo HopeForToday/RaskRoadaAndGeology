@@ -93,7 +93,6 @@
             this.barButtonItem20 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem21 = new DevExpress.XtraBars.BarButtonItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.barButtonItem15 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -302,8 +301,7 @@
             this.barButtonItem27,
             this.barButtonItem28,
             this.barButtonItem29,
-            this.barButtonItem30,
-            this.barButtonItem15});
+            this.barButtonItem30});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.MaxItemId = 37;
             this.ribbonControl1.Name = "ribbonControl1";
@@ -495,7 +493,7 @@
             // 
             // barButtonItem26
             // 
-            this.barButtonItem26.Caption = "编辑经过点";
+            this.barButtonItem26.Caption = "插入经过点";
             this.barButtonItem26.Id = 29;
             this.barButtonItem26.ImageUri.Uri = "AlignHorizontalTop";
             this.barButtonItem26.Name = "barButtonItem26";
@@ -503,7 +501,7 @@
             // 
             // barButtonItem25
             // 
-            this.barButtonItem25.Caption = "撤销经过点";
+            this.barButtonItem25.Caption = "移除经过点";
             this.barButtonItem25.Id = 30;
             this.barButtonItem25.ImageUri.Uri = "Undo";
             this.barButtonItem25.Name = "barButtonItem25";
@@ -536,7 +534,7 @@
             // 
             // barButtonItem27
             // 
-            this.barButtonItem27.Caption = "编辑断点";
+            this.barButtonItem27.Caption = "插入断点";
             this.barButtonItem27.Id = 32;
             this.barButtonItem27.ImageUri.Uri = "Delete";
             this.barButtonItem27.Name = "barButtonItem27";
@@ -544,7 +542,7 @@
             // 
             // barButtonItem28
             // 
-            this.barButtonItem28.Caption = "撤销断点";
+            this.barButtonItem28.Caption = "移除断点";
             this.barButtonItem28.Id = 33;
             this.barButtonItem28.ImageUri.Uri = "Undo";
             this.barButtonItem28.Name = "barButtonItem28";
@@ -588,7 +586,6 @@
             // ribbonPageGroup5
             // 
             this.ribbonPageGroup5.ItemLinks.Add(this.barButtonItem5);
-            this.ribbonPageGroup5.ItemLinks.Add(this.barButtonItem15);
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "降水数据管理";
             // 
@@ -631,13 +628,6 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // barButtonItem15
-            // 
-            this.barButtonItem15.Caption = "barButtonItem15";
-            this.barButtonItem15.Id = 36;
-            this.barButtonItem15.Name = "barButtonItem15";
-            this.barButtonItem15.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem15_ItemClick);
-            // 
             // MainFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -649,7 +639,7 @@
             this.Name = "MainFrom";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
-            this.Text = "雅安市芦山~宝山公路风险预警系统";
+            this.Text = "雅安市芦山~宝兴公路风险预警系统";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrom_FormClosing);
             this.Load += new System.EventHandler(this.MainFrom_Load);
@@ -732,7 +722,6 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem28;
         private DevExpress.XtraBars.BarButtonItem barButtonItem29;
         private DevExpress.XtraBars.BarButtonItem barButtonItem30;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem15;
    
     }
 }

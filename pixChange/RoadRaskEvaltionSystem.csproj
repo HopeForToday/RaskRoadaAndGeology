@@ -737,8 +737,8 @@
     <Content Include="bin\Release\Rources\RoadData\RoadShapeData\新建文本文档.txt" />
     <Content Include="bin\Release\Rources\雨量信息.mdb" />
     <EmbeddedResource Include="ComTools\BarrysInsertTool.cur" />
-    <EmbeddedResource Include="ComTools\BarrysInsertTool.bmp" />
     <EmbeddedResource Include="ComTools\StopsInsertTool.cur" />
+    <EmbeddedResource Include="ComTools\BarrysInsertTool.bmp" />
     <EmbeddedResource Include="ComTools\StopsInsertTool.bmp" />
     <EmbeddedResource Include="ComTools\BarrysRemoveTool.cur" />
     <EmbeddedResource Include="ComTools\BarrysRemoveTool.bmp" />

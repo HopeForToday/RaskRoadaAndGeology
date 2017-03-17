@@ -27,6 +27,8 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         void InsertPoint(int insertFlag, AxMapControl mapControl, IPoint point);
         void InsertBarryPoint(AxMapControl mapControl, IPoint point);
         void InsertStopPoint(AxMapControl mapControl, IPoint point);
+        void RemoveStopPoint(AxMapControl mapControl, IPoint point);
+        void RemoveBarryPoint(AxMapControl mapControl, IPoint point);
         List<IPoint> BarryPoints { get; }
         List<IPoint> StopPoints { get; }
         List<IElement> BarryElements { get; }

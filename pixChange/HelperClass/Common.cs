@@ -112,7 +112,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
        /// <summary>
        /// areaXML保存路径
        /// </summary>
-        public static string arexmlPath = Application.StartupPath + @"\Rources\xmlData\AreaXML.xml";
+       public static string arexmlPath = Application.StartupPath + @"\Rources\xmlData\AreaXML.xml";
        public  static string[] hour = { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22","23"};
 
        public static AccessDataBase DBHander = new AccessDataBase();
@@ -148,39 +148,6 @@ namespace RoadRaskEvaltionSystem.HelperClass
            }
            return IsEqual;
        }
-       public static bool InsertLayer(Boolean IsEqual, IRasterLayer rasterLayer)//插入栅格图
-       {
-           int count = MainFrom.m_mapControl.LayerCount;
-           if (count == 0)
-           {
-               MainFrom.groupLayer.Add(rasterLayer);
-               MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-           }
-           else
-           {
-               for (int m = count - 1; m >= 0; m--)
-               {
-                   IMapLayers pLayers = MainFrom.m_mapControl.Map as IMapLayers;
-                   ILayer pGL = MainFrom.m_mapControl.get_Layer(m);
-                   if (pGL.Name == MainFrom.groupLayer.Name)
-                   {
-                       IsEqual = true;
-                       if (pGL is IGroupLayer)
-                       {
-                           pLayers.InsertLayerInGroup((IGroupLayer)pGL, rasterLayer, false, 0);
-                       }
-                   }
-               }
-               if (!IsEqual)
-               {
-                   MainFrom.groupLayer.Add(rasterLayer);
-                   MainFrom.m_mapControl.AddLayer(MainFrom.groupLayer);
-
-               }
-           }
-           return IsEqual;
-       }
-
        public static void funColorForRaster_Classify(IRasterLayer pRasterLayer,int ClassNum)
        {
            IRasterClassifyColorRampRenderer pRClassRend = new RasterClassifyColorRampRendererClass();

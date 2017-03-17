@@ -6,11 +6,14 @@ using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.Controls;
 using System.Windows.Forms;
 using ESRI.ArcGIS.SystemUI;
+using RoadRaskEvaltionSystem.RouteUIDeal;
+using ESRI.ArcGIS.Geometry;
 
 namespace RoadRaskEvaltionSystem.ComTools
 {
     /// <summary>
-    /// Summary description for StopRemTool.
+    /// 经过点移除工具
+    /// fhr
     /// </summary>
     [Guid("cc6e73a4-e877-423f-a0b6-6fc7c99af27b")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -67,7 +70,12 @@ namespace RoadRaskEvaltionSystem.ComTools
         #endregion
         #endregion
 
+        private IRouteUI routeUI = ServiceLocator.RouteUI;
+
         private IHookHelper m_hookHelper = null;
+
+        private AxMapControl mapControl = null;
+
 
         public StopsRemoveTool()
         {
@@ -120,10 +128,8 @@ namespace RoadRaskEvaltionSystem.ComTools
                 base.m_enabled = false;
             else
                 base.m_enabled = true;
-            //ITool tool= new StopRemTool();
-            //IToolbarMenu toolBarMenu = null;
-            //toolBarMenu.
             // TODO:  Add other initialization code
+            mapControl = hook as AxMapControl;
         }
 
         /// <summary>
@@ -146,7 +152,11 @@ namespace RoadRaskEvaltionSystem.ComTools
 
         public override void OnMouseUp(int Button, int Shift, int X, int Y)
         {
-            // TODO:  Add StopRemTool.OnMouseUp implementation
+            if (Button == 1)
+            {
+                IPoint point = this.mapControl.ToMapPoint(X, Y);
+                routeUI.RemoveStopPoint(this.mapControl, point);
+            }
         }
         #endregion
     }

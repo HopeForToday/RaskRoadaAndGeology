@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Configuration;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 
 namespace RoadRaskEvaltionSystem.HelperClass
@@ -23,21 +24,17 @@ namespace RoadRaskEvaltionSystem.HelperClass
         /// 构造函数：数据库的默认连接
         /// </summary>
         public AccessDataBase()
-{
-
-            
-            string connStr;
- 
-            connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString.ToString();
- //connStr = System.Configuration.con.AppSettings["ConnectionString"].ToString(); //从web.config配置中读取
-
+        {
+            //因为获取天气已经修改为异步方法 且打开mxd竟然会修改程序作用域 所以在此硬编码连接信息
+            //2017/03/17 fhr
+            string connStr = string.Format("PRovider=Microsoft.Jet.OLEDB.4.0;Data Source={0}\\Rources\\雨量信息.mdb;Jet OLEDB:Database PassWord=123", Application.StartupPath);
+            //     connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString.ToString();
+            //connStr = System.Configuration.con.AppSettings["ConnectionString"].ToString(); //从web.config配置中读取
             connectionString = connStr;
-//connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + HttpContext.Current.Request.PhysicalapplicationPath + connStr;
-// connectionString = System.Configuration.ConfigurationSettings.AppSettings["ConnectionString"].ToString();
-//
-
+            //connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + HttpContext.Current.Request.PhysicalapplicationPath + connStr;
+            // connectionString = System.Configuration.ConfigurationSettings.AppSettings["ConnectionString"].ToString();
             Connection = new OleDbConnection(connectionString);
-}
+        }
 
         /// <summary>
         /// 构造函数：带有参数的数据库连接
