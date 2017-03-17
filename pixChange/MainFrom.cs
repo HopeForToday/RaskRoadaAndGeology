@@ -33,18 +33,33 @@ namespace pixChange
 {
     public partial class MainFrom : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-        //0为不插入 1为插入经过点 2为插入断点
-        private int insertFlag = 0;
+        #region fhr
+        #region 相关组件
         //路线操作接口字段
         private IRouteDecide routeDecide = ServiceLocator.GetRouteDecide();
         //路线操作
         private IRouteUI routeUI = ServiceLocator.RouteUI;
         //空间查询操作
-        private ISpatialQueryUI spatiallUI=ServiceLocator.SpatialQueryUI;
+        private ISpatialQueryUI spatiallUI = ServiceLocator.SpatialQueryUI;
+        #endregion
+        #region ToolbarMenus
+        private IToolbarMenu mapMenu;//toc控件右键地图菜单
+        private IToolbarMenu layerMenu;//toc控件右键图层菜单
+        #endregion
+        #region Tools
+        private StopsInsertTool stopsInsertTool = new StopsInsertTool();
+        private BarrysInsertTool barrysInsertTool = new BarrysInsertTool();
+        private StopsRemoveTool stopRemTool = new StopsRemoveTool();
+        private BarrysRemoveTool barryRemTool = new BarrysRemoveTool();
+        #endregion
+        #region fields
         //公路网图层
         private ILayer routeNetLayer = null;
-        ////栅格接口类
-        //IRoadRaskCaculate roadRaskCaculate = ServerLocator.GetIRoadRaskCaculate();
+        //查询时的提示窗口
+        private ProInfoWindow infoWindow;
+        #endregion
+        #endregion
+       
         //提交测试
         //公共变量用于表示整个系统都能访问的图层控件和环境变量
         //  public static SpatialAnalysisOption SAoption;
@@ -55,58 +70,12 @@ namespace pixChange
         public static string groupLayerName = null;
         public static int WhichChecked = 0;//记录哪一个模块被点击 1:基础数据 2:地质数据 3:公路数据 4:生态数据
         //用于判断当前鼠标点击的菜单命令,以备在地图控件中判断操作
-        static public CustomTool m_cTool;
+        public static  CustomTool m_cTool;
         IScreenDisplay m_focusScreenDisplay;// For 平移
         //For 放大,缩小，平移
         INewEnvelopeFeedback m_feedBack;//  '拉框
         IPoint m_mouseDownPoint;
         bool m_isMouseDown;
-        public bool frmAttriQueryisOpen = false;
-
-
-        //当前窗体实例
-        public MainFrom pCurrentWin = null;
-        //当前主地图控件实例
-        public AxMapControl pCurrentMap = null;
-        //当前鹰眼控件实例
-        public AxMapControl pCurrentSmallMap = null;
-        //当前TOC控件实例
-        public AxTOCControl pCurrentTOC = null;
-        #region ToolbarMenus
-        private IToolbarMenu mapMenu;//toc控件右键地图菜单
-        private IToolbarMenu layerMenu;//toc控件右键图层菜单
-        #endregion
-
-        #region Tools
-        private StopsInsertTool stopsInsertTool = new StopsInsertTool();
-        private BarrysInsertTool barrysInsertTool = new BarrysInsertTool();
-        private StopsRemoveTool stopRemTool = new StopsRemoveTool();
-        private BarrysRemoveTool barryRemTool = new BarrysRemoveTool();
-        #endregion
-
-        private ProInfoWindow infoWindow;
-        public enum CustomTool
-        {
-            None = 0,
-            ZoomIn = 1,
-            ZoomOut = 2,
-            Pan = 3,
-            RuleMeasure = 4,
-            AreaMeasure = 5,
-            PointSelect = 6,
-            RectSelect = 7,
-            PolygonSelect = 8,
-            CircleSelect = 9,
-            NAanalysis = 10,
-            StartEditing = 11,
-            SelectFeature = 12,
-            MoveFeature = 13,
-            EditVertex = 14,
-            EditUndo = 15,
-            EditRedo = 16,
-            EditDeleteFeature = 17,
-            EditAttribute = 18
-        };
         public MainFrom()
         {
             InitializeComponent();
@@ -218,63 +187,6 @@ namespace pixChange
             }
              * */
         }
-        private IGroupLayer QueryGroupLayer(ILayer layer,ref int index)
-        {
-            IGroupLayer gLayer = null;
-            int layerIndex;
-            int groupIndex;
-            if (LayerUtil.QueryLayerInMap(this.axMapControl1, layer, ref gLayer, out layerIndex, out groupIndex))
-            {
-                index = layerIndex;
-            }
-            return gLayer;
-        }
-        private void axTOCControl1_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
-        {
-            /*
-            if (e.button == 1)
-            {
-            //   int toIndex = -1;
-                esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone;
-                IBasicMap pBasMap = null;
-                ILayer pLayer = null;
-                object pOther = null;
-                object pIndex = null;
-                this.axTOCControl1.HitTest(e.x, e.y, ref pItem, ref pBasMap, ref pLayer, ref pOther, ref pIndex);
-                if (pItem == esriTOCControlItem.esriTOCControlItemLayer)
-                {
-                    if (removedLayer != pLayer)//如果是原图层则不用操作
-                    {
-                        //IMap pMap = axMapControl1.Map;
-                        //ILayer pTempLayer;
-                        //for (int i = 0; i < pMap.LayerCount; i++)
-                        //{
-                        //    pTempLayer = pMap.get_Layer(i);
-                        //    if (pTempLayer == pLayer)//获取移动后的图层索引
-                        //        toIndex = i;
-                        //}
-                        //pMap.MoveLayer(removedLayer, toIndex);
-                        IGroupLayer gLayer = null;
-                        int toIndex2 = -1;
-                        //如何是组合图层的子图层
-                        if (pIndex == null)
-                        {
-                            gLayer = QueryGroupLayer(pLayer, ref toIndex2);
-                        }
-                        object toObj = null;
-                        if (toIndex2 != -1)
-                        {
-                            toObj = (object)toIndex2;
-                        }
-                        TOCControlUtil.RemoveLayer(this.axMapControl1, removedLayer, removedGroupLayer, gLayer, toObj);
-                        axMapControl1.ActiveView.Refresh();
-                        this.axTOCControl1.Update();
-                    }
-                }
-            }
-             * */
-        }
-
         //放大
         private void ToolButtonZoomIn_Click(object sender, EventArgs e)
         {
@@ -307,7 +219,6 @@ namespace pixChange
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-
         private void ToolButtonFull_Click(object sender, EventArgs e)
         {
             MapAreaUtil.ZoomToByMaxLayer(this.axMapControl1);
@@ -457,10 +368,6 @@ namespace pixChange
                     m_focusScreenDisplay.PanStart(m_mouseDownPoint);
                     break;
             }
-            if (this.insertFlag!=0&&this.axMapControl1.CurrentTool==null)
-            {
-                InsertStopOrBarryPoint(e);
-            }
         }
 
         //操作图层选择
@@ -523,8 +430,7 @@ namespace pixChange
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.axMapControl1.Map.ClearSelection();
-            routeUI.ClearRouteAnalyst(this.axMapControl1,ref this.insertFlag);
-           // SymbolUtil.ClearElement(this.axMapControl1);
+            routeUI.ClearRouteAnalyst(this.axMapControl1);
            //   MapUtil.SaveMap(Common.MapPath, this.axMapControl1.Map);
             MapUtil.SaveMxd(this.axMapControl1);
             Application.Exit();
@@ -585,6 +491,10 @@ namespace pixChange
         {
             new PropertyQueryForm(this.toolStripComboBox2.Text, this.axMapControl1).ShowDialog();
         }
+        private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            routeUI.ClearRouteAnalyst(this.axMapControl1);
+        }
         #region 最短路径计算
         //计算最优路线
         //最后可以考虑使用async进行异步查询
@@ -595,7 +505,6 @@ namespace pixChange
                 MessageBox.Show("路线经过点少于一个");
                 return;
             }
-            this.insertFlag = 0;
             this.routeNetLayer = routeUI.DealRoutenetLayer(this.axMapControl1);
             if (routeNetLayer == null)
             {
@@ -606,18 +515,7 @@ namespace pixChange
             infoWindow.Show();
             timer1.Enabled = true;
         }
-        private void barButtonItem23_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            routeUI.ClearRouteAnalyst(this.axMapControl1, ref this.insertFlag);
-        }
-        //插入公路点
-        private void InsertStopOrBarryPoint(IMapControlEvents2_OnMouseDownEvent e)
-        {
-            IPoint point = new PointClass();
-            point.X = e.mapX;
-            point.Y = e.mapY;
-            routeUI.InsertPoint(this.insertFlag, this.axMapControl1, point);
-        }
+      
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.timer1.Enabled = false;
@@ -675,7 +573,7 @@ namespace pixChange
             stopsInsertTool.OnClick();//执行itool的click事件
             this.axMapControl1.CurrentTool = stopsInsertTool;//设置当前工具
         }
-        //撤销上一个公路经过点
+        //激活或者关闭公路经过点删除工具
         private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (this.axMapControl1.CurrentTool ==stopRemTool)
@@ -694,7 +592,7 @@ namespace pixChange
         }
 
         #endregion
-        #region 公路断点相关命令事件
+        #region 公路断点相关工具事件
         //激活或者关闭公路断点插入工具
         private void barButtonItem27_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -707,7 +605,7 @@ namespace pixChange
             barrysInsertTool.OnClick();//执行itool的click事件
             this.axMapControl1.CurrentTool = barrysInsertTool;//设置当前工具
         }
-        //撤销上一个断点
+        //激活或者关闭公路断点删除工具
         private void barButtonItem28_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (this.axMapControl1.CurrentTool ==barryRemTool)
@@ -725,10 +623,5 @@ namespace pixChange
             routeUI.ResetBarryPointSymbols(this.axMapControl1);
         }
         #endregion
-
-        private void barButtonItem15_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            this.axMapControl1.CurrentTool = stopRemTool;
-        }
     }
 }

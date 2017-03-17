@@ -10,23 +10,25 @@ using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.WeatherHander;
 using Ling.cnzhnet;
 using System.Diagnostics;
+using log4net;
 namespace pixChange
 {
      class Program
     {
-        static AboutDevCompanion DevCompanion;
+        private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(Program));
+        private static readonly AboutDevCompanion devCompanion=new  AboutDevCompanion(1, false);
         private static LicenseInitializer m_AOLicenseInitializer = new pixChange.LicenseInitializer();
-         //获取保存天气的依赖字段
-        private static  ISaveWeather saveWeather = ServiceLocator.GetSaveWeather();
-        /// <summary>
+        private static readonly ISaveWeather saveWeather = ServiceLocator.GetSaveWeather();
+     
+         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            #region fhr 毒手关闭Dev
-            DevCompanion = new AboutDevCompanion(1, false);
-            DevCompanion.Run();
+            logger.Info("程序启动");
+            #region fhr 通过毒手关闭Dev
+            devCompanion.Run();
             #endregion
             //ESRI License Initializer generated code.
             m_AOLicenseInitializer.InitializeApplication(new esriLicenseProductCode[] { esriLicenseProductCode.esriLicenseProductCodeEngine },
@@ -53,7 +55,7 @@ namespace pixChange
             m_AOLicenseInitializer.ShutdownApplication();
 
             // 关闭Dev检测程序
-            DevCompanion.Stop();
+            devCompanion.Stop();
         }
 
         public static  bool getWeatherData()
@@ -73,6 +75,7 @@ namespace pixChange
             }
             catch (Exception ex)
             {
+               logger.Error("天气信息提取异常",ex);
                Debug.Print("天气信息提取异常！");
                return false;
             }

@@ -19,12 +19,11 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         ILayer DealRoutenetLayer(AxMapControl mapControl);
         bool FindTheShortRoute(AxMapControl mapControl, IFeatureLayer routeNetLayer, ref ILayer layer);
         void UpdateSymbol(AxMapControl mapControl);
-        void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag);
+        void ClearRouteAnalyst(AxMapControl mapControl);
         void ResetStopPointSymbols(AxMapControl mapControl);
         void ResetBarryPointSymbols(AxMapControl mapControl);
         void UndoStopPointSymbols(AxMapControl mapControl);
         void UndoBarryPointSymbols(AxMapControl mapControl);
-        void InsertPoint(int insertFlag, AxMapControl mapControl, IPoint point);
         void InsertBarryPoint(AxMapControl mapControl, IPoint point);
         void InsertStopPoint(AxMapControl mapControl, IPoint point);
         void RemoveStopPoint(AxMapControl mapControl, IPoint point);

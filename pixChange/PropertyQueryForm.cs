@@ -2,6 +2,7 @@
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geodatabase;
+using log4net;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.QueryAndUIDeal;
 using System;
@@ -18,7 +19,8 @@ namespace RoadRaskEvaltionSystem
 {
     public partial class PropertyQueryForm : Form
     {
-        private ISpatialQueryUI spatialQuery = ServiceLocator.SpatialQueryUI;
+        private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(PropertyQueryForm));
+        private static readonly ISpatialQueryUI spatialQuery = ServiceLocator.SpatialQueryUI;
         public PropertyQueryForm()
         {
             InitializeComponent();
@@ -82,6 +84,7 @@ namespace RoadRaskEvaltionSystem
             }
             catch (Exception er)
             {
+                logger.Error("查询语句错误", er);
                 MessageBox.Show("请检查查询语句");
                 this.queryTxtBox.Focus();
             }

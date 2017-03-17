@@ -4,6 +4,7 @@ using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.NetworkAnalyst;
+using log4net;
 using pixChange.HelperClass;
 using RoadRaskEvaltionSystem.HelperClass;
 using RoadRaskEvaltionSystem.RouteAnalysis;
@@ -23,6 +24,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
     /// </summary>
     class RouteUIHelp : IRouteUI
     {
+        private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(RouteUIHelp));
         private List<IPoint> barryPoints = new List<IPoint>();
         private List<IPoint> stopPoints = new List<IPoint>();
         private List<IElement> barryElements = new List<IElement>();
@@ -157,6 +159,7 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             Debug.Print("运行时间：" + ts.TotalSeconds.ToString());
             if (!pointIsRight)
             {
+                logger.Error("点位太过远离图层");
                 throw new PointIsFarException("请检查点位是否太过远离图层");
             }
             return simpleRrouteDecide.QueryTheRoue(mapControl, routeNetLayer as IFeatureLayer, Common.NetWorkPath, "roads", "roads_ND", this.stopPoints, this.barryPoints, ref layer);
@@ -169,10 +172,8 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             this.barryPoints.ForEach(point => SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.RouteBeakImggePath));
         }
 
-        public void ClearRouteAnalyst(AxMapControl mapControl, ref int insertFlag)
+        public void ClearRouteAnalyst(AxMapControl mapControl)
         {
-            //标志初始化
-            insertFlag = 0;
             //清除所有图标
             SymbolUtil.ClearElement(mapControl);
             stopPoints.Clear();
@@ -233,19 +234,6 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
                 this.barryPoints.RemoveAt(this.barryPoints.Count - 1);
                 SymbolUtil.ClearElement(mapControl, this.barryElements[this.barryElements.Count - 1]);
                 this.barryElements.RemoveAt(this.barryElements.Count - 1);
-            }
-        }
-        public void InsertPoint(int insertFlag, AxMapControl mapControl,IPoint point)
-        {
-            if (insertFlag == 1)
-            {
-                this.stopElements.Add(SymbolUtil.DrawSymbolWithPicture(point,mapControl, Common.StopImagePath));
-                this.stopPoints.Add(point);
-            }
-            else if (insertFlag == 2)
-            {
-                this.barryElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.RouteBeakImggePath));
-                this.barryPoints.Add(point);
             }
         }
         public void InsertBarryPoint(AxMapControl mapControl, IPoint point)
