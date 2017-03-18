@@ -11,6 +11,8 @@ using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
 using ESRI.ArcGIS.Display;
 using System.Drawing;
+using System.Data;
+using System.Collections;
 
 namespace pixChange.HelperClass
 {
@@ -123,46 +125,94 @@ namespace pixChange.HelperClass
         /// <param name="sFieldName"></param>
         public static void UniqueValueRenderer(IFeatureLayer R_pFeatureLayer, string sFieldName)
         {
-            IFeatureSelection R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
-            IFeature R_pFeature;
-            IFeatureCursor R_FeatureCursor;
-            R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
-            R_pFeatureSelection.Clear();
-            ISelectionSet R_pSelectionSet = R_pFeatureSelection.SelectionSet;
-            IFeatureClass R_pFeatureClass = R_pFeatureLayer.FeatureClass;
-            IQueryFilter R_pQueryFilter = new QueryFilterClass();
-            R_pQueryFilter.WhereClause = null;
-            R_FeatureCursor = R_pFeatureClass.Search(R_pQueryFilter, true);
-            R_pFeature = R_FeatureCursor.NextFeature();
-            IUniqueValueRenderer renderer = new UniqueValueRendererClass();
-            renderer.FieldCount = 1;
-            renderer.set_Field(0, sFieldName);
-            int index = R_pFeatureLayer.FeatureClass.Fields.FindField(sFieldName);
-            IRandomColorRamp rx = new RandomColorRampClass();
-            rx.MinSaturation = 15;
-            rx.MaxSaturation = 30;
-            rx.MinValue = 85;
-            rx.MaxValue = 100;
-            rx.StartHue = 0;
-            rx.EndHue = 360;
-            rx.Size = 100;
-            bool ok=true;
-            rx.CreateRamp(out ok);
-            IEnumColors RColors = rx.Colors;
-            RColors.Reset();
-            while (R_pFeature != null)
-            {
-                ISimpleFillSymbol symd = new SimpleFillSymbolClass();
-                symd.Style = esriSimpleFillStyle.esriSFSSolid;
-                symd.Outline.Width = 1;
-                symd.Color = RColors.Next();
-                string valuestr = R_pFeature.get_Value(index).ToString();
-                renderer.AddValue(valuestr,"", symd as ISymbol);
-                R_pFeature = R_FeatureCursor.NextFeature();
-            }
             IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
-            geoLayer.Renderer = renderer as IFeatureRenderer;
+            ITable pTable = geoLayer.FeatureClass as ITable;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.AddField(sFieldName);//以唯一值作为条件
+            pCursor = pTable.Search(pQueryFilter,true);
+            IEnumerator pEnumreator;
+            //获取字段中各要素属性唯一值
+            IDataStatistics pDataStatistics = new DataStatisticsClass();
+            pDataStatistics.Field = sFieldName;//获取统计字段
+            pDataStatistics.Cursor = pCursor;
+            pEnumreator = pDataStatistics.UniqueValues;
+            int fieldcount = pDataStatistics.UniqueValueCount;//唯一值个数，以此确定颜色带范围
+            IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            pUniqueValueR.FieldCount = 1;//单值渲染
+            pUniqueValueR.set_Field(0, sFieldName);//渲染字段
+            IEnumColors pEnumColor = GetColorRamp(fieldcount).Colors;
+            pEnumColor.Reset();
+            while (pEnumreator.MoveNext())
+            {
+                string value = pEnumreator.Current.ToString();
+                if (value != null)
+                {
+                    IColor pColor = pEnumColor.Next();
+                    ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+                    symd.Style = esriSimpleFillStyle.esriSFSSolid;
+                    symd.Outline.Width = 1;
+                    symd.Color = pColor;
+                    pUniqueValueR.AddValue(value, "", symd as ISymbol);
+                }
+            }
+            #region
+            //IFeatureSelection R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            //IFeature R_pFeature;
+            //IFeatureCursor R_FeatureCursor;
+            //R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            //R_pFeatureSelection.Clear();
+            //ISelectionSet R_pSelectionSet = R_pFeatureSelection.SelectionSet;
+            //IFeatureClass R_pFeatureClass = R_pFeatureLayer.FeatureClass;
+            //IQueryFilter R_pQueryFilter = new QueryFilterClass();
+            //R_pQueryFilter.WhereClause = null;
+            //R_FeatureCursor = R_pFeatureClass.Search(R_pQueryFilter, true);
+            //R_pFeature = R_FeatureCursor.NextFeature();
+            //IUniqueValueRenderer renderer = new UniqueValueRendererClass();
+            //renderer.FieldCount = 1;
+            //renderer.set_Field(0, sFieldName);
+            //int index = R_pFeatureLayer.FeatureClass.Fields.FindField(sFieldName);
+            //IRandomColorRamp rx = new RandomColorRampClass();
+            //rx.MinSaturation = 15;
+            //rx.MaxSaturation = 30;
+            //rx.MinValue = 85;
+            //rx.MaxValue = 100;
+            //rx.StartHue = 0;
+            //rx.EndHue = 360;
+            //rx.Size = 100;
+            //bool ok=true;
+            //rx.CreateRamp(out ok);
+            //IEnumColors RColors = rx.Colors;
+            //RColors.Reset();
+            //List<String> FeatureName = new List<string>();
+            //while (R_pFeature != null)
+            //{
+            //    ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+            //    symd.Style = esriSimpleFillStyle.esriSFSSolid;
+            //    symd.Outline.Width = 1;
+            //    symd.Color = RColors.Next();
+            //    string valuestr = R_pFeature.get_Value(index).ToString();
+            //    renderer.AddValue(valuestr,"", symd as ISymbol);
+            //    FeatureName.Add(valuestr);
+            //    R_pFeature = R_FeatureCursor.NextFeature();
+            //}
+            #endregion
+            geoLayer.Renderer = pUniqueValueR as IFeatureRenderer;
             MainFrom.m_mapControl.Refresh();  
+        }
+        private static IRandomColorRamp GetColorRamp(int size)
+        {
+            IRandomColorRamp pRandomColorRamp = new RandomColorRampClass();
+            pRandomColorRamp.StartHue = 10;
+            pRandomColorRamp.EndHue = 300;
+            pRandomColorRamp.MaxSaturation = 100;
+            pRandomColorRamp.MinSaturation = 0;
+            pRandomColorRamp.MaxValue = 100;
+            pRandomColorRamp.MinValue = 0;
+            pRandomColorRamp.Size = size;
+            bool ok = true;
+            pRandomColorRamp.CreateRamp(out ok);
+            return pRandomColorRamp;
         }
         /// <summary>
         /// 设置要素图片显示样式
