@@ -13,13 +13,13 @@ namespace RoadRaskEvaltionSystem.WeatherHander
         /// </summary>
         /// <param name="url"></param>
         /// <param name="AreaID"></param>
-          void Savelast24hMsg(string url, int AreaID);
+          void Savelast24hMsg(string url, int AreaID, out bool isSaved24hours);
         /// <summary>
         /// 保存数据
         /// </summary>
         /// <param name="url"></param>
         /// <param name="AreaID"></param>
-          void SaveForeacastWerherMsg(string url, int AreaID);
+          void SaveForeacastWerherMsg(string url, int AreaID, out bool isSaved7days);
 
     }
 }

@@ -60,26 +60,32 @@ namespace pixChange
 
         public static  bool getWeatherData()
         {
+            bool isError = true;
             try
             {
+                bool is7days_1, is7days_2, is24hours_1, is24hours_2;
                 //更新庐山地区
-                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/lushan.html", 1);
+                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/lushan.html", 1, out is7days_1);
                 Common.DBHander.coloseCon(); //来不及数据库连接
                //更新宝新
-                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/baoxing.html", 2);
+                saveWeather.SaveForeacastWerherMsg("http://www.nmc.cn/publish/forecast/ASC/baoxing.html", 2, out is7days_2);
                 Common.DBHander.coloseCon();
-                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56279", 1);
+                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56279", 1, out is24hours_1);
                 Common.DBHander.coloseCon();
-                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56273", 2);
+                saveWeather.Savelast24hMsg("http://www.nmc.cn/f/rest/passed/56273", 2, out is24hours_2);
                 Common.DBHander.coloseCon();
+                if (!is7days_1 || !is7days_2 || !is24hours_1 || !is24hours_2)
+                {
+                    isError = false;
+                }
             }
             catch (Exception ex)
             {
                logger.Error("天气信息提取异常",ex);
                Debug.Print("天气信息提取异常！");
-               return false;
+               isError = false;
             }
-            return true;
+            return isError;
         }
     }
 }
