@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace RoadRaskEvaltionSystem.HelperClass
 {
@@ -43,6 +44,7 @@ namespace RoadRaskEvaltionSystem.HelperClass
             pRgbColor.Green = green;
             pRgbColor.Blue = blue;
             ILineSymbol lineSymbol = new SimpleLineSymbol();
+            lineSymbol.Color = pRgbColor;
             lineSymbol.Width = width;
             ISimpleRenderer simpleRender = new SimpleRendererClass();
             simpleRender.Symbol = lineSymbol as ISymbol;

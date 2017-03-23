@@ -199,6 +199,10 @@ namespace pixChange
                     {
                         LayerManager.SetFeaturePictureSymbol(pFLayer, Common.CountryPointImagePath, 15);
                     }
+                    if (pFLayer.Name == "水系")
+                    {
+                        FeatureStyleUtil.SetFetureLineStyle(0,92,230,2,pFLayer);
+                    }
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
                     MainFrom.m_pTocControl.Update();
@@ -239,7 +243,6 @@ namespace pixChange
 
             }
         }
-    
         private void LayerMangerView_Load(object sender, EventArgs e)
         {
             exCheckedListBox1.Items.Clear();

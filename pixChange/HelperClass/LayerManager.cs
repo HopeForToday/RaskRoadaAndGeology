@@ -11,6 +11,9 @@ using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
 using ESRI.ArcGIS.Display;
 using System.Drawing;
+using System.Data;
+using System.Collections;
+using System.Diagnostics;
 
 namespace pixChange.HelperClass
 {
@@ -114,8 +117,10 @@ namespace pixChange.HelperClass
         {
             IColor pColor = new RgbColorClass();
             pColor.RGB = color.B * 65536 + color.G * 256 + color.R;
+            pColor.Transparency = color.A;
             return pColor;
         }  
+
         /// <summary>
         /// 根据图层唯一值渲染图层
         /// </summary>
@@ -123,47 +128,162 @@ namespace pixChange.HelperClass
         /// <param name="sFieldName"></param>
         public static void UniqueValueRenderer(IFeatureLayer R_pFeatureLayer, string sFieldName)
         {
-            IFeatureSelection R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
-            IFeature R_pFeature;
-            IFeatureCursor R_FeatureCursor;
-            R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
-            R_pFeatureSelection.Clear();
-            ISelectionSet R_pSelectionSet = R_pFeatureSelection.SelectionSet;
-            IFeatureClass R_pFeatureClass = R_pFeatureLayer.FeatureClass;
-            IQueryFilter R_pQueryFilter = new QueryFilterClass();
-            R_pQueryFilter.WhereClause = null;
-            R_FeatureCursor = R_pFeatureClass.Search(R_pQueryFilter, true);
-            R_pFeature = R_FeatureCursor.NextFeature();
-            IUniqueValueRenderer renderer = new UniqueValueRendererClass();
-            renderer.FieldCount = 1;
-            renderer.set_Field(0, sFieldName);
-            int index = R_pFeatureLayer.FeatureClass.Fields.FindField(sFieldName);
-            IRandomColorRamp rx = new RandomColorRampClass();
-            rx.MinSaturation = 15;
-            rx.MaxSaturation = 30;
-            rx.MinValue = 85;
-            rx.MaxValue = 100;
-            rx.StartHue = 0;
-            rx.EndHue = 360;
-            rx.Size = 100;
-            bool ok=true;
-            rx.CreateRamp(out ok);
-            IEnumColors RColors = rx.Colors;
-            RColors.Reset();
-            while (R_pFeature != null)
+
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+            ITable pTable = geoLayer.FeatureClass as ITable;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.AddField(sFieldName);              //以唯一值作为条件
+            pCursor = pTable.Search(pQueryFilter,true);
+            IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            pUniqueValueR.FieldCount = 1;                   //单值渲染
+            pUniqueValueR.set_Field(0, sFieldName);         //渲染字段
+            IFeatureCursor pFeatureCursor=R_pFeatureLayer.Search(pQueryFilter,false);
+            IFeature pFeature = pFeatureCursor.NextFeature();
+            int index = R_pFeatureLayer.FeatureClass.FindField("Name");
+            
+            #region
+            List<Color> colors = new List<Color>();         //存储行政区连续颜色带,以要素数量为上限
+            colors = createcolor(colors, R_pFeatureLayer.FeatureClass.FeatureCount(pQueryFilter));
+            int i = 15; 
+            while (pFeature != null)
             {
+                string value=pFeature.get_Value(index).ToString();
+                pFeature = pFeatureCursor.NextFeature();
                 ISimpleFillSymbol symd = new SimpleFillSymbolClass();
                 symd.Style = esriSimpleFillStyle.esriSFSSolid;
                 symd.Outline.Width = 1;
-                symd.Color = RColors.Next();
-                string valuestr = R_pFeature.get_Value(index).ToString();
-                renderer.AddValue(valuestr,"", symd as ISymbol);
-                R_pFeature = R_FeatureCursor.NextFeature();
+                if (value.Equals("飞仙关镇"))                       //此处用于渲染原始图层
+                    symd.Color = ConvertColorToIColor(colors[0]);
+                else if(value.Equals("凤禾乡"))
+                    symd.Color = ConvertColorToIColor(colors[1]);
+                else if(value.Equals("芦阳镇"))
+                    symd.Color = ConvertColorToIColor(colors[2]);
+                else if(value.Equals("沫东镇"))
+                    symd.Color = ConvertColorToIColor(colors[3]);
+                else if(value.Equals("思延乡"))
+                    symd.Color = ConvertColorToIColor(colors[4]);
+                else if(value.Equals("升隆乡"))
+                    symd.Color = ConvertColorToIColor(colors[5]);
+                else if(value.Equals("清源乡"))
+                    symd.Color = ConvertColorToIColor(colors[6]);
+                else if(value.Equals("隆兴乡"))
+                    symd.Color = ConvertColorToIColor(colors[7]);
+                else if(value.Equals("仁加乡"))
+                    symd.Color = ConvertColorToIColor(colors[8]);
+                else if(value.Equals("龙门乡"))
+                    symd.Color = ConvertColorToIColor(colors[9]);
+                else if(value.Equals("双石镇"))
+                    symd.Color = ConvertColorToIColor(colors[10]);
+                else if(value.Equals("太平镇"))
+                    symd.Color = ConvertColorToIColor(colors[11]);
+                else if(value.Equals("宝盛乡"))
+                    symd.Color = ConvertColorToIColor(colors[12]);
+                else if(value.Equals("中林乡"))
+                    symd.Color = ConvertColorToIColor(colors[13]);
+                else if(value.Equals("大川镇"))
+                    symd.Color = ConvertColorToIColor(colors[14]);
+                else
+                {
+                    symd.Color = ConvertColorToIColor(colors[i]);  //i后移一位，以便于对应name字段
+                    i++; 
+                }
+                pUniqueValueR.AddValue(value, "", symd as ISymbol);
+                
             }
-            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
-            geoLayer.Renderer = renderer as IFeatureRenderer;
-            MainFrom.m_mapControl.Refresh();  
+            geoLayer.Renderer = pUniqueValueR as IFeatureRenderer;
+            MainFrom.m_mapControl.Refresh();
+            #endregion
+            //IEnumerator pEnumreator;
+            ////获取字段中各要素属性唯一值
+            //IDataStatistics pDataStatistics = new DataStatisticsClass();
+            //pDataStatistics.Field = sFieldName;//获取统计字段
+            //pDataStatistics.Cursor = pCursor;
+            //pEnumreator = pDataStatistics.UniqueValues;
+            //int fieldcount = pDataStatistics.UniqueValueCount;//唯一值个数，以此确定颜色带范围
+            //IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            //pUniqueValueR.FieldCount = 1;//单值渲染
+            //pUniqueValueR.set_Field(0, sFieldName);//渲染字段
+            //IEnumColors pEnumColor = GetColorRamp(fieldcount).Colors;
+            //pEnumColor.Reset();
+            //createcolor();int i=0;              //产生颜色带,
+            //while (pEnumreator.MoveNext())
+            //{
+            //    string value = pEnumreator.Current.ToString();
+            //    if (value != null)
+            //    {
+            //        //IColor pColor = pEnumColor.Next();
+            //        ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+            //        symd.Style = esriSimpleFillStyle.esriSFSSolid;
+            //        symd.Outline.Width = 1;
+            //        symd.Color = ConvertColorToIColor(colors[i]);i++;   //i后移一位，以便于对应name字段
+            //        pUniqueValueR.AddValue(value, "", symd as ISymbol);
+            //    }
+            //}
         }
+
+        public static void RiverRender(IFeatureLayer R_pFeatureLayer, string sFieldName)
+        {
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+            ITable pTable = geoLayer.FeatureClass as ITable;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.AddField(sFieldName);              //以唯一值作为条件
+            pCursor = pTable.Search(pQueryFilter, true);
+            IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            pUniqueValueR.FieldCount = 1;                   //单值渲染
+            pUniqueValueR.set_Field(0, sFieldName);         //渲染字段
+        }
+
+        private static IRandomColorRamp GetColorRamp(int size)
+        {
+            IRandomColorRamp pRandomColorRamp = new RandomColorRampClass();
+            pRandomColorRamp.StartHue = 10;
+            pRandomColorRamp.EndHue = 300;
+            pRandomColorRamp.MaxSaturation = 100;
+            pRandomColorRamp.MinSaturation = 0;
+            pRandomColorRamp.MaxValue = 100;
+            pRandomColorRamp.MinValue = 0;
+            pRandomColorRamp.Size = size;
+            bool ok = true;
+            pRandomColorRamp.CreateRamp(out ok);
+            return pRandomColorRamp;
+        }
+
+        /// <summary>
+        /// 产生行政区的渐变颜色带
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="colornum"></param>
+        /// <returns></returns>
+        private static List<Color> createcolor(List<Color> colors,int colornum)
+        {
+            colors.Add(Color.FromArgb(100, 77, 117, 180));   //飞仙关
+            colors.Add(Color.FromArgb(100, 159, 169, 228));  //凤禾乡
+            colors.Add(Color.FromArgb(100, 107, 134, 202));  //芦阳镇
+            colors.Add(Color.FromArgb(100, 171, 178, 233));  //沫东镇
+            colors.Add(Color.FromArgb(100, 83, 121, 186));  //思延乡
+            colors.Add(Color.FromArgb(100, 83, 121, 237));  //升隆乡
+            colors.Add(Color.FromArgb(100, 184, 189, 239));  //清源乡
+            colors.Add(Color.FromArgb(100, 126, 146, 212));  //隆兴乡
+            colors.Add(Color.FromArgb(100, 212, 213, 249));  //仁加乡
+            colors.Add(Color.FromArgb(100, 147, 159, 223));  //龙门乡
+            colors.Add(Color.FromArgb(100, 116, 138, 207));  //双石镇
+            colors.Add(Color.FromArgb(100, 136, 152, 217));  //太平镇
+            colors.Add(Color.FromArgb(100, 198, 201, 245));  //宝盛乡
+            colors.Add(Color.FromArgb(100, 99, 129, 196));  //中林乡
+            colors.Add(Color.FromArgb(100, 226, 226, 255));  //大川镇
+            for (int i = 15; i < colornum+15; i++)         //产生随机颜色,用于多余要素处理
+            {
+                Random ran1 = new Random(i);
+                Random ran2 = new Random(2 * i);
+                Random ran3 = new Random(3 * i);
+                Random ran0=new Random(4*i);
+                colors.Add(Color.FromArgb(ran0.Next(0,255),ran1.Next(0, 255), ran2.Next(0, 255), ran3.Next(0, 255)));
+            }
+                return colors;
+        }
+
         /// <summary>
         /// 设置要素图片显示样式
         /// </summary>
