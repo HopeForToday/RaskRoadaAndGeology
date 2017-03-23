@@ -17,7 +17,7 @@ namespace RoadRaskEvaltionSystem
 {
     public partial class ForecastDisplay : Form
     {
-        string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=" + Application.StartupPath + "\\Rources\\雨量信息.mdb";
+        //string strFilePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data source=" + Application.StartupPath + "\\Rources\\雨量信息.mdb";
         string ChartSqlStr, GridSqlStr, WeekSqlStr;
         Series newRains, newTemperature, newWindspeed;//未来天气预报Series
         Series oldRain1h, oldTemperature, oldHumidity, oldWindspeed;//过去24小时天气数据Series
@@ -42,7 +42,7 @@ namespace RoadRaskEvaltionSystem
             comboBoxEdit_Area.Properties.Items.Add("宝兴县");
             comboBoxEdit_Area.SelectedItem = "芦山县";
             NowTime = DateTime.Now;
-            for (int i = 1; i < 6; i++)
+            for (int i = 0; i < 6; i++)
             {
                 comboBoxEdit_Date.Properties.Items.Add(NowTime.AddDays(i).ToString("yyyy-MM-dd"));
             }
@@ -58,11 +58,11 @@ namespace RoadRaskEvaltionSystem
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
             //获取数据并创建图表 
-            dt_Chart = getDataTable(ChartSqlStr);
+            dt_Chart = Common.DBHander.ReturnDataSet(ChartSqlStr).Tables[0];
             CreateNewChart(dt_Chart);
-            dt_Grid = getDataTable(GridSqlStr);
+            dt_Grid = Common.DBHander.ReturnDataSet(GridSqlStr).Tables[0];
             CreateTable(dt_Grid);
-            dt_Week = getDataTable(WeekSqlStr);
+            dt_Week = Common.DBHander.ReturnDataSet(WeekSqlStr).Tables[0];
             CreateOldChart(dt_Week);
         }
 
@@ -395,35 +395,6 @@ namespace RoadRaskEvaltionSystem
         }
 
         /// <summary>
-        /// 读取数据存为table
-        /// </summary>
-        /// <param name="sqlStr">SQL语句</param>
-        /// <returns></returns>
-        private DataTable getDataTable(string sqlStr)
-        {
-            OleDbConnection con = new OleDbConnection(strFilePath);
-            con.Open();
-            OleDbDataAdapter da = new OleDbDataAdapter(sqlStr, con);
-            DataTable _dt = new DataTable();
-            try
-            {
-                da.Fill(_dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-            finally
-            {
-                con.Close();
-                con.Dispose();
-                da.Dispose();
-            }
-
-            return _dt;
-        }
-
-        /// <summary>
         /// 为表格添加行标题
         /// </summary>
         /// <param name="sender"></param>
@@ -460,25 +431,20 @@ namespace RoadRaskEvaltionSystem
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            //day1 = String.Format("{0}日", comboBoxEdit_Date.Text.Split('-')[2].ToString());
-            //day2 = String.Format("{0}日", (Convert.ToDateTime(comboBoxEdit_Date.Text.ToString()).AddDays(1).ToString("yyyy-mm-dd").Split('-')[2].ToString()));
-            //day1 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(1).ToString("yyyy-MM-dd");
-            //day2 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(5).ToString("yyyy-MM-dd");
             day1 = NowTime.ToString("yyyy-MM-dd");
             day2 = NowTime.AddDays(6).ToString("yyyy-MM-dd");
 
             ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, comboBoxEdit_Date.Text);
-            //GridSqlStr = String.Format("SELECT dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} ORDER BY ID", AreaId);
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
             WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
 
             initPoints();   // 初始化图表的点位信息
 
-            dt_Chart = getDataTable(ChartSqlStr);
+            dt_Chart = Common.DBHander.ReturnDataSet(ChartSqlStr).Tables[0];
             CreateNewChart(dt_Chart);
-            dt_Grid = getDataTable(GridSqlStr);
+            dt_Grid = Common.DBHander.ReturnDataSet(GridSqlStr).Tables[0];
             CreateTable(dt_Grid);
-            dt_Week = getDataTable(WeekSqlStr);
+            dt_Week = Common.DBHander.ReturnDataSet(WeekSqlStr).Tables[0];
             CreateOldChart(dt_Week);
         }
 

@@ -17,18 +17,19 @@ namespace RoadRaskEvaltionSystem.WeatherHander
         {
             this.getWeatherObj = getWeatherObj;
         }
-        public void SaveForeacastWerherMsg(string url, int AreaID)
+        public void SaveForeacastWerherMsg(string url, int AreaID, out bool isSaved7days)
         {
+            isSaved7days = true;
             List<forecastWeatherMesg> WeatherList = getWeatherObj.getforcastMessage(url);
             if (WeatherList.Count == 0)
             {
                 Console.WriteLine("SaveForeacastWerherMsg天气预报提取失败!");
+                isSaved7days = false;
                 return;
             }
             DataTable idS = Common.DBHander.ReturnDataSet("select ID from ForecastWeather where AreaID=" + AreaID + " order by ID asc").Tables[0];
             List<string> sqllist = new List<string>();
             
-            // var dd=WeatherList.Find(t=>t.dateTime.Contains("日"));var index1=WeatherList.IndexOf(dd);  下面的方式效率会高一些
             int index = 0, count = WeatherList.Count;
             for (int k = 0; k < count; k++)
             {
@@ -83,7 +84,6 @@ namespace RoadRaskEvaltionSystem.WeatherHander
             for (int i = 0; i < WeatherList.Count; i++)
             {
                 var r = WeatherList[i];
-
                 sqllist.Add(
                     string.Format(
                         "update ForecastWeather set dtime3hour='{0}' , temperature='{1}',rains='{2}',wind='{3}',windd='{4}',qy='{5}',yl='{6}',njd='{7}',xdsd='{8}',timedate7='{10}',timehour7='{11}' where ID={9} ",
@@ -93,8 +93,9 @@ namespace RoadRaskEvaltionSystem.WeatherHander
         }
 
         //实际上只有最近23个小时的数据
-        public void Savelast24hMsg(string url, int AreaID)
+        public void Savelast24hMsg(string url, int AreaID, out bool isSaved24hours)
         {
+            isSaved24hours = true;
             List<OneHourWeather> Last23h = (List<OneHourWeather>)getWeatherObj.Get24HourWeather(url);
             foreach (var r in Last23h)
             {
@@ -114,6 +115,7 @@ namespace RoadRaskEvaltionSystem.WeatherHander
                     if (!succes)
                     {
                         Console.WriteLine(r.time + " 的天气信息存入失败!___" + DateTime.Now);
+                        isSaved24hours = false;
                     }
                     else
                     {

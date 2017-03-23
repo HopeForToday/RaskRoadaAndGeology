@@ -157,67 +157,6 @@ namespace HtmlAgilityPackDemo1
                             } 
 	                    }
                     }
-                    //if (j==1)
-                    //{
-                    //    if (oritime.Contains("日"))
-                    //    {
-                    //        alltime = DateTime.Today.ToString("yyyy-MM-") + oritime.Replace("日", " ");
-                    //        //alltime = oritime.Insert(3, " ").ToString();
-                    //        forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0].ToString();
-                    //        forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1].ToString();
-                    //    }
-                    //    else
-                    //    {
-                    //        if (oritime.Equals("02:00"))
-                    //        {
-                    //            if (int.Parse(DateTime.Now.ToString("HH"))==23)
-                    //            {
-                    //                alltime = (DateTime.Today.AddDays(k).ToString("yyyy-MM-dd") + " " + oritime).ToString();
-                    //                forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //                forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
-                    //            }
-                    //            else
-                    //            {
-                    //                alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
-                    //                forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //                forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            alltime = (DateTime.Today.AddDays(k - 1).ToString("yyyy-MM-dd") + " " + oritime).ToString();
-                    //            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
-                    //        }
-
-                    //    }
-                    //}
-                    //else if (j>1)
-                    //{
-                    //    if (oritime.Contains("日"))
-                    //    {
-                    //        alltime = DateTime.Today.ToString("yyyy-MM-") + oritime.Replace("日", " ");
-                    //        //alltime = oritime.Insert(3, " ").ToString();
-                    //        forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //        forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1];
-                    //    }
-                    //    else
-                    //    {
-
-                    //        if (k>2)
-                    //        {
-                    //            alltime = (forWeMsgList[8 * (k - 1) - 1].timedate7 + " " + oritime).ToString();
-                    //            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
-                    //        }
-                    //        else
-                    //        {
-                    //            alltime = (forWeMsgList[8 * k + (j - 1) - 9].timedate7 + " " + oritime).ToString();
-                    //            forWeMsgList[8 * k + j - 9].timedate7 = alltime.Split(' ')[0];
-                    //            forWeMsgList[8 * k + j - 9].timehour7 = alltime.Split(' ')[1]; 
-                    //        }
-                    //    } 
-                    //}
                 }
 
                 for (int j = 1; j < rains.Count; j++)

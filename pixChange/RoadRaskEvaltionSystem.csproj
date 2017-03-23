@@ -480,6 +480,7 @@
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\行政区.sbn" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\行政区.sbx" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\行政区.shp" />
+    <None Include="bin\Debug\Rources\BaseData\BaseShapeData\行政区.shp.QSTCBGO560FGLKC.8204.3976.sr.lock" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\行政区.shx" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\道路.dbf" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\道路.mxd" />
