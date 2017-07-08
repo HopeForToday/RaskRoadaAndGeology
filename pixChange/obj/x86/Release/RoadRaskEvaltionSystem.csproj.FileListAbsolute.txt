@@ -61,3 +61,6 @@ E:\项目\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.X
 E:\项目\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.csproj.GenerateResource.Cache
 E:\项目\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.exe.licenses
 E:\项目\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.AddFieldForm.resources
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\log4net.dll
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\log4net.xml
+E:\项目\temp2\RaskRoadaAndGeology\pixChange\obj\x86\Release\RoadRaskEvaltionSystem.AddFieldForm.resources

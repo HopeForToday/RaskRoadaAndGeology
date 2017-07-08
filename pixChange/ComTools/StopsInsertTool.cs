@@ -143,7 +143,7 @@ namespace RoadRaskEvaltionSystem.ComTools
         {
             if (Button == 1)
             {
-               IPoint point = this.mapControl.ToMapPoint(X, Y);
+                IPoint point = this.mapControl.ToMapPoint(X, Y);
                 routeUI.InsertStopPoint(this.mapControl, point);
             }
         }

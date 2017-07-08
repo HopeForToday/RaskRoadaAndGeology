@@ -170,13 +170,12 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeColumnMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 48);
-            //this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 26);
             // 
             // removeColumnMenuItem
             // 
             this.removeColumnMenuItem.Name = "removeColumnMenuItem";
-            this.removeColumnMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeColumnMenuItem.Size = new System.Drawing.Size(124, 22);
             this.removeColumnMenuItem.Text = "删除字段";
             this.removeColumnMenuItem.Click += new System.EventHandler(this.removeColumnMenuItem_Click);
             // 

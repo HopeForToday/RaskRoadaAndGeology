@@ -1,0 +1,21 @@
+2017-03-24 10:45:16,985 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 10:51:14,211 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 10:53:11,986 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 10:54:06,554 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 10:56:31,363 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 10:59:01,941 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 11:00:26,605 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-03-24 11:11:00,395 [13] ERROR pixChange.Program - 天气信息提取异常
+ pixChange.ProgramnameSystem.Net.WebException: 操作已超时。
+   在 System.Net.ConnectStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.StreamReader.ReadBuffer()
+   在 System.IO.StreamReader.ReadToEnd()
+   在 HtmlAgilityPack.HtmlDocument.Load(TextReader reader)
+   在 HtmlAgilityPack.HtmlDocument.Load(Stream stream, Boolean detectEncodingFromByteOrderMarks)
+   在 HtmlAgilityPack.HtmlWeb.Get(Uri uri, String method, String path, HtmlDocument doc, IWebProxy proxy, ICredentials creds)
+   在 HtmlAgilityPack.HtmlWeb.LoadUrl(Uri uri, String method, WebProxy proxy, NetworkCredential creds)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url, String method)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url)
+   在 HtmlAgilityPackDemo1.GetWeatherMessage.getforcastMessage(String url) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\GetWeatherMessage.cs:行号 22
+   在 RoadRaskEvaltionSystem.WeatherHander.SaveWeatherMsg.SaveForeacastWerherMsg(String url, Int32 AreaID, Boolean& isSaved7days) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\SaveWeatherMsg.cs:行号 23
+   在 pixChange.Program.getWeatherData() 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\Program.cs:行号 68

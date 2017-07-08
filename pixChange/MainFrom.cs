@@ -41,12 +41,13 @@ namespace pixChange
         private IRouteUI routeUI = ServiceLocator.RouteUI;
         //空间查询操作
         private ISpatialQueryUI spatiallUI = ServiceLocator.SpatialQueryUI;
+
         #endregion
         #region ToolbarMenus
         private IToolbarMenu mapMenu;//toc控件右键地图菜单
         private IToolbarMenu layerMenu;//toc控件右键图层菜单
         #endregion
-        #region Tools
+        #region Tools 已经没有使用 暂时不删
         private StopsInsertTool stopsInsertTool = new StopsInsertTool();
         private BarrysInsertTool barrysInsertTool = new BarrysInsertTool();
         private StopsRemoveTool stopRemTool = new StopsRemoveTool();
@@ -70,12 +71,7 @@ namespace pixChange
         public static string groupLayerName = null;
         public static int WhichChecked = 0;//记录哪一个模块被点击 1:基础数据 2:地质数据 3:公路数据 4:生态数据
         //用于判断当前鼠标点击的菜单命令,以备在地图控件中判断操作
-        public static  CustomTool m_cTool;
-        IScreenDisplay m_focusScreenDisplay;// For 平移
-        //For 放大,缩小，平移
-        INewEnvelopeFeedback m_feedBack;//  '拉框
-        IPoint m_mouseDownPoint;
-        bool m_isMouseDown;
+        public   CustomTool currentTool;
         public MainFrom()
         {
             InitializeComponent();
@@ -190,29 +186,26 @@ namespace pixChange
         //放大
         private void ToolButtonZoomIn_Click(object sender, EventArgs e)
         {
-            ICommand zoomIn;
-            zoomIn = new ControlsMapZoomInTool();
+            ICommand zoomIn= new ControlsMapZoomInTool();
             zoomIn.OnCreate(m_mapControl);
             m_mapControl.CurrentTool = zoomIn as ITool;
-            m_cTool = CustomTool.ZoomIn;
+            currentTool = CustomTool.None;
         }
         //缩小
         private void ToolButtonZoomOut_Click(object sender, EventArgs e)
         {
-            ICommand zoomOut;
-            zoomOut = new ControlsMapZoomOutTool();
+            ICommand zoomOut = new ControlsMapZoomOutTool();
             zoomOut.OnCreate(m_mapControl);
-            m_cTool = CustomTool.ZoomOut;
             m_mapControl.CurrentTool = zoomOut as ITool;
+            currentTool = CustomTool.None;
         }
         //平移
         private void ToolButtonPan_Click(object sender, EventArgs e)
         {
-            ICommand pan;
-            pan = new ControlsMapPanTool();
+            ICommand pan = new ControlsMapPanTool();
             pan.OnCreate(m_mapControl);
-            m_cTool = CustomTool.Pan;
             m_mapControl.CurrentTool = pan as ITool;
+            currentTool = CustomTool.None;
         }
         /// <summary>
         /// 全景 获取图层中最大的包围壳进行显示
@@ -223,129 +216,15 @@ namespace pixChange
         {
             MapAreaUtil.ZoomToByMaxLayer(this.axMapControl1);
         }
-
-        private void axMapControl1_OnKeyUp(object sender, IMapControlEvents2_OnKeyUpEvent e)
-        {
-            //鼠标未落下,退出
-            if (m_isMouseDown == false) return;
-
-            IActiveView pActiveView = m_mapControl.ActiveView;
-            IEnvelope pEnvelope;
-
-            switch (m_cTool)
-            {
-                case CustomTool.ZoomIn:
-
-                    ////If an envelope has not been tracked
-
-                    if (m_feedBack == null)
-                    {
-                        //Zoom in from mouse click
-                        pEnvelope = pActiveView.Extent;
-                        pEnvelope.CenterAt(m_mouseDownPoint);
-                        pEnvelope.Expand(0.5, 0.5, true);
-
-
-                    }
-                    else
-                    {
-                        //Stop the envelope feedback
-                        pEnvelope = m_feedBack.Stop();
-
-                        //Exit if the envelope height or width is 0
-                        if (pEnvelope.Width == 0 || pEnvelope.Height == 0)
-                        {
-                            m_feedBack = null;
-                            m_isMouseDown = false;
-                        }
-                    }
-                    //Set the new extent
-                    pActiveView.Extent = pEnvelope;
-                    break;
-
-                case CustomTool.ZoomOut:
-                    IEnvelope pFeedEnvelope;
-
-                    double NewWidth, NewHeight;
-
-                    //If an envelope has not been tracked
-                    if (m_feedBack == null)
-                    {
-                        //Zoom out from the mouse click
-                        pEnvelope = pActiveView.Extent;
-                        pEnvelope.Expand(2, 2, true);
-                        pEnvelope.CenterAt(m_mouseDownPoint);
-                    }
-                    else
-                    {
-                        //Stop the envelope feedback
-                        pFeedEnvelope = m_feedBack.Stop();
-
-                        //Exit if the envelope height or width is 0
-                        if (pFeedEnvelope.Width == 0 || pFeedEnvelope.Height == 0)
-                        {
-                            m_feedBack = null;
-                            m_isMouseDown = false;
-
-                        }
-
-                        NewWidth = pActiveView.Extent.Width * (pActiveView.Extent.Width / pFeedEnvelope.Width);
-                        NewHeight = pActiveView.Extent.Height * (pActiveView.Extent.Height / pFeedEnvelope.Height);
-
-                        //Set the new extent coordinates
-                        pEnvelope = new Envelope() as IEnvelope;
-                        pEnvelope.PutCoords(
-                            pActiveView.Extent.XMin -
-                            ((pFeedEnvelope.XMin - pActiveView.Extent.XMin) *
-                             (pActiveView.Extent.Width / pFeedEnvelope.Width)),
-                            pActiveView.Extent.YMin -
-                            ((pFeedEnvelope.YMin - pActiveView.Extent.YMin) *
-                             (pActiveView.Extent.Height / pFeedEnvelope.Height)),
-                            (pActiveView.Extent.XMin -
-                             ((pFeedEnvelope.XMin - pActiveView.Extent.XMin) *
-                              (pActiveView.Extent.Width / pFeedEnvelope.Width))) + NewWidth,
-                            (pActiveView.Extent.YMin -
-                             ((pFeedEnvelope.YMin - pActiveView.Extent.YMin) *
-                              (pActiveView.Extent.Height / pFeedEnvelope.Height))) + NewHeight);
-
-                    }
-                    //Set the new extent
-                    pActiveView.Extent = pEnvelope;
-                    break;
-
-                case CustomTool.Pan:
-                    pEnvelope = m_focusScreenDisplay.PanStop();
-
-                    //Check if user dragged a rectangle or just clicked.
-                    //If a rectangle was dragged, m_ipFeedback in non-NULL
-                    if (pEnvelope != null)
-                    {
-                        m_focusScreenDisplay.DisplayTransformation.VisibleBounds = pEnvelope;
-                        m_focusScreenDisplay.Invalidate(null, true, (short)esriScreenCache.esriAllScreenCaches);
-
-                    }
-                    m_cTool = CustomTool.None;
-                    break;
-            }
-        }
       
         private void axMapControl1_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
             this.axMapControl1.Focus();
             this.axMapControl1.Map.ClearSelection();
-            switch (m_cTool)
+            IPoint point = this.axMapControl1.ToMapPoint(e.x,e.y);
+            switch (currentTool)
             {
-                case CustomTool.ZoomIn:
-                case CustomTool.ZoomOut:
-                    //case CustomTool.Pan:
-                    //Create a point in map coordinates
-                    IPoint pPoint = new ESRI.ArcGIS.Geometry.Point();
-                    m_mouseDownPoint = new ESRI.ArcGIS.Geometry.Point();
-                    pPoint.X = e.mapX;
-                    pPoint.Y = e.mapY;
-                    m_mouseDownPoint = pPoint;
-                    m_isMouseDown = true;
-                    break;
+                //矩形框查询
                 case CustomTool.RectSelect:
                  //  toolStripComboBox2.ComboBox.
                     if (this.toolStripComboBox2.SelectedIndex < 0)
@@ -357,15 +236,21 @@ namespace pixChange
                     spatiallUI.DealFeatureQuery(this.axMapControl1,pRect as IGeometry,null,this.toolStripComboBox2.Text);
                     this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                     break;
-
-                case CustomTool.Pan:
-                    pPoint = new ESRI.ArcGIS.Geometry.Point();
-                    pPoint.X = e.mapX;
-                    pPoint.Y = e.mapY;
-                    m_mouseDownPoint = pPoint;
-                    m_isMouseDown = true;
-                    m_focusScreenDisplay = m_mapControl.ActiveView.ScreenDisplay;
-                    m_focusScreenDisplay.PanStart(m_mouseDownPoint);
+                //经过点插入
+                case CustomTool.StopInsert:
+                    routeUI.InsertStopPoint(this.axMapControl1, point);
+                    break;
+                //障碍点插入
+                case CustomTool.BarryInsert:
+                    routeUI.InsertBarryPoint(this.axMapControl1, point);
+                    break;
+                //经过点移除
+                case CustomTool.StopRemove:
+                    routeUI.RemoveStopPoint(this.axMapControl1, point);
+                    break;
+                //障碍点移除
+                case CustomTool.BarryRemove:
+                    routeUI.RemoveBarryPoint(this.axMapControl1, point);
                     break;
             }
         }
@@ -373,10 +258,10 @@ namespace pixChange
         //操作图层选择
         private void LayerSelect_Click(object sender, EventArgs e)
         {
-            if( m_cTool == CustomTool.RectSelect)
+            if( currentTool == CustomTool.RectSelect)
             {
                 this.toolStripButton9.Text = "矩形框查询";
-                m_cTool = CustomTool.None;
+                currentTool = CustomTool.None;
                 this.axMapControl1.Map.ClearSelection();
                 this.axMapControl1.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
                 return;
@@ -391,7 +276,7 @@ namespace pixChange
             this.toolStripButton9.Text = "停止查询";
             // //将mapcontrol的tool设为nothing，不然会影响效果
             m_mapControl.CurrentTool = null;
-            m_cTool = CustomTool.RectSelect;
+            currentTool = CustomTool.RectSelect;
         }
         private void LayerMange_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -425,6 +310,7 @@ namespace pixChange
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             this.axMapControl1.CurrentTool = null;
+            this.currentTool = CustomTool.None;
         }
 
         private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
@@ -502,7 +388,7 @@ namespace pixChange
         {
             if (routeUI.StopPoints.Count < 2)
             {
-                MessageBox.Show("路线经过点少于一个");
+                MessageBox.Show("路线经过点少于两个");
                 return;
             }
             this.routeNetLayer = routeUI.DealRoutenetLayer(this.axMapControl1);
@@ -511,6 +397,7 @@ namespace pixChange
                 MessageBox.Show("未找到公路网图层");
                 return;
             }
+            currentTool = CustomTool.None;
             infoWindow = new ProInfoWindow();
             infoWindow.Show();
             timer1.Enabled = true;
@@ -564,6 +451,15 @@ namespace pixChange
         //激活或者关闭公路经过点插入工具
         private void barButtonItem26_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            if (currentTool == CustomTool.StopInsert)
+            {
+                currentTool = CustomTool.None;
+                return;
+            }
+            currentTool = CustomTool.StopInsert;
+            //m_mapControl.MousePointer = esriControlsMousePointer.esriPointerLabel;
+            routeUI.DealRoutenetLayer(axMapControl1);
+            /*
             if (this.axMapControl1.CurrentTool == stopsInsertTool)
             {
                 this.axMapControl1.CurrentTool = null;
@@ -572,18 +468,17 @@ namespace pixChange
             stopsInsertTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
             stopsInsertTool.OnClick();//执行itool的click事件
             this.axMapControl1.CurrentTool = stopsInsertTool;//设置当前工具
+            */
         }
         //激活或者关闭公路经过点删除工具
         private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (this.axMapControl1.CurrentTool ==stopRemTool)
+            if (currentTool == CustomTool.StopRemove)
             {
-                this.axMapControl1.CurrentTool = null;
+                currentTool = CustomTool.None;
                 return;
             }
-            stopRemTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
-            stopRemTool.OnClick();//执行itool的click事件
-            this.axMapControl1.CurrentTool = stopRemTool;//设置当前工具
+            currentTool = CustomTool.StopRemove;
         }
         //清空公路经过点
         private void barButtonItem29_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -596,26 +491,23 @@ namespace pixChange
         //激活或者关闭公路断点插入工具
         private void barButtonItem27_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (this.axMapControl1.CurrentTool == barrysInsertTool)
+            if (currentTool == CustomTool.BarryInsert)
             {
-                this.axMapControl1.CurrentTool = null;
+                currentTool = CustomTool.None;
                 return;
             }
-            barrysInsertTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
-            barrysInsertTool.OnClick();//执行itool的click事件
-            this.axMapControl1.CurrentTool = barrysInsertTool;//设置当前工具
+            currentTool = CustomTool.BarryInsert;
+            routeUI.DealRoutenetLayer(axMapControl1);
         }
         //激活或者关闭公路断点删除工具
         private void barButtonItem28_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (this.axMapControl1.CurrentTool ==barryRemTool)
+            if (currentTool == CustomTool.BarryRemove)
             {
-                this.axMapControl1.CurrentTool = null;
+                currentTool = CustomTool.None;
                 return;
             }
-            barryRemTool.OnCreate(this.axMapControl1);//绑定到mapcontrol
-            barryRemTool.OnClick();//执行itool的click事件
-            this.axMapControl1.CurrentTool = barryRemTool;//设置当前工具
+            currentTool = CustomTool.BarryRemove;
         }
         //清空断点
         private void barButtonItem30_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

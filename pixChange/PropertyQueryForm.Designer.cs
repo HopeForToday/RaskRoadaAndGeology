@@ -465,9 +465,9 @@
             this.panel3.Controls.Add(this.panel5);
             this.panel3.Controls.Add(this.panel4);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(143, 21);
+            this.panel3.Location = new System.Drawing.Point(143, 23);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(204, 117);
+            this.panel3.Size = new System.Drawing.Size(204, 115);
             this.panel3.TabIndex = 1;
             // 
             // panel5
@@ -476,7 +476,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(63, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(141, 117);
+            this.panel5.Size = new System.Drawing.Size(141, 115);
             this.panel5.TabIndex = 1;
             // 
             // valueslistBoxControl
@@ -484,7 +484,7 @@
             this.valueslistBoxControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.valueslistBoxControl.Location = new System.Drawing.Point(0, 0);
             this.valueslistBoxControl.Name = "valueslistBoxControl";
-            this.valueslistBoxControl.Size = new System.Drawing.Size(141, 117);
+            this.valueslistBoxControl.Size = new System.Drawing.Size(141, 115);
             this.valueslistBoxControl.TabIndex = 0;
             this.valueslistBoxControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.valueslistBoxControl_MouseClick);
             // 
@@ -494,7 +494,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(63, 117);
+            this.panel4.Size = new System.Drawing.Size(63, 115);
             this.panel4.TabIndex = 0;
             // 
             // getValueBtt
@@ -510,9 +510,9 @@
             // 
             this.panel2.Controls.Add(this.listBoxControl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(2, 21);
+            this.panel2.Location = new System.Drawing.Point(2, 23);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(141, 117);
+            this.panel2.Size = new System.Drawing.Size(141, 115);
             this.panel2.TabIndex = 0;
             // 
             // listBoxControl1
@@ -520,7 +520,7 @@
             this.listBoxControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxControl1.Location = new System.Drawing.Point(0, 0);
             this.listBoxControl1.Name = "listBoxControl1";
-            this.listBoxControl1.Size = new System.Drawing.Size(141, 117);
+            this.listBoxControl1.Size = new System.Drawing.Size(141, 115);
             this.listBoxControl1.TabIndex = 1;
             this.listBoxControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBoxControl1_MouseDoubleClick);
             // 

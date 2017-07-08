@@ -6,26 +6,18 @@ using System.Threading.Tasks;
 
 namespace RoadRaskEvaltionSystem
 {
+    /// <summary>
+    /// 自定义工具类型枚举 用于MapControl
+    /// </summary>
     public enum CustomTool
     {
         None = 0,
-        ZoomIn = 1,
-        ZoomOut = 2,
-        Pan = 3,
-        RuleMeasure = 4,
-        AreaMeasure = 5,
-        PointSelect = 6,
         RectSelect = 7,
         PolygonSelect = 8,
         CircleSelect = 9,
-        NAanalysis = 10,
-        StartEditing = 11,
-        SelectFeature = 12,
-        MoveFeature = 13,
-        EditVertex = 14,
-        EditUndo = 15,
-        EditRedo = 16,
-        EditDeleteFeature = 17,
-        EditAttribute = 18
+        StopInsert=11,
+        BarryInsert=12,
+        StopRemove=13,
+        BarryRemove=14
     };
 }

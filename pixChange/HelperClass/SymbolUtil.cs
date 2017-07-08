@@ -61,9 +61,9 @@ namespace RoadRaskEvaltionSystem.HelperClass
                 pGraphicsContainer.DeleteElement(element);
                 pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                
+                var exception = e;
             }
         }
         /// <summary>

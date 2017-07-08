@@ -92,7 +92,8 @@ namespace RoadRaskEvaltionSystem.ComTools
                 //
                 string bitmapResourceName = GetType().Name + ".bmp";
                 base.m_bitmap = new Bitmap(GetType(), bitmapResourceName);
-                base.m_cursor = new System.Windows.Forms.Cursor(GetType(), GetType().Name + ".cur");
+                //base.m_cursor = new System.Windows.Forms.Cursor(GetType(), GetType().Name + ".cur");
+                base.m_cursor = null;
             }
             catch (Exception ex)
             {
@@ -152,6 +153,7 @@ namespace RoadRaskEvaltionSystem.ComTools
             {
                 IPoint point = this.mapControl.ToMapPoint(X, Y);
                 routeUI.InsertBarryPoint(mapControl, point);
+                mapControl.CurrentTool = null;
             }
         }
 

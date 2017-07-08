@@ -168,8 +168,11 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
         public void UpdateSymbol(AxMapControl mapControl)
         {
             SymbolUtil.ClearElement(mapControl);
-            this.stopPoints.ForEach(point=>SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.StopImagePath));
-            this.barryPoints.ForEach(point => SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.RouteBeakImggePath));
+            this.barryElements.Clear();
+            this.stopElements.Clear();
+            this.stopPoints.ForEach(point=>stopElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.StopImagePath)));
+            this.barryPoints.ForEach(point => barryElements.Add(SymbolUtil.DrawSymbolWithPicture(point, mapControl, Common.RouteBeakImggePath)));
+       
         }
 
         public void ClearRouteAnalyst(AxMapControl mapControl)
@@ -178,6 +181,8 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             SymbolUtil.ClearElement(mapControl);
             stopPoints.Clear();
             barryPoints.Clear();
+            barryElements.Clear();
+            stopElements.Clear();
             //清除网络分析图层
             for (int i = 0; i < mapControl.LayerCount; i++)
             {
@@ -198,8 +203,6 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             IActiveView pActiveView = mapControl.ActiveView;
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             mapControl.Refresh();
-            this.stopPoints.Clear();
-            this.barryPoints.Clear();
         }
 
 
@@ -208,6 +211,9 @@ namespace RoadRaskEvaltionSystem.RouteUIDeal
             this.stopPoints.Clear();
             this.stopElements.ForEach(element => SymbolUtil.ClearElement(mapControl, element));
             this.stopElements.Clear();
+            IActiveView pActiveView = mapControl.ActiveView;
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            mapControl.Refresh();
         }
 
         public void ResetBarryPointSymbols(AxMapControl mapControl)

@@ -22,7 +22,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=C:\Users\Administrator\Desktop\打包文件
 OutputBaseFilename=公路预警系统安装包
-SetupIconFile=E:\favicon-20161204012616260.ico
+SetupIconFile=E:\项目\temp2\RaskRoadaAndGeology\公路预警.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -41,7 +41,9 @@ Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltio
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\RoadRaskEvaltionSystem.vshost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-
+Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\app.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "E:\项目\temp2\RaskRoadaAndGeology\pixChange\bin\Release\Rources\雨量信息.mdb"; DestDir: "{app}\Rources"; Flags: ignoreversion
 

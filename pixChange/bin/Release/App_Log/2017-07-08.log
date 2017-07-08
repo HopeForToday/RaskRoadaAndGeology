@@ -1,0 +1,50 @@
+2017-07-08 00:01:14,568 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 00:01:31,348 [13] ERROR pixChange.Program - 天气信息提取异常
+ pixChange.ProgramnameSystem.Net.WebException: 未能解析此远程名称: 'www.nmc.cn'
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 HtmlAgilityPack.HtmlWeb.Get(Uri uri, String method, String path, HtmlDocument doc, IWebProxy proxy, ICredentials creds)
+   在 HtmlAgilityPack.HtmlWeb.LoadUrl(Uri uri, String method, WebProxy proxy, NetworkCredential creds)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url, String method)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url)
+   在 HtmlAgilityPackDemo1.GetWeatherMessage.getforcastMessage(String url) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\GetWeatherMessage.cs:行号 22
+   在 RoadRaskEvaltionSystem.WeatherHander.SaveWeatherMsg.SaveForeacastWerherMsg(String url, Int32 AreaID, Boolean& isSaved7days) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\SaveWeatherMsg.cs:行号 23
+   在 pixChange.Program.getWeatherData() 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\Program.cs:行号 68
+2017-07-08 00:08:17,767 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 00:09:34,110 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 00:10:17,740 [12] ERROR pixChange.Program - 天气信息提取异常
+ pixChange.ProgramnameSystem.Net.WebException: 无法连接到远程服务器 ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.120.82.180:80
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 HtmlAgilityPack.HtmlWeb.Get(Uri uri, String method, String path, HtmlDocument doc, IWebProxy proxy, ICredentials creds)
+   在 HtmlAgilityPack.HtmlWeb.LoadUrl(Uri uri, String method, WebProxy proxy, NetworkCredential creds)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url, String method)
+   在 HtmlAgilityPack.HtmlWeb.Load(String url)
+   在 HtmlAgilityPackDemo1.GetWeatherMessage.getforcastMessage(String url) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\GetWeatherMessage.cs:行号 22
+   在 RoadRaskEvaltionSystem.WeatherHander.SaveWeatherMsg.SaveForeacastWerherMsg(String url, Int32 AreaID, Boolean& isSaved7days) 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\WeatherHander\SaveWeatherMsg.cs:行号 23
+   在 pixChange.Program.getWeatherData() 位置 e:\项目\temp2\RaskRoadaAndGeology\pixChange\Program.cs:行号 68
+2017-07-08 00:11:24,005 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 00:32:18,415 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:25:09,392 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:28:10,493 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:29:03,081 [10] ERROR RoadRaskEvaltionSystem.RouteUIDeal.RouteUIHelp - 点位太过远离图层
+ RoadRaskEvaltionSystem.RouteUIDeal.RouteUIHelpname2017-07-08 07:37:06,353 [8] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:39:38,924 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:42:25,509 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:47:15,822 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:51:21,165 [8] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:52:25,263 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 07:55:23,123 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:03:34,225 [8] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:06:34,691 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:17:55,842 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:22:04,120 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:23:10,027 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 08:28:56,466 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 09:23:16,811 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 09:25:33,231 [11] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 09:26:42,979 [9] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 09:30:43,888 [10] INFO  pixChange.Program - 程序启动
+ pixChange.Programname2017-07-08 09:37:24,507 [1] INFO  pixChange.Program - 程序启动
+ pixChange.Programname

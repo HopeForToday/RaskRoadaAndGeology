@@ -357,20 +357,28 @@ namespace Ling.cnzhnet
             StopCompanion = false;
             Thread m_Thread = new Thread(() =>
             {
-                while (!StopCompanion)
+                try
                 {
-                    //常驻模式持续检测
-                    if (ResidentMode)
+                    while (!StopCompanion)
                     {
-                        CloseAboutDev();
+                        //常驻模式持续检测
+                        if (ResidentMode)
+                        {
+                            CloseAboutDev();
+                        }
+                        // 如果非常驻模式，则在检测并关闭Dev注册弹框后应结束程序。
+                        else
+                        {
+                            StopCompanion = CloseAboutDev();
+                        }
+                        Thread.Sleep(Interval);
                     }
-                    // 如果非常驻模式，则在检测并关闭Dev注册弹框后应结束程序。
-                    else 
-                    {
-                        StopCompanion = CloseAboutDev();
-                    }
-                    Thread.Sleep(Interval);
                 }
+                catch (Exception e)
+                {
+
+                }
+              
             });
             m_Thread.Start();
         }
