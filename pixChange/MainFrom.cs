@@ -110,6 +110,24 @@ namespace pixChange
            // IMap map = MapUtil.OpenMap(Common.MapPath);
             MapUtil.LoadMxd(this.axMapControl1,Common.MapPath);
             ClearNoData();
+             //SetInitialRouteNetLayerStyle();
+        }
+        /// <summary>
+        /// 设置初始化的公路网样式 似乎加入地图的图层就不能再设置样式了
+        /// </summary>
+        private void SetInitialRouteNetLayerStyle()
+        {
+            IGroupLayer myGroupLayer = null;
+            int gIndex;
+            int layerIndex;
+            ILayer routeNetLayer = LayerUtil.QueryLayerInMap(this.axMapControl1, "公路网", ref myGroupLayer, out layerIndex, out gIndex);
+            //从配置文件中设置公路网样式
+            if (routeNetLayer !=null)
+            {
+                RouteLayerUtil.SetRouteLayerStyle(routeNetLayer);
+                this.axMapControl1.Refresh();
+            }
+
         }
         //删除不存在的图层
         private void ClearNoData()
