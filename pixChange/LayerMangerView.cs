@@ -203,6 +203,26 @@ namespace pixChange
                     {
                         FeatureStyleUtil.SetFetureLineStyle(0,92,230,2,pFLayer);
                     }
+                    if (pFLayer.Name == "震前灾害点")
+                    {
+                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.BeforeDisaterImagePath, 15);
+                    }
+                    if (pFLayer.Name == "震后新增灾害点")
+                    {
+                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.AfterDisaterImagePath, 15);
+                    }
+                    if (pFLayer.Name == "断裂带")
+                    {
+                        FeatureStyleUtil.SetFetureLineStyle(0, 0, 0, 3, pFLayer);
+                    }
+                    if (pFLayer.Name == "地震烈度")
+                    {
+                        LayerManager.UniqueValueRendererEarthquake(pFLayer, "地震烈度");
+                    }
+                    if (pFLayer.Name == "岩性")
+                    {
+                        LayerManager.SetFeaturePictureFillSymbol(pFLayer, Common.AfterDisaterImagePath);
+                    }
                     //选择数据源
                     MainFrom.toolComboBox.Items.Add(pFLayer.Name);
                     MainFrom.m_pTocControl.Update();

@@ -122,7 +122,7 @@ namespace pixChange.HelperClass
         }  
 
         /// <summary>
-        /// 根据图层唯一值渲染图层
+        /// 根据图层唯一值渲染图层,行政区
         /// </summary>
         /// <param name="R_pFeatureLayer"></param>
         /// <param name="sFieldName"></param>
@@ -221,7 +221,58 @@ namespace pixChange.HelperClass
             //    }
             //}
         }
+        /// <summary>
+        /// 根据图层唯一值渲染图层,行政区
+        /// </summary>
+        /// <param name="R_pFeatureLayer"></param>
+        /// <param name="sFieldName"></param>
+        public static void UniqueValueRendererEarthquake(IFeatureLayer R_pFeatureLayer, string sFieldName)
+        {
 
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+            ITable pTable = geoLayer.FeatureClass as ITable;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.AddField(sFieldName);              //以唯一值作为条件
+            pCursor = pTable.Search(pQueryFilter, true);
+            IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            pUniqueValueR.FieldCount = 1;                   //单值渲染
+            pUniqueValueR.set_Field(0, sFieldName);         //渲染字段
+            IFeatureCursor pFeatureCursor = R_pFeatureLayer.Search(pQueryFilter, false);
+            IFeature pFeature = pFeatureCursor.NextFeature();
+            int index = R_pFeatureLayer.FeatureClass.FindField(sFieldName);
+
+            List<Color> colors = new List<Color>();         //存储地震烈度连续颜色带,以要素数量为上限
+            colors = createEarthquakecolor(colors, R_pFeatureLayer.FeatureClass.FeatureCount(pQueryFilter));
+            int i = 5;
+            while (pFeature != null)
+            {
+                string value = pFeature.get_Value(index).ToString();
+                pFeature = pFeatureCursor.NextFeature();
+                ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+                symd.Style = esriSimpleFillStyle.esriSFSSolid;
+                symd.Outline.Width = 1;
+                if (value.Equals("Ⅸ度"))                       //此处用于渲染原始图层
+                    symd.Color = ConvertColorToIColor(colors[4]);
+                else if (value.Equals("Ⅷ度"))
+                    symd.Color = ConvertColorToIColor(colors[3]);
+                else if (value.Equals("Ⅶ度"))
+                    symd.Color = ConvertColorToIColor(colors[2]);
+                else if (value.Equals("Ⅵ度"))
+                    symd.Color = ConvertColorToIColor(colors[1]);
+                else if (value.Equals("V度"))
+                    symd.Color = ConvertColorToIColor(colors[0]);
+                else
+                {
+                    symd.Color = ConvertColorToIColor(colors[i]);  //i后移一位，以便于对应name字段
+                    i++;
+                }
+                pUniqueValueR.AddValue(value, "", symd as ISymbol);
+
+            }
+            geoLayer.Renderer = pUniqueValueR as IFeatureRenderer;
+            MainFrom.m_mapControl.Refresh();
+        }
         public static void RiverRender(IFeatureLayer R_pFeatureLayer, string sFieldName)
         {
             IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
@@ -283,7 +334,47 @@ namespace pixChange.HelperClass
             }
                 return colors;
         }
-
+        /// <summary>
+        /// 产生地震烈度的渐变颜色带
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="colornum"></param>
+        /// <returns></returns>
+        private static List<Color> createEarthquakecolor(List<Color> colors, int colornum)
+        {
+            colors.Add(Color.FromArgb(100, 222, 222, 253));   //V度
+            colors.Add(Color.FromArgb(100, 161, 167, 231));  //VI度
+            colors.Add(Color.FromArgb(100, 110, 131, 209));  //VII度
+            colors.Add(Color.FromArgb(100, 68, 104, 187));  //VIII度
+            colors.Add(Color.FromArgb(100, 38, 86, 165));  //IX度
+            for (int i = 5; i < colornum + 5; i++)         //产生随机颜色,用于多余要素处理
+            {
+                Random ran1 = new Random(i);
+                Random ran2 = new Random(2 * i);
+                Random ran3 = new Random(3 * i);
+                Random ran0 = new Random(4 * i);
+                colors.Add(Color.FromArgb(ran0.Next(0, 255), ran1.Next(0, 255), ran2.Next(0, 255), ran3.Next(0, 255)));
+            }
+            return colors;
+        }
+        /// <summary>
+        /// 设置要素图片填充
+        /// </summary>
+        /// <param name="featureLayer"></param>
+        /// <param name="pictureName"></param>
+        public static void SetFeaturePictureFillSymbol(IFeatureLayer featureLayer, string pictureName)
+        {
+            IGeoFeatureLayer geoLayer = featureLayer as IGeoFeatureLayer;
+            IPictureFillSymbol pFillSymbol = new PictureFillSymbolClass();
+            pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, pictureName);
+            ISimpleRenderer simpleRender = geoLayer.Renderer as ISimpleRenderer;
+            if (simpleRender==null)
+            {
+                simpleRender = new SimpleRendererClass();
+            }
+            simpleRender.Symbol = pFillSymbol as ISymbol;
+            geoLayer.Renderer = simpleRender as IFeatureRenderer;
+        }
         /// <summary>
         /// 设置要素图片显示样式
         /// </summary>

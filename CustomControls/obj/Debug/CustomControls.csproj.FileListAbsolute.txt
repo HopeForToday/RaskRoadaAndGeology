@@ -37,3 +37,8 @@ E:\项目\temp2\RaskRoadaAndGeology\CustomControls\bin\Debug\CustomControls.pdb
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.csprojResolveAssemblyReference.cache
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.dll
 E:\项目\temp2\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.pdb
+F:\Projects\NET\西科大文档\RaskRoadaAndGeology\CustomControls\bin\Debug\CustomControls.dll
+F:\Projects\NET\西科大文档\RaskRoadaAndGeology\CustomControls\bin\Debug\CustomControls.pdb
+F:\Projects\NET\西科大文档\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.csprojResolveAssemblyReference.cache
+F:\Projects\NET\西科大文档\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.dll
+F:\Projects\NET\西科大文档\RaskRoadaAndGeology\CustomControls\obj\Debug\CustomControls.pdb

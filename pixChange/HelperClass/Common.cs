@@ -24,6 +24,22 @@ namespace RoadRaskEvaltionSystem.HelperClass
    /// </summary>
    public class Common
     {
+       private static string afterDisaterImagePath = Application.StartupPath + @"\Images\震后灾害点.png";
+       public static string AfterDisaterImagePath
+       {
+           get
+           {
+               return afterDisaterImagePath;
+           }
+       }
+       private static string beforeDisaterImagePath = Application.StartupPath + @"\Images\震前灾害点.png";
+       public static string BeforeDisaterImagePath
+       {
+           get
+           {
+               return beforeDisaterImagePath;
+           }
+       }
        private static string conuntryPointImagePath = Application.StartupPath + @"\Images\乡村点.png";
        public static string CountryPointImagePath
        {
