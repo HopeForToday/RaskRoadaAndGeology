@@ -135,7 +135,6 @@
             this.axTOCControl1.Size = new System.Drawing.Size(239, 546);
             this.axTOCControl1.TabIndex = 0;
             this.axTOCControl1.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl1_OnMouseDown);
-          //  this.axTOCControl1.OnMouseUp += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseUpEventHandler(this.axTOCControl1_OnMouseUp);
             // 
             // toolStrip2
             // 
@@ -259,7 +258,6 @@
             this.axMapControl1.Size = new System.Drawing.Size(642, 524);
             this.axMapControl1.TabIndex = 0;
             this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
-          //  this.axMapControl1.OnKeyUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnKeyUpEventHandler(this.axMapControl1_OnKeyUp);
             // 
             // defaultLookAndFeel1
             // 
@@ -639,7 +637,7 @@
             this.Name = "MainFrom";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
-            this.Text = "雅安市芦山~宝兴公路风险预警系统";
+            this.Text = "雅安市芦山县地理信息管理与风险预警系统";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrom_FormClosing);
             this.Load += new System.EventHandler(this.MainFrom_Load);

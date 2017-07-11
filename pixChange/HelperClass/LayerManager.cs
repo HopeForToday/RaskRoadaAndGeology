@@ -428,7 +428,7 @@ namespace pixChange.HelperClass
                 {
                     pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("其他岩性")); //i后移一位，以便于对应name字段
                     i++;
-                }
+                } 
                 pUniqueValueR.AddValue(value, "", pFillSymbol as ISymbol);
 
             }
