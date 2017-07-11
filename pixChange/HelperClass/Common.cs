@@ -24,6 +24,8 @@ namespace RoadRaskEvaltionSystem.HelperClass
    /// </summary>
    public class Common
     {
+        
+
        private static string afterDisaterImagePath = Application.StartupPath + @"\Images\震后灾害点.png";
        public static string AfterDisaterImagePath
        {

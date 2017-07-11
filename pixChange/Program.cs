@@ -35,16 +35,16 @@ namespace pixChange
             new esriLicenseExtensionCode[] { esriLicenseExtensionCode.esriLicenseExtensionCode3DAnalyst, esriLicenseExtensionCode.esriLicenseExtensionCodeNetwork, esriLicenseExtensionCode.esriLicenseExtensionCodeSpatialAnalyst, esriLicenseExtensionCode.esriLicenseExtensionCodeSchematics, esriLicenseExtensionCode.esriLicenseExtensionCodeMLE, esriLicenseExtensionCode.esriLicenseExtensionCodeDataInteroperability, esriLicenseExtensionCode.esriLicenseExtensionCodeTracking });
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            #region fhr  异步处理天气获取
-            Thread getWeatherThread = new Thread(() =>
-            {
-                if (!getWeatherData())
-                {
-                    MessageBox.Show("天气信息获取异常,请检查网络连接或者联系管理员", "警告", MessageBoxButtons.OK);
-                }
-            });
-            getWeatherThread.Start();
-            #endregion
+            //#region fhr  异步处理天气获取
+            //Thread getWeatherThread = new Thread(() =>
+            //{
+            //    if (!getWeatherData())
+            //    {
+            //        MessageBox.Show("天气信息获取异常,请检查网络连接或者联系管理员", "警告", MessageBoxButtons.OK);
+            //    }
+            //});
+            //getWeatherThread.Start();
+            //#endregion
             Application.Run(new MainFrom());
             //ESRI License Initializer generated code.
             //Do not make any call to ArcObjects after ShutDownApplication()

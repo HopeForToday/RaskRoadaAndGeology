@@ -26,9 +26,10 @@ namespace RoadRaskEvaltionSystem
         List<SecondaryAxisY> oldAxisYList, newAxisYList;
         List<Series> oldlist, newlist;
         DataTable dt_Chart, dt_Grid, dt_Week;
-        DateTime NowTime;//当前时间
+        DateTime NowTime, NowTimeDate;//当前时间
         String day1, day2;
         int AreaId = 1; //1为芦山县，2为宝兴县
+        int selectedIndex = 1;
         public ForecastDisplay()
         {
             InitializeComponent();
@@ -41,22 +42,24 @@ namespace RoadRaskEvaltionSystem
             comboBoxEdit_Area.Properties.Items.Add("芦山县");
             comboBoxEdit_Area.Properties.Items.Add("宝兴县");
             comboBoxEdit_Area.SelectedItem = "芦山县";
-            NowTime = DateTime.Now;
+            //NowTime = DateTime.Now;
+            NowTime = Convert.ToDateTime("2017-07-08");
+            NowTimeDate = Convert.ToDateTime("2017-07-08 09:15");
             for (int i = 0; i < 6; i++)
             {
-                comboBoxEdit_Date.Properties.Items.Add(NowTime.AddDays(i).ToString("yyyy-MM-dd"));
+                comboBoxEdit_Date.Properties.Items.Add(DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
             }
-            comboBoxEdit_Date.SelectedItem = NowTime.AddDays(1).ToString("yyyy-MM-dd");
-
+            comboBoxEdit_Date.SelectedItem = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            selectedIndex = comboBoxEdit_Date.SelectedIndex;
             oldAxisYList = new List<SecondaryAxisY>();
             newAxisYList = new List<SecondaryAxisY>();
             //day1 = (Convert.ToDateTime(comboBoxEdit_Date.Text)).AddDays(1).ToString("yyyy-MM-dd");
             day1 = NowTime.ToString("yyyy-MM-dd");
             day2 = NowTime.AddDays(6).ToString("yyyy-MM-dd");
             //数据库连接字符串
-            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, comboBoxEdit_Date.Text);
+            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, indextodate(selectedIndex));
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
-            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
+            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTimeDate.ToString("yyyy-MM-dd HH:mm"), NowTimeDate.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
             //获取数据并创建图表 
             dt_Chart = Common.DBHander.ReturnDataSet(ChartSqlStr).Tables[0];
             CreateNewChart(dt_Chart);
@@ -64,6 +67,38 @@ namespace RoadRaskEvaltionSystem
             CreateTable(dt_Grid);
             dt_Week = Common.DBHander.ReturnDataSet(WeekSqlStr).Tables[0];
             CreateOldChart(dt_Week);
+        }
+
+        private string indextodate(int olddate)
+        {
+            string newdate;
+            switch(olddate){
+                case 0:
+                    newdate = "2017-07-08";
+                    break;
+                case 1:
+                    newdate = "2017-07-09";
+                    break;
+                case 2:
+                    newdate = "2017-07-10";
+                    break;
+                case 3:
+                    newdate = "2017-07-11";
+                    break;
+                case 4:
+                    newdate = "2017-07-12";
+                    break;
+                case 5:
+                    newdate = "2017-07-13";
+                    break;
+                case 6:
+                    newdate = "2017-07-14";
+                    break;
+                default:
+                    newdate = "2017-07-09";
+                    break;
+            }
+            return newdate;
         }
 
         /// <summary>
@@ -226,7 +261,8 @@ namespace RoadRaskEvaltionSystem
                         case "Hourtime":
                             if ((Convert.ToDateTime(dt.Rows[i][xBindName])).ToString("HH:mm").Equals("00:00"))
                             {
-                                argument = dt.Rows[i][xBindName].ToString().Split(' ')[0].ToString();
+                                //argument = dt.Rows[i][xBindName].ToString().Split(' ')[0].ToString();
+                                argument = "0点";
                             }
                             else
                             {
@@ -434,9 +470,11 @@ namespace RoadRaskEvaltionSystem
             day1 = NowTime.ToString("yyyy-MM-dd");
             day2 = NowTime.AddDays(6).ToString("yyyy-MM-dd");
 
-            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, comboBoxEdit_Date.Text);
+            selectedIndex = comboBoxEdit_Date.SelectedIndex;
+
+            ChartSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind FROM ForecastWeather WHERE AreaID = {0} AND timedate7 = #{1}#", AreaId, indextodate(selectedIndex));
             GridSqlStr = String.Format("SELECT ID,dtime3hour,temperature,rains,wind,windd,yl,xdsd FROM ForecastWeather WHERE AreaID = {0} AND timedate7 BETWEEN #{1}# AND #{2}# ORDER BY ID ASC", AreaId, day1, day2);
-            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, NowTime.ToString("yyyy-MM-dd HH:mm"), NowTime.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
+            WeekSqlStr = String.Format("SELECT ID,Hourtime,rain1h,temperature,humidity,windSpeed FROM OneHourWeather WHERE Hourtime BETWEEN #{1}# AND #{2}# AND AreaID = {0} ORDER BY Hourtime ASC", AreaId, this.NowTimeDate.ToString("yyyy-MM-dd HH:mm"), this.NowTimeDate.AddDays(-1).ToString("yyyy-MM-dd HH:mm"));
 
             initPoints();   // 初始化图表的点位信息
 

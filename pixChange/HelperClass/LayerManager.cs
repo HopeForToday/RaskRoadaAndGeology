@@ -222,7 +222,7 @@ namespace pixChange.HelperClass
             //}
         }
         /// <summary>
-        /// 根据图层唯一值渲染图层,行政区
+        /// 根据图层唯一值渲染图层,地震烈度
         /// </summary>
         /// <param name="R_pFeatureLayer"></param>
         /// <param name="sFieldName"></param>
@@ -356,6 +356,84 @@ namespace pixChange.HelperClass
                 colors.Add(Color.FromArgb(ran0.Next(0, 255), ran1.Next(0, 255), ran2.Next(0, 255), ran3.Next(0, 255)));
             }
             return colors;
+        }
+        /// <summary>
+        /// 岩性图层单值渲染
+        /// </summary>
+        /// <param name="R_pFeatureLayer"></param>
+        /// <param name="sFieldName"></param>
+        public static void UniqueValueRendererLithology(IFeatureLayer R_pFeatureLayer, string sFieldName)
+        {
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+            ITable pTable = geoLayer.FeatureClass as ITable;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter = new QueryFilter();
+            pQueryFilter.AddField(sFieldName);              //以唯一值作为条件
+            pCursor = pTable.Search(pQueryFilter, true);
+            IUniqueValueRenderer pUniqueValueR = new UniqueValueRendererClass();
+            pUniqueValueR.FieldCount = 1;                   //单值渲染
+            pUniqueValueR.set_Field(0, sFieldName);         //渲染字段
+            IFeatureCursor pFeatureCursor = R_pFeatureLayer.Search(pQueryFilter, false);
+            IFeature pFeature = pFeatureCursor.NextFeature();
+            int index = R_pFeatureLayer.FeatureClass.FindField(sFieldName);
+
+            int i = 20;
+            while (pFeature != null)
+            {
+                string value = pFeature.get_Value(index).ToString();
+                pFeature = pFeatureCursor.NextFeature();
+                IPictureFillSymbol pFillSymbol = new PictureFillSymbolClass();
+                pFillSymbol.Outline.Width = 1;
+                if (value.Equals("上三叠统"))
+                {
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("上三叠统"));
+                }
+                else if (value.Equals("上古生界"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("上古生界"));
+                else if (value.Equals("上白垩统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("上白垩统"));
+                else if (value.Equals("上震旦统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("上震旦统"));
+                else if (value.Equals("下三叠统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("下三叠统"));
+                else if (value.Equals("下白垩统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("下白垩统"));
+                else if (value.Equals("下第三系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("下第三系"));
+                else if (value.Equals("下远古界"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("下远古界"));
+                else if (value.Equals("下震旦统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("下震旦统"));
+                else if (value.Equals("中远古界"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("中远古界"));
+                else if (value.Equals("二叠系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("二叠系"));
+                else if (value.Equals("二叠系  三叠系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("二叠系  三叠系"));
+                else if (value.Equals("二叠系上统"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("二叠系上统"));
+                else if (value.Equals("侏罗纪"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("侏罗纪"));
+                else if (value.Equals("奥陶系  志留系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("奥陶系  志留系"));
+                else if (value.Equals("志留系 泥盆系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("志留系 泥盆系"));
+                else if (value.Equals("新近系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("新近系"));
+                else if (value.Equals("泥盆系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("泥盆系"));
+                else if (value.Equals("石炭系  二叠系"))
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("石炭系  二叠系"));
+                else
+                {
+                    pFillSymbol.CreateFillSymbolFromFile(esriIPictureType.esriIPicturePNG, LithologyImageUtils.getImagePath("其他岩性")); //i后移一位，以便于对应name字段
+                    i++;
+                }
+                pUniqueValueR.AddValue(value, "", pFillSymbol as ISymbol);
+
+            }
+            geoLayer.Renderer = pUniqueValueR as IFeatureRenderer;
+            MainFrom.m_mapControl.Refresh();
         }
         /// <summary>
         /// 设置要素图片填充

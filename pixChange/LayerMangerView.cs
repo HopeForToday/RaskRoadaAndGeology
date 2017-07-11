@@ -92,13 +92,15 @@ namespace pixChange
             //加载矢量底图
             DirectoryInfo Shasfolder = new DirectoryInfo(shapePath);
             FileInfo[] fileInfo2 = Shasfolder.GetFiles();
-            foreach (FileInfo file in fileInfo2)
+            foreach (FileInfo file in  fileInfo2)
             {
                 if (file.Name.Substring(file.Name.LastIndexOf(".")) == ".shp")
                 {
                     LayerNameList.Add(file.Name);
                 }
             }
+            //加载降水量文件
+            LayerNameList.Add("降水量");
         }
         //若果已经有图层,则相应的chexbox项应该被选中
         private void judeLayer()
@@ -118,9 +120,11 @@ namespace pixChange
                         for (int y = 0; y < exCheckedListBox1.Items.Count; y++)
                         {
                             string layerName = exCheckedListBox1.Items[y].ToString();
-                            int index = layerName.LastIndexOf(".");
-                            if (layerName.Substring(index) == ".shp")
-                                layerName = layerName.Substring(0, index);
+                            if (!layerName.Equals("降水量"))
+                            {
+                                int index = layerName.LastIndexOf(".");
+                                if (layerName.Substring(index) == ".shp") layerName = layerName.Substring(0, index);
+                            }
                             if (layerName == pCompositeLayer.Name)
                             {
                                 //后台选中 改变checkState
@@ -134,8 +138,11 @@ namespace pixChange
                     for (int y = 0; y < exCheckedListBox1.Items.Count; y++)
                     {
                         string layerName = exCheckedListBox1.Items[y].ToString();
-                        int index = layerName.LastIndexOf(".");
-                        if (layerName.Substring(index) == ".shp") layerName = layerName.Substring(0, index);
+                        if (!layerName.Equals("降水量"))
+                        {
+                            int index = layerName.LastIndexOf(".");
+                            if (layerName.Substring(index) == ".shp") layerName = layerName.Substring(0, index);
+                        }
                         if (layerName == pGL.Name)
                         {
                             //后台选中 改变checkState
@@ -162,81 +169,92 @@ namespace pixChange
             if (exCheckedListBox1.CheckedItems.Contains(selectLayer))
             {
                 string fullPath = selectLayer.ToString();
-                if (fullPath.Substring(fullPath.LastIndexOf(".")) == ".shp")
+                if (fullPath.Equals("降水量"))
                 {
-                    fullPath = shapePath + fullPath;//这里发现+=和普通写法还是有区别的
-                    //利用"\\"将文件路径分成两部分 
-                    int Position = fullPath.LastIndexOf("\\");
-                    //文件目录
-                    string FilePath = fullPath.Substring(0, Position);
-                    //
-                    string ShpName = fullPath.Substring(Position + 1);
-                    IWorkspaceFactory pWF;
-                    pWF = new ShapefileWorkspaceFactory();
-                    IFeatureWorkspace pFWS;
-                    pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
-                    IFeatureClass pFClass;
-                    pFClass = pFWS.OpenFeatureClass(ShpName);
-                    IFeatureLayer pFLayer;
-                    pFLayer = new FeatureLayer();
-                    pFLayer.FeatureClass = pFClass;
-                    pFLayer.Name = pFClass.AliasName;
-                    //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
-                    if(pFLayer.Name=="公路网")
-                    {
-                        RouteLayerUtil.SetRouteLayerStyle(pFLayer);
-                    }
-                    IsEqual = Common.InsertShapeLayer(IsEqual,(ILayer)pFLayer);
-                    if (pFLayer.Name == "聚落")
-                    {
-                        LayerManager.ClassBreaksMap(pFLayer, "rkmidu", 5);
-                    }
-                    if (pFLayer.Name == "行政区")
-                    {
-                        LayerManager.UniqueValueRenderer(pFLayer, "name");
-                    }
-                    if (pFLayer.Name == "乡村点")
-                    {
-                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.CountryPointImagePath, 15);
-                    }
-                    if (pFLayer.Name == "水系")
-                    {
-                        FeatureStyleUtil.SetFetureLineStyle(0,92,230,2,pFLayer);
-                    }
-                    if (pFLayer.Name == "震前灾害点")
-                    {
-                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.BeforeDisaterImagePath, 15);
-                    }
-                    if (pFLayer.Name == "震后新增灾害点")
-                    {
-                        LayerManager.SetFeaturePictureSymbol(pFLayer, Common.AfterDisaterImagePath, 15);
-                    }
-                    if (pFLayer.Name == "断裂带")
-                    {
-                        FeatureStyleUtil.SetFetureLineStyle(0, 0, 0, 3, pFLayer);
-                    }
-                    if (pFLayer.Name == "地震烈度")
-                    {
-                        LayerManager.UniqueValueRendererEarthquake(pFLayer, "地震烈度");
-                    }
-                    if (pFLayer.Name == "岩性")
-                    {
-                        LayerManager.SetFeaturePictureFillSymbol(pFLayer, Common.AfterDisaterImagePath);
-                    }
-                    //选择数据源
-                    MainFrom.toolComboBox.Items.Add(pFLayer.Name);
-                    MainFrom.m_pTocControl.Update();
+                    ToRasterControl.OpenRasterLayer(rasterPath, fullPath);
                 }
                 else
                 {
-                    //fullPath = rasterPath + fullPath;
-                    ToRasterControl.RaskCaulte(rasterPath, fullPath);
-                    ////这里将RasterLayerClass改为RasterLayer  即可以嵌入互操作类型  下同
-                    //IRasterLayer rasterLayer = new RasterLayer();
-                    //rasterLayer.CreateFromFilePath(fullPath);
-                    //// IRaster ir = (IRaster) rasterLayer;
-                    //IsEqual = Common.InsertLayer(IsEqual, rasterLayer);
-                    //MainFrom.m_pTocControl.Update();
+                    if (fullPath.Substring(fullPath.LastIndexOf(".")) == ".shp")
+                    {
+                        fullPath = shapePath + fullPath;//这里发现+=和普通写法还是有区别的
+                        //利用"\\"将文件路径分成两部分 
+                        int Position = fullPath.LastIndexOf("\\");
+                        //文件目录
+                        string FilePath = fullPath.Substring(0, Position);
+                        //
+                        string ShpName = fullPath.Substring(Position + 1);
+                        IWorkspaceFactory pWF;
+                        pWF = new ShapefileWorkspaceFactory();
+                        IFeatureWorkspace pFWS;
+                        pFWS = (IFeatureWorkspace)pWF.OpenFromFile(FilePath, 0);
+                        IFeatureClass pFClass;
+                        pFClass = pFWS.OpenFeatureClass(ShpName);
+                        IFeatureLayer pFLayer;
+                        pFLayer = new FeatureLayer();
+                        pFLayer.FeatureClass = pFClass;
+                        pFLayer.Name = pFClass.AliasName;
+                        //   MainFrom.m_mapControl.Refresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        if (pFLayer.Name == "公路网")
+                        {
+                            RouteLayerUtil.SetRouteLayerStyle(pFLayer);
+                        }
+                        IsEqual = Common.InsertShapeLayer(IsEqual, (ILayer)pFLayer);
+                        if (pFLayer.Name == "聚落")
+                        {
+                            LayerManager.ClassBreaksMap(pFLayer, "rkmidu", 5);
+                        }
+                        if (pFLayer.Name == "行政区")
+                        {
+                            LayerManager.UniqueValueRenderer(pFLayer, "name");
+                        }
+                        if (pFLayer.Name == "乡村点")
+                        {
+                            LayerManager.SetFeaturePictureSymbol(pFLayer, Common.CountryPointImagePath, 15);
+                        }
+                        if (pFLayer.Name == "水系")
+                        {
+                            FeatureStyleUtil.SetFetureLineStyle(0, 92, 230, 2, pFLayer);
+                        }
+                        if (pFLayer.Name == "震前灾害点")
+                        {
+                            LayerManager.SetFeaturePictureSymbol(pFLayer, Common.BeforeDisaterImagePath, 15);
+                        }
+                        if (pFLayer.Name == "震后新增灾害点")
+                        {
+                            LayerManager.SetFeaturePictureSymbol(pFLayer, Common.AfterDisaterImagePath, 15);
+                        }
+                        if (pFLayer.Name == "断裂带")
+                        {
+                            FeatureStyleUtil.SetFetureLineStyle(0, 0, 0, 3, pFLayer);
+                        }
+                        if (pFLayer.Name == "地震烈度")
+                        {
+                            LayerManager.UniqueValueRendererEarthquake(pFLayer, "地震烈度");
+                        }
+                        if (pFLayer.Name == "岩性")
+                        {
+                            LayerManager.UniqueValueRendererLithology(pFLayer, "岩性");
+                            //LayerManager.UniqueValueRenderer(pFLayer, "name");
+                            //LayerManager.SetFeaturePictureFillSymbol(pFLayer, Common.AfterDisaterImagePath);
+                        }
+
+                        //选择数据源
+                        MainFrom.toolComboBox.Items.Add(pFLayer.Name);
+                        MainFrom.m_pTocControl.Update();
+                    }
+                    else
+                    {
+                        
+                        //fullPath = rasterPath + fullPath;
+                        ToRasterControl.RaskCaulte(rasterPath, fullPath);
+                        ////这里将RasterLayerClass改为RasterLayer  即可以嵌入互操作类型  下同
+                        //IRasterLayer rasterLayer = new RasterLayer();
+                        //rasterLayer.CreateFromFilePath(fullPath);
+                        //// IRaster ir = (IRaster) rasterLayer;
+                        //IsEqual = Common.InsertLayer(IsEqual, rasterLayer);
+                        //MainFrom.m_pTocControl.Update();
+                    }
                 }
             }
             else

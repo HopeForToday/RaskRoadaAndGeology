@@ -231,6 +231,7 @@
     <Compile Include="HelperClass\FeatureStyleUtil.cs" />
     <Compile Include="HelperClass\LayerManager.cs" />
     <Compile Include="HelperClass\LayerUtil.cs" />
+    <Compile Include="HelperClass\LithologyImageUtils.cs" />
     <Compile Include="HelperClass\MapAreaUtil.cs" />
     <Compile Include="HelperClass\MapUtil.cs" />
     <Compile Include="HelperClass\MegerTable.cs" />
@@ -441,6 +442,12 @@
     <None Include="bin\Debug\RoadRaskEvaltionSystem.exe.config" />
     <None Include="bin\Debug\RoadRaskEvaltionSystem.vshost.exe.config" />
     <None Include="bin\Debug\RoadRaskEvaltionSystem.vshost.exe.manifest" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\dblbnd.adf" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\hdr.adf" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\prj.adf" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\sta.adf" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\w001001.adf" />
+    <None Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\w001001x.adf" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\乡村点.dbf" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\乡村点.mxd" />
     <None Include="bin\Debug\Rources\BaseData\BaseShapeData\乡村点.prj" />
@@ -709,6 +716,7 @@
     <Content Include="bin\Debug\RoadRaskEvaltionSystem.exe" />
     <Content Include="bin\Debug\RoadRaskEvaltionSystem.pdb" />
     <Content Include="bin\Debug\RoadRaskEvaltionSystem.vshost.exe" />
+    <Content Include="bin\Debug\Rources\BaseData\BaseRasterData\降水量\metadata.xml" />
     <Content Include="bin\Debug\Rources\BaseData\BaseShapeData\乡村点.jpg" />
     <Content Include="bin\Debug\Rources\BaseData\BaseShapeData\乡村点.shp.xml" />
     <Content Include="bin\Debug\Rources\BaseData\BaseShapeData\乡镇.shp.xml" />
@@ -799,7 +807,6 @@
     <EmbeddedResource Include="ComTools\StopsRemoveTool.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\Rources\BaseData\BaseRasterData\" />
     <Folder Include="bin\Debug\Rources\ConditionAllData\ConditionAllShapeData\" />
     <Folder Include="bin\Debug\Rources\ConditionData\ConditionShapeData\" />
     <Folder Include="bin\Debug\Rources\RoadData\RoadRasterData\" />

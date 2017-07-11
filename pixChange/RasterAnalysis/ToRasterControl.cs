@@ -16,6 +16,7 @@ using pixChange;
 using pixChange.HelperClass;
 using ESRI.ArcGIS.Geometry;
 using RoadRaskEvaltionSystem.HelperClass;
+using ESRI.ArcGIS.Display;
 namespace RoadRaskEvaltionSystem.RasterAnalysis
 {
    public class ToRasterControl :IRoadRaskCaculate
@@ -419,7 +420,40 @@ namespace RoadRaskEvaltionSystem.RasterAnalysis
            pFClass = pFWS.OpenFeatureClass(ShpName);
            return pFClass;
        }
-
+       /// <summary>
+       /// 打开adf文件格式栅格数据
+       /// </summary>
+       /// <param name="rasterPath"></param>
+       /// <param name="fileName"></param>
+       public static void OpenRasterLayer(string rasterPath, string fileName)
+       {
+           IWorkspaceFactory workspaceFactory = new RasterWorkspaceFactory();
+           IWorkspace SWorkspace = workspaceFactory.OpenFromFile(rasterPath, 0);
+           IRasterWorkspace rasterWorkspace = SWorkspace as IRasterWorkspace;
+           IRasterDataset pRasterDataset = (IRasterDataset)rasterWorkspace.OpenRasterDataset(fileName);
+           IRasterLayer pRasterLayer = new RasterLayerClass();
+           pRasterLayer.CreateFromDataset(pRasterDataset);
+           IAlgorithmicColorRamp colorRamp = new AlgorithmicColorRampClass()
+           {
+               FromColor = new RgbColorClass() { Red = 197, Green = 68, Blue = 56 },
+               ToColor = new RgbColorClass() { Red = 80, Green = 110, Blue = 207 },
+               Size = 100
+           };//Red = 80, Green = 110, Blue = 207
+           IMultiPartColorRamp multiPartColorRamp = new MultiPartColorRampClass();
+           multiPartColorRamp.set_Ramp(0,colorRamp);
+           bool outCreate = false;
+           colorRamp.CreateRamp(out outCreate);
+           //设置渲染参数  
+           IRasterStretchColorRampRenderer rasterStretchColorRampRenderer = new RasterStretchColorRampRendererClass();
+           IRasterRenderer rasterRenderer = rasterStretchColorRampRenderer as IRasterRenderer;
+           rasterRenderer.Raster = pRasterLayer.Raster;
+           rasterRenderer.Update();
+           rasterStretchColorRampRenderer.BandIndex = 0;
+           rasterStretchColorRampRenderer.ColorRamp = multiPartColorRamp as IColorRamp;
+           rasterRenderer.Update();
+           pRasterLayer.Renderer = rasterRenderer;  
+           MainFrom.m_mapControl.AddLayer(pRasterLayer);
+       }
 
 
        public IRasterDataset OpenRasterDataSet(string name)
